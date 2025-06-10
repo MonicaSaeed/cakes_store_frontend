@@ -27,11 +27,12 @@ class CustomCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Stack(
+                  alignment: Alignment.topRight,
                   children:
                   [
                      Image.asset(
                     imageUrl,
-                    height: 120,
+                    height: 100,
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),
@@ -40,7 +41,6 @@ class CustomCard extends StatelessWidget {
                       onPressed: onPressedFav,
                       color: Colors.white,
                     ),
-
                   ] 
                 ),
                 Text(
