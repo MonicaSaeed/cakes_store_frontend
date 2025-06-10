@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import 'core/component/not_found_screen.dart';
+import 'core/components/not_found_screen.dart';
 import 'features/auth/presentation/screen/login_screen.dart';
 import 'features/auth/presentation/screen/register_screen.dart';
 import 'features/cart/presentation/screen/cart_screen.dart';
