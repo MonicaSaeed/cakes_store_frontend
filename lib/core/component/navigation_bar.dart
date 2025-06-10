@@ -30,11 +30,16 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        final isFirstRouteInCurrentTab =
-            !await _navigatorKeys[_currentIndex].currentState!.maybePop();
-        return isFirstRouteInCurrentTab;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, dynamic result) async {
+        if (!didPop) {
+          final isFirstRouteInCurrentTab =
+              !await _navigatorKeys[_currentIndex].currentState!.maybePop();
+          if (isFirstRouteInCurrentTab) {
+            return;
+          }
+        }
       },
       child: Scaffold(
         body: IndexedStack(
@@ -50,6 +55,12 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (index) {
+            if (index == _currentIndex) {
+              // Pop to first route if already on this tab
+              _navigatorKeys[index].currentState?.popUntil(
+                (route) => route.isFirst,
+              );
+            }
             setState(() {
               _currentIndex = index;
             });
