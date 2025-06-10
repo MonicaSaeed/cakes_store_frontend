@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
- CustomCard({super.key,required this.cardtitle, required this.carddescription, required this.imageUrl});
+ CustomCard({super.key,required this.cardtitle, required this.price, required this.imageUrl, required this.favicon, required this.addcartIcon, this.onPressedCart, this.onPressedFav});
 
   String cardtitle;
-  String carddescription;
+  String price;
   String imageUrl;
+  Icon favicon;
+  Icon addcartIcon;
+  void Function()? onPressedCart;
+  void Function()? onPressedFav;
+
 
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-         
          Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -22,11 +26,22 @@ class CustomCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.asset(
-                  imageUrl,
-                  height: 120,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+                Stack(
+                  children:
+                  [
+                     Image.asset(
+                    imageUrl,
+                    height: 120,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                    IconButton(
+                      icon: favicon,
+                      onPressed: onPressedFav,
+                      color: Colors.white,
+                    ),
+
+                  ] 
                 ),
                 Text(
                   '${cardtitle}',
@@ -35,11 +50,19 @@ class CustomCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  '${carddescription}',
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      '${price}',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed:onPressedCart , 
+                      icon:addcartIcon,
+                       ),
+                  ],
                 ),
               ],
             ),
