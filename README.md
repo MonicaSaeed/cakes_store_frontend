@@ -1,4 +1,4 @@
-## 🍰 YumSlice Backend
+## 🍰 YumSlice Frontend
 This is the frontend for the YumSlice application.
 
 ## screens
