@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 class CustomCard extends StatelessWidget {
  CustomCard({super.key,required this.cardtitle, required this.price, required this.imageUrl, required this.favicon, required this.addcartIcon, this.onPressedCart, this.onPressedFav});
 
-  String cardtitle;
-  String price;
-  String imageUrl;
-  Icon favicon;
-  Icon addcartIcon;
-  void Function()? onPressedCart;
-  void Function()? onPressedFav;
-
+  final String cardtitle;
+  final String price;
+  final String imageUrl;
+  final IconData favicon;
+  final IconData addcartIcon;
+  final void Function()? onPressedCart;
+  final void Function()? onPressedFav;
 
 
   @override
@@ -18,9 +17,10 @@ class CustomCard extends StatelessWidget {
     return Column(
       children: [
          Card(
+          elevation: 4,
           color: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(16),
           ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -31,41 +31,75 @@ class CustomCard extends StatelessWidget {
                   alignment: Alignment.topRight,
                   children:
                   [
-                     Image.asset(
-                    imageUrl,
-                    height: 100,
-                    width: double.infinity,
+                Container(
+                height: 120,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: AssetImage(imageUrl),
                     fit: BoxFit.cover,
                   ),
-                    IconButton(
-                      icon: favicon,
-                      onPressed: onPressedFav,
-                      color: Colors.white,
-                    ),
-                  ] 
                 ),
+              ),
+               Padding(
+                 padding: const EdgeInsets.only(
+                   top: 5, right: 8,
+                 ),
+                 child: Container(
+                   padding: EdgeInsets.all(6),
+                   decoration: BoxDecoration(
+                     shape: BoxShape.circle,
+                     color: Colors.white,
+                   ),
+                   child: IconButton(
+                     icon: Icon(
+                       favicon,
+                       size: 30,
+                     ),
+                      onPressed: onPressedFav,
+                   ),
+                 ),
+               ),
+              ] 
+           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12, vertical: 8),
+            child: Text(
+              cardtitle,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12, vertical: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 Text(
-                  '${cardtitle}',
-                   style: TextStyle(
-                    color: Colors.black,
+                  '\$$price',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Text(
-                      '${price}',
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed:onPressedCart , 
-                      icon:addcartIcon,
-                       ),
-                  ],
+                IconButton(
+                  onPressed: onPressedCart,
+                  icon: Icon(
+                    addcartIcon,
+                    color: Colors.teal,
+                    size: 30,
+                  ),
                 ),
               ],
+            ),
+          ),
+              ],
+          
             ),
           ),
          ),
