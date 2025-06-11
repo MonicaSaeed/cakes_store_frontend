@@ -41,16 +41,24 @@ class AuthGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthCubit, AuthState>(
-      builder: (context, state) {
-        if (state is AuthLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is AuthSuccess) {
-          return const NavigationBarScreen();
-        } else {
-          return const LoginScreen();
-        }
-      },
+    final AuthWebservice _webservice = AuthWebservice();
+    final AuthRepository _repository = AuthRepository(_webservice);
+
+    return BlocProvider(
+      create: (_) => AuthCubit(_repository),
+      child: BlocBuilder<AuthCubit, AuthState>(
+        builder: (context, state) {
+          // if (state is AuthLoading) {
+          //   return const Center(child: CircularProgressIndicator());
+          // } else
+          //
+          if (state is AuthSuccess) {
+            return const NavigationBarScreen();
+          } else {
+            return const LoginScreen();
+          }
+        },
+      ),
     );
   }
 }
