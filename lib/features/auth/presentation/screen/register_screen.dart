@@ -85,19 +85,6 @@ class RegisterScreen extends StatelessWidget {
                         icon: const Icon(Icons.app_registration),
                         color: LightThemeColors.primary,
                         onPressed: () {
-                          if (nameController.text.isEmpty ||
-                              emailController.text.isEmpty ||
-                              phoneController.text.isEmpty ||
-                              addressController.text.isEmpty ||
-                              passwordController.text.isEmpty) {
-                            ToastHelper.showToast(
-                              context: context,
-                              message: 'All fields are required',
-                              toastType: ToastType.error,
-                            );
-                            return;
-                          }
-
                           if (formKey.currentState!.validate()) {
                             final user = UserFirebaseModel(
                               name: nameController.text.trim(),

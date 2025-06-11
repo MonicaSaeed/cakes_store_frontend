@@ -11,7 +11,7 @@ extension StringExtensions on String {
     final passwordRegex = RegExp(
       // r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$',
       // contain only 8 characters
-      r'^[a-zA-Z_0-9!@#$%^&*()_+={}]{8,}$',
+      r'^[a-zA-Z0-9\s.,-]{8,}$',
     );
     return passwordRegex.hasMatch(this);
   }

@@ -48,7 +48,9 @@ class CustomTextField extends StatelessWidget {
             obscureText: obscureText,
             validator: (value) {
               final trimmed = value?.trim() ?? '';
-              switch (title.toLowerCase()) {
+              final cleanTitle = title.replaceAll('*', '').trim().toLowerCase();
+
+              switch (cleanTitle) {
                 case 'name':
                   return trimmed.isValidName
                       ? null
@@ -66,7 +68,7 @@ class CustomTextField extends StatelessWidget {
                 case 'password':
                   return trimmed.isValidPassword
                       ? null
-                      : 'Password must include upper, lower, number, special char and 8+ chars';
+                      : 'Password must include 8+ chars';
                 default:
                   return trimmed.isEmpty ? 'This field is required' : null;
               }
