@@ -46,7 +46,6 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> loginUser(String email, String password) async {
-    emit(AuthLoading());
     try {
       final credential = await _repository.loginUser(email, password);
       final user = credential.user;
@@ -54,6 +53,7 @@ class AuthCubit extends Cubit<AuthState> {
         if (user.emailVerified) {
           emit(AuthSuccess(user));
         } else {
+          print('user email not verified: ${user.email}');
           emit(
             AuthEmailNotVerified('Please verify your email before logging in.'),
           );
@@ -62,6 +62,7 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthUserNotFound('User not found.'));
       }
     } catch (e) {
+      print('error from cubit: ${e.toString()}');
       emit(AuthFailure(e.toString()));
     }
   }

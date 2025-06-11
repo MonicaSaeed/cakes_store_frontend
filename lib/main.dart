@@ -12,6 +12,7 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // FirebaseAuth.instance.signOut(); // Ensure user is signed out on app start
   runApp(const MyApp());
 }
 

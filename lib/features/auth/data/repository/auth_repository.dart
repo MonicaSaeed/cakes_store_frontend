@@ -54,8 +54,10 @@ class AuthRepository {
     try {
       return await _authWebservice.loginUser(email, password);
     } on FirebaseAuthException catch (e) {
-      throw Exception(_mapFirebaseError(e));
+      print('error from repository: ${_mapFirebaseError(e)}');
+      throw Exception(e.code);
     } catch (e) {
+      print('Unexpected error during login: $e');
       throw Exception('Unexpected error during login');
     }
   }
@@ -96,6 +98,8 @@ class AuthRepository {
         return 'Operation not allowed. Please contact support.';
       case 'too-many-requests':
         return 'Too many requests. Please try again later.';
+      case 'network-request-failed':
+        return 'Network request failed. Please check your internet connection.';
       default:
         return e.message ?? 'Authentication error occurred.';
     }
