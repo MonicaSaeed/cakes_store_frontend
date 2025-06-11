@@ -9,6 +9,16 @@ class AuthInitial extends AuthState {}
 
 class AuthLoading extends AuthState {}
 
+class AuthRegistrationSuccess extends AuthState {
+  final User user;
+  AuthRegistrationSuccess(this.user);
+}
+
+class AuthVerificationEmailSent extends AuthState {
+  final String message;
+  AuthVerificationEmailSent(this.message);
+}
+
 class AuthSuccess extends AuthState {
   final User user;
   AuthSuccess(this.user);

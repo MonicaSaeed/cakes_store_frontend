@@ -13,6 +13,7 @@ class LightThemeColors {
   static const Color textLight = Color(0xFF888888);
   static const Color white = Colors.white;
   static const Color black = Colors.black;
+  static const Color error = Color(0xFFFF5252);
 }
 
 class DarkThemeColors {

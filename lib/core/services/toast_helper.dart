@@ -69,8 +69,8 @@ class ToastHelper {
         return {
           'type': ToastificationType.error,
           'title': 'Error',
-          'color': Colors.red,
-          'icon': const Icon(Icons.error, color: Colors.red),
+          'color': Color(0xFFFF5252),
+          'icon': const Icon(Icons.error, color: Color(0xFFFF5252)),
         };
       case ToastType.warning:
         return {

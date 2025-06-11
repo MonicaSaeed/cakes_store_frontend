@@ -28,12 +28,13 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
     try {
       await _repository.registerUser(user);
-
       final currentUser = await _repository.getCurrentUser();
+
       if (currentUser != null) {
+        emit(AuthRegistrationSuccess(currentUser));
         await _repository.sendVerificationEmail(currentUser);
         emit(
-          AuthEmailNotVerified(
+          AuthVerificationEmailSent(
             'Registration successful. Please verify your email before logging in.',
           ),
         );
