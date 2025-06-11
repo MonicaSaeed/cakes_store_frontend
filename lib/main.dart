@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/components/navigation_bar.dart';
+import 'core/services/preference_manager.dart';
+import 'core/theme/dark_theme.dart';
+import 'core/theme/light_theme.dart';
+import 'core/theme/theme_controller.dart';
 import 'features/auth/business/auth_cubit.dart';
 import 'features/auth/data/repository/auth_repository.dart';
 import 'features/auth/data/webservice/auth_webservice.dart';
@@ -12,6 +16,9 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await PreferencesManager().init();
+  await ThemeController().init();
+
   // FirebaseAuth.instance.signOut(); // Ensure user is signed out on app start
   runApp(const MyApp());
 }
@@ -21,17 +28,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create:
-          (_) => AuthCubit(AuthRepository(AuthWebservice()))..getCurrentUser(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        ),
-        home: const AuthGate(),
-      ),
+    return ValueListenableBuilder(
+      valueListenable: ThemeController.themeNotifier,
+      builder: (_, value, _) {
+        return BlocProvider(
+          create:
+              (_) =>
+                  AuthCubit(AuthRepository(AuthWebservice()))..getCurrentUser(),
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'YumSlice',
+            themeMode: value,
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            home: const AuthGate(),
+          ),
+        );
+      },
     );
   }
 }
@@ -41,24 +54,14 @@ class AuthGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AuthWebservice _webservice = AuthWebservice();
-    final AuthRepository _repository = AuthRepository(_webservice);
-
-    return BlocProvider(
-      create: (_) => AuthCubit(_repository),
-      child: BlocBuilder<AuthCubit, AuthState>(
-        builder: (context, state) {
-          // if (state is AuthLoading) {
-          //   return const Center(child: CircularProgressIndicator());
-          // } else
-          //
-          if (state is AuthSuccess) {
-            return const NavigationBarScreen();
-          } else {
-            return const LoginScreen();
-          }
-        },
-      ),
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
+        if (state is AuthSuccess) {
+          return const NavigationBarScreen();
+        } else {
+          return const LoginScreen();
+        }
+      },
     );
   }
 }
