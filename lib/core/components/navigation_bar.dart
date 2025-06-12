@@ -10,12 +10,13 @@ class NavigationBarScreen extends StatefulWidget {
 }
 
 class _NavigationBarScreenState extends State<NavigationBarScreen> {
-  int _currentIndex = 0;
+  int _currentIndex = 3;
   final List<String> _routes = [
     AppRouter.home,
     AppRouter.favorites,
     AppRouter.orders,
-    AppRouter.cart,
+    // AppRouter.cart,
+    AppRouter.shop,
     AppRouter.profile,
   ];
 
@@ -76,8 +77,8 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
               label: 'Orders',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart),
-              label: 'Cart',
+              icon: Icon(Icons.shopping_bag_outlined),
+              label: 'Shop',
             ),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
           ],
