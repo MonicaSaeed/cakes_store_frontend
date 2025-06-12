@@ -1,6 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../auth/business/auth_cubit.dart';
 import '../../../auth/presentation/screen/login_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -13,11 +14,11 @@ class HomeScreen extends StatelessWidget {
       body: Column(
         children: [
           ElevatedButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.push(
-                context,
+            onPressed: () async {
+              await context.read<AuthCubit>().logoutUser();
+              Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (_) => const LoginScreen()),
+                (route) => false, // removes all previous routes
               );
             },
             child: const Text('logout'),

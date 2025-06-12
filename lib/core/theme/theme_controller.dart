@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 
 class ThemeController {
   static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(
-    ThemeMode.dark,
+    ThemeMode.light,
   );
 
   init() {
-    bool result = PreferencesManager().getBool(PreferencesKeys.theme) ?? true;
+    bool result = PreferencesManager().getBool(PreferencesKeys.theme) ?? false;
     themeNotifier.value = result ? ThemeMode.dark : ThemeMode.light;
   }
 

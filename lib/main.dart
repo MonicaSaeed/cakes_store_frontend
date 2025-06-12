@@ -18,8 +18,6 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await PreferencesManager().init();
   await ThemeController().init();
-
-  // FirebaseAuth.instance.signOut(); // Ensure user is signed out on app start
   runApp(const MyApp());
 }
 
@@ -56,7 +54,11 @@ class AuthGate extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
-        if (state is AuthSuccess) {
+        if (state is AuthLoadingCurrentUser || state is AuthInitial) {
+          return Scaffold(
+            body: const Center(child: CircularProgressIndicator()),
+          );
+        } else if (state is AuthSuccess) {
           return const NavigationBarScreen();
         } else {
           return const LoginScreen();

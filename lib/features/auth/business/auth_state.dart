@@ -7,6 +7,8 @@ abstract class AuthState extends Equatable {
 
 class AuthInitial extends AuthState {}
 
+class AuthLoadingCurrentUser extends AuthState {}
+
 class AuthLoading extends AuthState {}
 
 class AuthRegistrationSuccess extends AuthState {

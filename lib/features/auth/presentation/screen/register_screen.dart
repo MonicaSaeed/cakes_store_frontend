@@ -32,11 +32,14 @@ class RegisterScreen extends StatelessWidget {
               toastType: ToastType.error,
             );
           } else if (state is AuthVerificationEmailSent) {
-            Navigator.pop(context);
             ToastHelper.showToast(
               context: context,
               message: state.message,
               toastType: ToastType.warning,
+            );
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginScreen()),
             );
           }
         },

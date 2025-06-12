@@ -10,12 +10,20 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepository _repository;
   AuthCubit(this._repository) : super(AuthInitial());
+
   Future<void> getCurrentUser() async {
-    emit(AuthLoading());
+    emit(AuthLoadingCurrentUser());
     try {
       final user = await _repository.getCurrentUser();
       if (user != null) {
-        emit(AuthSuccess(user));
+        if (!user.emailVerified) {
+          emit(
+            AuthEmailNotVerified('Please verify your email before logging in.'),
+          );
+          return;
+        } else {
+          emit(AuthSuccess(user));
+        }
       } else {
         emit(AuthLoggedOut());
       }
@@ -47,7 +55,6 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> loginUser(String email, String password) async {
-    print("ayyyyyyyyyy");
     emit(AuthLoading());
     try {
       final credential = await _repository.loginUser(email, password);
@@ -56,7 +63,6 @@ class AuthCubit extends Cubit<AuthState> {
         if (user.emailVerified) {
           emit(AuthSuccess(user));
         } else {
-          print('user email not verified: ${user.email}');
           emit(
             AuthEmailNotVerified('Please verify your email before logging in.'),
           );
@@ -65,7 +71,6 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthUserNotFound('User not found.'));
       }
     } catch (e) {
-      print('error from cubit: ${e.toString()}');
       emit(AuthFailure(e.toString()));
     }
   }

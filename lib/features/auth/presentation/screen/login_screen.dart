@@ -7,6 +7,8 @@ import 'package:cakes_store_frontend/features/auth/presentation/screen/register_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/components/navigation_bar.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -39,7 +41,10 @@ class _LoginScreenState extends State<LoginScreen> {
               message: 'Login Successfully',
               toastType: ToastType.success,
             );
-            Navigator.pushReplacementNamed(context, '/home');
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => NavigationBarScreen()),
+            );
           } else if (state is AuthFailure || state is AuthEmailNotVerified) {
             final msg =
                 state is AuthFailure
