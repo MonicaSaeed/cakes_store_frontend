@@ -39,6 +39,7 @@ dependencies:
   dio: ^5.8.0+1
   firebase_core: ^3.14.0
   firebase_auth: ^5.6.0
+  toastification: ^3.0.3
   shared_preferences: ^2.5.3
 
 
@@ -90,6 +91,6 @@ flutter:
         - asset: assets/fonts/Poppins-Medium.ttf
         - asset: assets/fonts/Poppins-SemiBold.ttf
         - asset: assets/fonts/Poppins-Bold.ttf
-  
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

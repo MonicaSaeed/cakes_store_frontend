@@ -13,7 +13,6 @@ ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
   ),
   appBarTheme: const AppBarTheme(
-    centerTitle: true,
     backgroundColor: DarkThemeColors.surface,
     foregroundColor: DarkThemeColors.primary,
     elevation: 2,
@@ -43,8 +42,8 @@ ThemeData darkTheme = ThemeData(
     labelLarge: TextStyle(
       fontFamily: 'Poppins',
       fontSize: 14,
-      color: DarkThemeColors.primary,
-      fontWeight: FontWeight.w600,
+      color: DarkThemeColors.textDark,
+      fontWeight: FontWeight.w400,
     ),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(

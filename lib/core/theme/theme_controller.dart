@@ -3,10 +3,12 @@ import 'package:cakes_store_frontend/core/services/preference_manager.dart';
 import 'package:flutter/material.dart';
 
 class ThemeController {
-  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.dark);
+  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(
+    ThemeMode.light,
+  );
 
   init() {
-    bool result = PreferencesManager().getBool(PreferencesKeys.theme) ?? true;
+    bool result = PreferencesManager().getBool(PreferencesKeys.theme) ?? false;
     themeNotifier.value = result ? ThemeMode.dark : ThemeMode.light;
   }
 

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "926443017819",
+    "project_id": "yumslice-2bab2",
+    "storage_bucket": "yumslice-2bab2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:926443017819:android:a0cb82bbabe69b45b6917e",
+        "android_client_info": {
+          "package_name": "com.cakes.cakes_store_frontend"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADr8msZQ2tqTKR0FsVGs89wDzuU8E53LE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
