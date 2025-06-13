@@ -1,17 +1,17 @@
 class UserMongoModel {
   final String uid;
   final String email;
-  final String username;
-  final String phoneNumber;
-  final List<String> addresses;
+  final String? username;
+  final String? phoneNumber;
+  final List<String>? addresses;
   final String? image;
 
   UserMongoModel({
     required this.uid,
     required this.email,
-    required this.username,
-    required this.phoneNumber,
-    required this.addresses,
+    this.username,
+    this.phoneNumber,
+    this.addresses,
     this.image,
   });
 

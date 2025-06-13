@@ -58,7 +58,7 @@ class AuthRepository {
     try {
       return await _authWebservice.loginUser(email, password);
     } on FirebaseAuthException catch (e) {
-      throw Exception(e.code);
+      throw Exception(_mapFirebaseError(e));
     } catch (e) {
       throw Exception('Unexpected error during login');
     }
@@ -88,19 +88,20 @@ class AuthRepository {
 
       final isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
       final user = userCredential.user;
-
       if (isNewUser && user != null) {
         final mongoUser = UserMongoModel(
           uid: user.uid,
           email: user.email ?? '',
-          username: user.displayName ?? '',
-          phoneNumber: user.phoneNumber ?? '',
+          username: user.displayName ?? user.email?.split('@')[0],
+          phoneNumber: user.phoneNumber,
           addresses: [],
         );
         await UserMongoWebService().saveUserToMongo(mongoUser);
       }
 
       return user;
+    } on FirebaseAuthException catch (e) {
+      throw Exception(_mapFirebaseError(e));
     } catch (e) {
       throw Exception("Google sign-in failed: $e");
     }
@@ -125,6 +126,8 @@ class AuthRepository {
       }
 
       return user;
+    } on FirebaseAuthException catch (e) {
+      throw Exception(_mapFirebaseError(e));
     } catch (e) {
       throw Exception("Facebook sign-in failed: $e");
     }
@@ -132,26 +135,45 @@ class AuthRepository {
 
   String _mapFirebaseError(FirebaseAuthException e) {
     switch (e.code) {
+      // User-related errors
       case 'user-not-found':
-        return 'No user found for that email.';
+        return 'No account found with this email.';
+      case 'user-disabled':
+        return 'This account has been disabled. Please contact support.';
+      case 'user-token-expired':
+        return 'Your session has expired. Please log in again.';
+
+      // Password & credentials
       case 'wrong-password':
-        return 'Wrong password provided.';
-      case 'email-already-in-use':
-        return 'This email is already in use.';
+      case 'invalid-credential':
+        return 'Incorrect email or password. Please try again.';
+
       case 'weak-password':
-        return 'Password is too weak.';
+        return 'Your password is too weak. Use at least 6 characters.';
+
+      // Email issues
+      case 'email-already-in-use':
+        return 'An account with this email already exists.';
       case 'invalid-email':
-        return 'Invalid email address.';
+        return 'Please enter a valid email address.';
       case 'email-already-verified':
-        return 'Email is already verified.';
+        return 'This email is already verified.';
+
+      // Operation issues
       case 'operation-not-allowed':
-        return 'Operation not allowed. Please contact support.';
-      case 'too-many-requests':
-        return 'Too many requests. Please try again later.';
+        return 'This operation is not allowed. Please contact support.';
+      case 'requires-recent-login':
+        return 'For security reasons, please log in again to continue.';
+
+      // Network issues
       case 'network-request-failed':
-        return 'Network request failed. Please check your internet connection.';
+        return 'Unable to connect. Please check your internet connection.';
+      case 'too-many-requests':
+        return 'Too many attempts. Please try again later.';
+
+      // Default
       default:
-        return e.message ?? 'Authentication error occurred.';
+        return e.message ?? 'Something went wrong. Please try again.';
     }
   }
 }
