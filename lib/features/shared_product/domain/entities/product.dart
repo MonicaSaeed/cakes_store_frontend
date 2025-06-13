@@ -1,16 +1,14 @@
-import 'package:flutter/foundation.dart';
-
 class Product {
   final String? id;
-  final String name;
-  final String description;
-  final String imageUrl;
-  final String category;
-  final String price;
-  final String totalRating;
-  final String discountPercentage;
-  final String updatedAt;
-  final String stock;
+  final String? name;
+  final String? description;
+  final String? imageUrl;
+  final String? category;
+  final double? price; // updated
+  final double? totalRating; // updated
+  final int? discountPercentage;
+  final String? updatedAt;
+  final int? stock;
 
   Product({
     required this.id,
