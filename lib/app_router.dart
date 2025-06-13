@@ -1,3 +1,4 @@
+import 'package:cakes_store_frontend/features/shop/presentation/screens/shop_product_screen.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'core/components/not_found_screen.dart';
@@ -20,6 +21,7 @@ class AppRouter {
   static const String login = '/login';
   static const String register = '/register';
   static const String notFound = '/not-found';
+  static const String shop = '/shop';
 
   Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -37,6 +39,9 @@ class AppRouter {
         return CupertinoPageRoute(builder: (_) => const LoginScreen());
       case register:
         return CupertinoPageRoute(builder: (_) => const RegisterScreen());
+      case shop:
+        return CupertinoPageRoute(builder: (_) => const ShopProductScreen());
+
       default:
         return CupertinoPageRoute(builder: (_) => const NotFoundScreen());
     }
