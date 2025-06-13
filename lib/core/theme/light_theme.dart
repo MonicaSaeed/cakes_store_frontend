@@ -30,10 +30,15 @@ ThemeData lightTheme = ThemeData(
     ),
     bodyLarge: TextStyle(
       fontFamily: 'Poppins',
-      fontSize: 16,
-      color: LightThemeColors.textDark,
+      fontSize: 24,
+      color: LightThemeColors.textLight,
     ),
     bodyMedium: TextStyle(
+      fontFamily: 'Poppins',
+      fontSize: 18,
+      color: LightThemeColors.textLight,
+    ),
+    bodySmall: TextStyle(
       fontFamily: 'Poppins',
       fontSize: 14,
       color: LightThemeColors.textLight,
@@ -41,7 +46,7 @@ ThemeData lightTheme = ThemeData(
     labelLarge: TextStyle(
       fontFamily: 'Poppins',
       fontSize: 14,
-      color: LightThemeColors.textDark,
+      color: LightThemeColors.textLight,
       fontWeight: FontWeight.w400,
     ),
   ),

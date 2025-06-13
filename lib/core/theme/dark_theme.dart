@@ -31,10 +31,15 @@ ThemeData darkTheme = ThemeData(
     ),
     bodyLarge: TextStyle(
       fontFamily: 'Poppins',
-      fontSize: 16,
+      fontSize: 24,
       color: DarkThemeColors.textDark,
     ),
     bodyMedium: TextStyle(
+      fontFamily: 'Poppins',
+      fontSize: 18,
+      color: DarkThemeColors.textLight,
+    ),
+    bodySmall: TextStyle(
       fontFamily: 'Poppins',
       fontSize: 14,
       color: DarkThemeColors.textLight,
