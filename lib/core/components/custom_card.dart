@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CustomCard extends StatelessWidget {
- CustomCard({super.key,required this.cardtitle, required this.price, required this.imageUrl, required this.favicon, required this.addcartIcon, this.onPressedCart, this.onPressedFav, this.onPressedcard});
+  CustomCard({
+    super.key,
+    required this.cardtitle,
+    required this.price,
+    required this.imageUrl,
+    required this.favicon,
+    required this.addcartIcon,
+    this.onPressedCart,
+    this.onPressedFav,
+    this.onPressedcard,
+  });
 
   final String cardtitle;
   final String price;
@@ -14,31 +25,32 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-         GestureDetector(
-          onTap: onPressedcard,
-           child: Container(
-            width: 200,
-             height: 240,
-             child: Card(
-              elevation: 4,
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-                     
+    return GestureDetector(
+      onTap: onPressedcard,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 16.0, right: 8),
+        child: Container(
+          height: 550,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 2,
+                blurRadius: 8,
+                offset: Offset(0, 4),
               ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Stack(
-                      alignment: Alignment.topRight,
-                      children:
-                      [
-                    Container(
-                    height: 120,
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  Container(
+                    height: 250,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
@@ -46,34 +58,33 @@ class CustomCard extends StatelessWidget {
                         topRight: Radius.circular(16),
                       ),
                       image: DecorationImage(
-                        image: AssetImage(imageUrl),
+                        image: CachedNetworkImageProvider(imageUrl),
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                   Padding(
-                     padding: const EdgeInsets.all(4.0),
-                     child: Container(
-                      width: 40,
-                       padding: EdgeInsets.all(1),
-                       decoration: BoxDecoration(
-                         shape: BoxShape.circle,
-                         color: Colors.white,
-                       ),
-                       child: IconButton(
-                         icon: Icon(
-                           favicon,
-                           size: 20,
-                         ),
-                          onPressed: onPressedFav,
-                       ),
-                     ),
-                   ),
-                  ] 
-               ),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Container(
+                      width: 50,
+                      padding: EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                      child: IconButton(
+                        icon: Icon(favicon, size: 25),
+                        onPressed: onPressedFav,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 12, vertical: 8),
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 child: Text(
                   cardtitle,
                   maxLines: 1,
@@ -86,7 +97,9 @@ class CustomCard extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 12, vertical: 4),
+                  horizontal: 12,
+                  vertical: 4,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -96,30 +109,21 @@ class CustomCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
-                          overflow:TextOverflow.ellipsis,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ),
                     IconButton(
                       onPressed: onPressedCart,
-                      icon: Icon(
-                        addcartIcon,
-                        color: Colors.teal,
-                        size: 30,
-                      ),
+                      icon: Icon(addcartIcon, color: Colors.teal, size: 30),
                     ),
                   ],
                 ),
               ),
-                  ],
-              
-                ),
-              ),
-             ),
-           ),
-         ),
-
-      ],
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

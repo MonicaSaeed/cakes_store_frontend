@@ -10,6 +10,15 @@ class ProductListCubit extends Cubit<ProductListState> {
   ProductListCubit() : super(const ProductListLoading());
 
   ProductDataSource _dataSource = ProductDataSource();
+  List<String> categories = [
+    "All Items",
+    "Birthday",
+    "Wedding",
+    "Custom",
+    "Cheesecakes",
+    "Cupcakes",
+    "Molten Cakes",
+  ];
   getProductList() async {
     try {
       final BaseProductsRepository _repo = ProductsRepository(_dataSource);
@@ -19,6 +28,7 @@ class ProductListCubit extends Cubit<ProductListState> {
         print('from cubit $products');
         emit(ProductListLoaded(products));
       } else {
+        print('in the else statement');
         emit(ProductListError('product list return with null'));
       }
     } catch (e) {
