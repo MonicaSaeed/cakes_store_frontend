@@ -36,7 +36,6 @@ class AuthRepository {
     } on FirebaseAuthException catch (e) {
       throw Exception(_mapFirebaseError(e));
     } catch (e) {
-      print(e.toString());
       throw Exception('Unexpected error during registration');
     }
   }
@@ -86,7 +85,22 @@ class AuthRepository {
   Future<User?> signInWithGoogle() async {
     try {
       final userCredential = await _authWebservice.signInWithGoogle();
-      return userCredential.user;
+
+      final isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
+      final user = userCredential.user;
+
+      if (isNewUser && user != null) {
+        final mongoUser = UserMongoModel(
+          uid: user.uid,
+          email: user.email ?? '',
+          username: user.displayName ?? '',
+          phoneNumber: user.phoneNumber ?? '',
+          addresses: [],
+        );
+        await UserMongoWebService().saveUserToMongo(mongoUser);
+      }
+
+      return user;
     } catch (e) {
       throw Exception("Google sign-in failed: $e");
     }
@@ -95,9 +109,23 @@ class AuthRepository {
   Future<User?> signInWithFacebook() async {
     try {
       final userCredential = await _authWebservice.signInWithFacebook();
-      return userCredential.user;
+
+      final isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
+      final user = userCredential.user;
+
+      if (isNewUser && user != null) {
+        final mongoUser = UserMongoModel(
+          uid: user.uid,
+          email: user.email ?? '',
+          username: user.displayName ?? '',
+          phoneNumber: user.phoneNumber ?? '',
+          addresses: [],
+        );
+        await UserMongoWebService().saveUserToMongo(mongoUser);
+      }
+
+      return user;
     } catch (e) {
-      print('Facebook sign-in failed: $e');
       throw Exception("Facebook sign-in failed: $e");
     }
   }

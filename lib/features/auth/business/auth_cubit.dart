@@ -131,8 +131,6 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> signInWithFacebook() async {
-    print('ngrb sign in with facebook');
-
     try {
       final user = await _repository.signInWithFacebook();
       emit(AuthSuccessWithFacebook(user!));

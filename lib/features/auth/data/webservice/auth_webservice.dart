@@ -48,7 +48,6 @@ class AuthWebservice {
 
   Future<UserCredential> signInWithGoogle() async {
     final GoogleSignIn googleSignIn = GoogleSignIn();
-
     // 🔁 Always prompt account picker by signing out first
     await googleSignIn.signOut();
 
@@ -71,7 +70,6 @@ class AuthWebservice {
     final LoginResult result = await FacebookAuth.instance.login();
 
     if (result.status != LoginStatus.success) {
-      print('Error facebook: ${result.message}');
       throw Exception("Facebook Sign-In failed: ${result.message}");
     }
 

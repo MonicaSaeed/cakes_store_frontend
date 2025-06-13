@@ -1,4 +1,4 @@
-import 'package:cakes_store_frontend/core/components/custom_textfield_without_validatation.dart';
+import 'package:cakes_store_frontend/features/auth/presentation/components/custom_password_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cakes_store_frontend/core/components/custom_elevated_button.dart';
@@ -12,7 +12,6 @@ class LoginForm extends StatefulWidget {
   final TextEditingController passwordController;
   final GlobalKey<FormState> formKey;
   final bool isPasswordVisible;
-  final VoidCallback togglePasswordVisibility;
   final void Function(BuildContext context) onLoginPressed;
 
   const LoginForm({
@@ -20,7 +19,6 @@ class LoginForm extends StatefulWidget {
     required this.passwordController,
     required this.formKey,
     required this.isPasswordVisible,
-    required this.togglePasswordVisibility,
     required this.onLoginPressed,
     super.key,
   });
@@ -68,7 +66,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
             SizedBox(height: 8),
-            CustomTextFieldWithoutValidation(
+            CustomPasswordTextfield(
               title: 'Password',
               hintText: 'your password',
               controller: widget.passwordController,
@@ -77,16 +75,6 @@ class _LoginFormState extends State<LoginForm> {
                 Icons.lock_outline,
                 color: LightThemeColors.primary,
               ),
-              suffixIcon: IconButton(
-                icon: Icon(
-                  widget.isPasswordVisible
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined,
-                  size: 22,
-                  color: Theme.of(context).colorScheme.tertiary,
-                ),
-                onPressed: widget.togglePasswordVisibility,
-              ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'This field is required';
@@ -94,6 +82,7 @@ class _LoginFormState extends State<LoginForm> {
                 return null;
               },
             ),
+            SizedBox(height: 8),
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(

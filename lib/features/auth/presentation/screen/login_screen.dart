@@ -49,12 +49,6 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
-  void _togglePasswordVisibility() {
-    setState(() {
-      _isPasswordVisible = !_isPasswordVisible;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,61 +109,79 @@ class _LoginScreenState extends State<LoginScreen>
               ),
             ),
             child: SafeArea(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Column(
-                    children: [
-                      LoginHeader(animationController: _animationController),
-                      LoginForm(
-                        emailController: _emailController,
-                        passwordController: _passwordController,
-                        formKey: _formKey,
-                        isPasswordVisible: _isPasswordVisible,
-                        togglePasswordVisibility: _togglePasswordVisibility,
-                        onLoginPressed: _onLoginPressed,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
                       ),
-                      const SizedBox(height: 20),
-                      const AuthDivider(text: 'Or log in with'),
-                      const SocialAuthButtons(),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: Wrap(
-                          alignment: WrapAlignment.center,
-                          crossAxisAlignment: WrapCrossAlignment.center,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Column(
                           children: [
-                            Text(
-                              'Don’t have an account? ',
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(color: Colors.grey.shade600),
+                            const SizedBox(height: 30),
+                            LoginHeader(
+                              animationController: _animationController,
                             ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => const RegisterScreen(),
+                            LoginForm(
+                              emailController: _emailController,
+                              passwordController: _passwordController,
+                              formKey: _formKey,
+                              isPasswordVisible: _isPasswordVisible,
+                              onLoginPressed: _onLoginPressed,
+                            ),
+                            const SizedBox(height: 20),
+                            const AuthDivider(text: 'Or log in with'),
+                            const SocialAuthButtons(),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                              ),
+                              child: Wrap(
+                                alignment: WrapAlignment.center,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                children: [
+                                  Text(
+                                    'Don’t have an account? ',
+                                    style: Theme.of(context).textTheme.bodySmall
+                                        ?.copyWith(color: Colors.grey.shade600),
                                   ),
-                                );
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  'Sign up',
-                                  style:
-                                      Theme.of(context).textTheme.displaySmall,
-                                ),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) =>
+                                                  const RegisterScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 4.0,
+                                      ),
+                                      child: Text(
+                                        'Sign up',
+                                        style:
+                                            Theme.of(
+                                              context,
+                                            ).textTheme.displaySmall,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
+                            const SizedBox(height: 30),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 30),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               ),
             ),
           );

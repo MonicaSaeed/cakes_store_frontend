@@ -1,5 +1,7 @@
 import 'package:cakes_store_frontend/features/auth/presentation/components/auth_divider.dart';
+import 'package:cakes_store_frontend/features/auth/presentation/components/custom_password_textfield.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/components/social_auth_buttons.dart';
+import 'package:cakes_store_frontend/features/home/presentation/screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cakes_store_frontend/core/components/custom_elevated_button.dart';
@@ -59,10 +61,6 @@ class _RegisterScreenState extends State<RegisterScreen>
     }
   }
 
-  void _togglePasswordVisibility() {
-    setState(() => _isPasswordVisible = !_isPasswordVisible);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,6 +82,17 @@ class _RegisterScreenState extends State<RegisterScreen>
               context,
               MaterialPageRoute(builder: (_) => const LoginScreen()),
             );
+          } else if (state is AuthSuccessWithGoogle ||
+              state is AuthSuccessWithFacebook) {
+            ToastHelper.showToast(
+              context: context,
+              message: 'Logged in successfully',
+              toastType: ToastType.success,
+            );
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const HomeScreen()),
+            );
           }
         },
         builder: (context, state) {
@@ -100,196 +109,202 @@ class _RegisterScreenState extends State<RegisterScreen>
               ),
             ),
             child: SafeArea(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    Text(
-                      'Create Account',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.headlineLarge?.copyWith(
-                        shadows: [
-                          Shadow(
-                            blurRadius: 4.0,
-                            color: Colors.black.withOpacity(0.1),
-                            offset: const Offset(2, 2),
-                          ),
-                        ],
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
                       ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      'Create your account to get started',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    const SizedBox(height: 30),
-
-                    // Form
-                    Container(
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            blurRadius: 15,
-                            spreadRadius: 2,
-                            offset: const Offset(4, 4),
-                          ),
-                          const BoxShadow(
-                            color: Colors.white,
-                            blurRadius: 15,
-                            spreadRadius: 2,
-                            offset: Offset(-4, -4),
-                          ),
-                        ],
-                      ),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            CustomTextField(
-                              title: 'Username',
-                              hintText: 'Your username',
-                              controller: _nameController,
-                              prefixIcon: Icon(
-                                Icons.person_outline,
-                                color: LightThemeColors.primary,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            CustomTextField(
-                              title: 'Email',
-                              hintText: 'you@example.com',
-                              controller: _emailController,
-                              prefixIcon: Icon(
-                                Icons.email_outlined,
-                                color: LightThemeColors.primary,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            CustomTextField(
-                              title: 'Phone',
-                              hintText: 'Your phone number',
-                              controller: _phoneController,
-                              prefixIcon: Icon(
-                                Icons.phone_outlined,
-                                color: LightThemeColors.primary,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            CustomTextField(
-                              title: 'Address',
-                              hintText: 'Your delivery address',
-                              controller: _addressController,
-                              prefixIcon: Icon(
-                                Icons.home_outlined,
-                                color: LightThemeColors.primary,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            CustomTextField(
-                              title: 'Password',
-                              hintText: 'Minimum 8 characters',
-                              controller: _passwordController,
-                              obscureText: !_isPasswordVisible,
-                              prefixIcon: Icon(
-                                Icons.lock_outline,
-                                color: LightThemeColors.primary,
-                              ),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _isPasswordVisible
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
-                                  size: 22,
-                                  color: Theme.of(context).colorScheme.tertiary,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 20),
+                          Text(
+                            'Create Account',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.headlineLarge?.copyWith(
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 4.0,
+                                  color: Colors.black.withOpacity(0.1),
+                                  offset: const Offset(2, 2),
                                 ),
-                                onPressed: _togglePasswordVisibility,
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'Create your account to get started',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          const SizedBox(height: 30),
+
+                          // Form
+                          Container(
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  blurRadius: 15,
+                                  spreadRadius: 2,
+                                  offset: const Offset(4, 4),
+                                ),
+                                const BoxShadow(
+                                  color: Colors.white,
+                                  blurRadius: 15,
+                                  spreadRadius: 2,
+                                  offset: Offset(-4, -4),
+                                ),
+                              ],
+                            ),
+                            child: Form(
+                              key: _formKey,
+                              child: Column(
+                                children: [
+                                  CustomTextField(
+                                    title: 'Username',
+                                    hintText: 'Your username',
+                                    controller: _nameController,
+                                    prefixIcon: Icon(
+                                      Icons.person_outline,
+                                      color: LightThemeColors.primary,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  CustomTextField(
+                                    title: 'Email',
+                                    hintText: 'you@example.com',
+                                    controller: _emailController,
+                                    prefixIcon: Icon(
+                                      Icons.email_outlined,
+                                      color: LightThemeColors.primary,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  CustomTextField(
+                                    title: 'Phone',
+                                    hintText: 'Your phone number',
+                                    controller: _phoneController,
+                                    prefixIcon: Icon(
+                                      Icons.phone_outlined,
+                                      color: LightThemeColors.primary,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  CustomTextField(
+                                    title: 'Address',
+                                    hintText: 'Your delivery address',
+                                    controller: _addressController,
+                                    prefixIcon: Icon(
+                                      Icons.home_outlined,
+                                      color: LightThemeColors.primary,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  CustomPasswordTextfield(
+                                    title: 'Password',
+                                    hintText: 'Minimum 8 characters',
+                                    controller: _passwordController,
+                                    obscureText: !_isPasswordVisible,
+                                    prefixIcon: Icon(
+                                      Icons.lock_outline,
+                                      color: LightThemeColors.primary,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  if (state is AuthLoading)
+                                    SizedBox(
+                                      width: double.infinity,
+                                      height: 50,
+                                      child: Center(
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            SizedBox(
+                                              height: 24,
+                                              width: 24,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                      Color
+                                                    >(LightThemeColors.primary),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 12),
+                                            Text(
+                                              'Creating......',
+                                              style: TextStyle(
+                                                color: LightThemeColors.primary,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  else
+                                    CustomElevatedButton(
+                                      textdata: 'Sign Up',
+                                      onPressed: _onRegisterPressed,
+                                    ),
+                                ],
                               ),
                             ),
-                            const SizedBox(height: 20),
-                            if (state is AuthLoading)
-                              SizedBox(
-                                width: double.infinity,
-                                height: 50,
-                                child: Center(
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      SizedBox(
-                                        height: 24,
-                                        width: 24,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                LightThemeColors.primary,
-                                              ),
-                                        ),
+                          ),
+                          const SizedBox(height: 20),
+                          AuthDivider(text: 'Or sign up with'),
+                          SocialAuthButtons(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0,
+                            ),
+                            child: Wrap(
+                              alignment: WrapAlignment.center,
+                              children: [
+                                Text(
+                                  'Already have an account? ',
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(color: Colors.grey.shade600),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const LoginScreen(),
                                       ),
-                                      const SizedBox(width: 12),
-                                      Text(
-                                        'Creating......',
-                                        style: TextStyle(
-                                          color: LightThemeColors.primary,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ],
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0,
+                                    ),
+                                    child: Text(
+                                      'Log in',
+                                      style:
+                                          Theme.of(
+                                            context,
+                                          ).textTheme.displaySmall,
+                                    ),
                                   ),
                                 ),
-                              )
-                            else
-                              CustomElevatedButton(
-                                textdata: 'Sign Up',
-                                onPressed: _onRegisterPressed,
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    AuthDivider(text: 'Or sign up with'),
-                    SocialAuthButtons(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Wrap(
-                        alignment: WrapAlignment.center,
-                        children: [
-                          Text(
-                            'Already have an account? ',
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(color: Colors.grey.shade600),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const LoginScreen(),
-                                ),
-                              );
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text(
-                                'Log in',
-                                style: Theme.of(context).textTheme.displaySmall,
-                              ),
+                              ],
                             ),
                           ),
+                          const SizedBox(height: 30),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 30),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           );
