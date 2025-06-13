@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class AuthWebservice {
   AuthWebservice._internal();
@@ -42,6 +44,41 @@ class AuthWebservice {
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+
+    // 🔁 Always prompt account picker by signing out first
+    await googleSignIn.signOut();
+
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+    if (googleUser == null) throw Exception("Google Sign-In aborted");
+
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  Future<UserCredential> signInWithFacebook() async {
+    final LoginResult result = await FacebookAuth.instance.login();
+
+    if (result.status != LoginStatus.success) {
+      print('Error facebook: ${result.message}');
+      throw Exception("Facebook Sign-In failed: ${result.message}");
+    }
+
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(result.accessToken!.tokenString);
+
+    return await _auth.signInWithCredential(facebookAuthCredential);
   }
 
   Future<void> logoutUser() async {

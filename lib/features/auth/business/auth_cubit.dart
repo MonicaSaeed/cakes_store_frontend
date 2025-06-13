@@ -86,14 +86,28 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> sendPasswordResetEmail(String email) async {
-    emit(AuthLoading());
     try {
       await _repository.sendPasswordResetEmail(email);
       emit(
         AuthPasswordResetEmailSent('Password reset email sent successfully.'),
       );
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+
+      switch (e.code) {
+        case 'user-not-found':
+          errorMessage = 'No user found with this email.';
+          break;
+        case 'invalid-email':
+          errorMessage = 'Invalid email address format.';
+          break;
+        default:
+          errorMessage = 'Something went wrong. Please try again.';
+      }
+
+      emit(FailureSendPasswordResetEmail(errorMessage));
     } catch (e) {
-      emit(AuthFailure(e.toString()));
+      emit(AuthFailure('An unexpected error occurred.'));
     }
   }
 
@@ -104,6 +118,26 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthEmailNotVerified('Verification email sent successfully.'));
     } catch (e) {
       emit(AuthFailure(e.toString()));
+    }
+  }
+
+  Future<void> signInWithGoogle() async {
+    try {
+      final user = await _repository.signInWithGoogle();
+      emit(AuthSuccessWithGoogle(user!));
+    } catch (e) {
+      emit(AuthFailureWithGoogle(e.toString()));
+    }
+  }
+
+  Future<void> signInWithFacebook() async {
+    print('ngrb sign in with facebook');
+
+    try {
+      final user = await _repository.signInWithFacebook();
+      emit(AuthSuccessWithFacebook(user!));
+    } catch (e) {
+      emit(AuthFailureWithFacebook(e.toString()));
     }
   }
 }

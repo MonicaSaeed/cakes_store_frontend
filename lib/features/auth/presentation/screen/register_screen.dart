@@ -1,28 +1,71 @@
-import 'package:cakes_store_frontend/features/auth/presentation/screen/login_screen.dart';
+import 'package:cakes_store_frontend/features/auth/presentation/components/auth_divider.dart';
+import 'package:cakes_store_frontend/features/auth/presentation/components/social_auth_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cakes_store_frontend/core/components/custom_elevated_button.dart';
+import 'package:cakes_store_frontend/core/components/custom_text_field.dart';
+import 'package:cakes_store_frontend/core/services/toast_helper.dart';
+import 'package:cakes_store_frontend/core/theme/theme_colors.dart';
+import 'package:cakes_store_frontend/features/auth/business/auth_cubit.dart';
+import 'package:cakes_store_frontend/features/auth/data/model/user_firebase_model.dart';
+import 'package:cakes_store_frontend/features/auth/presentation/screen/login_screen.dart';
 
-import '../../../../core/components/custom_elevated_button.dart';
-import '../../../../core/components/custom_text_field.dart';
-import '../../../../core/services/toast_helper.dart';
-import '../../../../core/theme/theme_colors.dart';
-import '../../business/auth_cubit.dart';
-import '../../data/model/user_firebase_model.dart';
-
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-    final nameController = TextEditingController();
-    final emailController = TextEditingController();
-    final phoneController = TextEditingController();
-    final addressController = TextEditingController();
-    final passwordController = TextEditingController();
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
 
+class _RegisterScreenState extends State<RegisterScreen>
+    with SingleTickerProviderStateMixin {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  late AnimationController _animationController;
+  bool _isPasswordVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _onRegisterPressed() {
+    if (_formKey.currentState!.validate()) {
+      final user = UserFirebaseModel(
+        name: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        phone: _phoneController.text.trim(),
+        address: _addressController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      context.read<AuthCubit>().registerUser(user);
+    }
+  }
+
+  void _togglePasswordVisibility() {
+    setState(() => _isPasswordVisible = !_isPasswordVisible);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthFailure) {
@@ -39,91 +82,214 @@ class RegisterScreen extends StatelessWidget {
             );
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => LoginScreen()),
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
             );
           }
         },
         builder: (context, state) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(18),
-            child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  Text(
-                    'Create an Account',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                  CustomTextField(
-                    title: 'Name*',
-                    hintText: 'Enter your name',
-                    controller: nameController,
-                  ),
-                  CustomTextField(
-                    title: 'Email*',
-                    hintText: 'Enter your email',
-                    controller: emailController,
-                  ),
-                  CustomTextField(
-                    title: 'Phone*',
-                    hintText: 'Enter your phone number',
-                    controller: phoneController,
-                  ),
-                  CustomTextField(
-                    title: 'Address*',
-                    hintText: 'Enter your address',
-                    controller: addressController,
-                  ),
-                  CustomTextField(
-                    title: 'Password*',
-                    hintText: 'Enter your password',
-                    controller: passwordController,
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 20),
-                  state is AuthLoading
-                      ? const CircularProgressIndicator()
-                      : CustomElevatedButton(
-                        textdata: 'Register',
-                        icon: const Icon(Icons.app_registration),
-                        color: LightThemeColors.primary,
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            final user = UserFirebaseModel(
-                              name: nameController.text.trim(),
-                              email: emailController.text.trim(),
-                              phone: phoneController.text.trim(),
-                              address: addressController.text.trim(),
-                              password: passwordController.text.trim(),
-                            );
-                            context.read<AuthCubit>().registerUser(user);
-                          }
-                        },
-                      ),
-
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()),
-                      );
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Already have an account? ',
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                        Text(
-                          'Login',
-                          style: Theme.of(context).textTheme.bodyLarge
-                              ?.copyWith(color: LightThemeColors.primary),
-                        ),
-                      ],
-                    ),
-                  ),
+          return Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.white,
+                  LightThemeColors.primary.withOpacity(0.2),
+                  LightThemeColors.primary.withOpacity(0.1),
                 ],
+              ),
+            ),
+            child: SafeArea(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    Text(
+                      'Create Account',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.headlineLarge?.copyWith(
+                        shadows: [
+                          Shadow(
+                            blurRadius: 4.0,
+                            color: Colors.black.withOpacity(0.1),
+                            offset: const Offset(2, 2),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'Create your account to get started',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 30),
+
+                    // Form
+                    Container(
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            blurRadius: 15,
+                            spreadRadius: 2,
+                            offset: const Offset(4, 4),
+                          ),
+                          const BoxShadow(
+                            color: Colors.white,
+                            blurRadius: 15,
+                            spreadRadius: 2,
+                            offset: Offset(-4, -4),
+                          ),
+                        ],
+                      ),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            CustomTextField(
+                              title: 'Username',
+                              hintText: 'Your username',
+                              controller: _nameController,
+                              prefixIcon: Icon(
+                                Icons.person_outline,
+                                color: LightThemeColors.primary,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            CustomTextField(
+                              title: 'Email',
+                              hintText: 'you@example.com',
+                              controller: _emailController,
+                              prefixIcon: Icon(
+                                Icons.email_outlined,
+                                color: LightThemeColors.primary,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            CustomTextField(
+                              title: 'Phone',
+                              hintText: 'Your phone number',
+                              controller: _phoneController,
+                              prefixIcon: Icon(
+                                Icons.phone_outlined,
+                                color: LightThemeColors.primary,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            CustomTextField(
+                              title: 'Address',
+                              hintText: 'Your delivery address',
+                              controller: _addressController,
+                              prefixIcon: Icon(
+                                Icons.home_outlined,
+                                color: LightThemeColors.primary,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            CustomTextField(
+                              title: 'Password',
+                              hintText: 'Minimum 8 characters',
+                              controller: _passwordController,
+                              obscureText: !_isPasswordVisible,
+                              prefixIcon: Icon(
+                                Icons.lock_outline,
+                                color: LightThemeColors.primary,
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _isPasswordVisible
+                                      ? Icons.visibility_outlined
+                                      : Icons.visibility_off_outlined,
+                                  size: 22,
+                                  color: Theme.of(context).colorScheme.tertiary,
+                                ),
+                                onPressed: _togglePasswordVisibility,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            if (state is AuthLoading)
+                              SizedBox(
+                                width: double.infinity,
+                                height: 50,
+                                child: Center(
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SizedBox(
+                                        height: 24,
+                                        width: 24,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                LightThemeColors.primary,
+                                              ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Text(
+                                        'Creating......',
+                                        style: TextStyle(
+                                          color: LightThemeColors.primary,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            else
+                              CustomElevatedButton(
+                                textdata: 'Sign Up',
+                                onPressed: _onRegisterPressed,
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    AuthDivider(text: 'Or sign up with'),
+                    SocialAuthButtons(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        children: [
+                          Text(
+                            'Already have an account? ',
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: Colors.grey.shade600),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const LoginScreen(),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(
+                                'Log in',
+                                style: Theme.of(context).textTheme.displaySmall,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                  ],
+                ),
               ),
             ),
           );

@@ -11,6 +11,7 @@ ThemeData darkTheme = ThemeData(
     background: DarkThemeColors.background,
     surface: DarkThemeColors.surface,
     brightness: Brightness.dark,
+    tertiary: LightThemeColors.textLight,
   ),
   appBarTheme: const AppBarTheme(
     backgroundColor: DarkThemeColors.surface,
@@ -44,6 +45,24 @@ ThemeData darkTheme = ThemeData(
       fontSize: 14,
       color: DarkThemeColors.textDark,
       fontWeight: FontWeight.w400,
+    ),
+    displaySmall: TextStyle(
+      fontSize: 12,
+      color: DarkThemeColors.primary,
+      decoration: TextDecoration.underline,
+      fontWeight: FontWeight.bold,
+      decorationColor: DarkThemeColors.secondary,
+    ),
+    labelSmall: TextStyle(
+      color: DarkThemeColors.textLight,
+      fontSize: 12,
+      fontStyle: FontStyle.italic,
+      letterSpacing: 0.5,
+    ),
+    bodySmall: TextStyle(
+      color: DarkThemeColors.black,
+      fontSize: 14,
+      letterSpacing: 0.5,
     ),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(

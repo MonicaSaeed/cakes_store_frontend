@@ -10,6 +10,7 @@ ThemeData lightTheme = ThemeData(
     background: LightThemeColors.background,
     surface: LightThemeColors.white,
     brightness: Brightness.light,
+    tertiary: LightThemeColors.textLight,
   ),
   appBarTheme: const AppBarTheme(
     backgroundColor: LightThemeColors.white,
@@ -43,6 +44,24 @@ ThemeData lightTheme = ThemeData(
       fontSize: 14,
       color: LightThemeColors.textDark,
       fontWeight: FontWeight.w400,
+    ),
+    displaySmall: TextStyle(
+      fontSize: 12,
+      color: LightThemeColors.primary,
+      decoration: TextDecoration.underline,
+      fontWeight: FontWeight.bold,
+      decorationColor: LightThemeColors.secondary,
+    ),
+    labelSmall: TextStyle(
+      color: LightThemeColors.textLight,
+      fontSize: 12,
+      fontStyle: FontStyle.italic,
+      letterSpacing: 0.5,
+    ),
+    bodySmall: TextStyle(
+      color: LightThemeColors.black,
+      fontSize: 12,
+      letterSpacing: 0.5,
     ),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(

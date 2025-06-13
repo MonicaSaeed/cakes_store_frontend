@@ -28,6 +28,20 @@ class AuthSuccess extends AuthState {
   List<Object?> get props => [user];
 }
 
+class AuthSuccessWithGoogle extends AuthState {
+  final User user;
+  AuthSuccessWithGoogle(this.user);
+  @override
+  List<Object?> get props => [user];
+}
+
+class AuthSuccessWithFacebook extends AuthState {
+  final User user;
+  AuthSuccessWithFacebook(this.user);
+  @override
+  List<Object?> get props => [user];
+}
+
 class AuthFailure extends AuthState {
   final String message;
   AuthFailure(this.message);
@@ -35,7 +49,28 @@ class AuthFailure extends AuthState {
   List<Object?> get props => [message];
 }
 
+class AuthFailureWithFacebook extends AuthState {
+  final String message;
+  AuthFailureWithFacebook(this.message);
+  @override
+  List<Object?> get props => [message];
+}
+
+class AuthFailureWithGoogle extends AuthState {
+  final String message;
+  AuthFailureWithGoogle(this.message);
+  @override
+  List<Object?> get props => [message];
+}
+
 class AuthLoggedOut extends AuthState {}
+
+class FailureSendPasswordResetEmail extends AuthState {
+  final String message;
+  FailureSendPasswordResetEmail(this.message);
+  @override
+  List<Object?> get props => [message];
+}
 
 class AuthEmailNotVerified extends AuthState {
   final String message;

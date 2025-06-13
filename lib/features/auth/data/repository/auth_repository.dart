@@ -1,4 +1,6 @@
 import 'package:cakes_store_frontend/features/auth/data/model/user_firebase_model.dart';
+import 'package:cakes_store_frontend/features/auth/data/model/user_mongo_model.dart';
+import 'package:cakes_store_frontend/features/auth/data/webservice/user_mongo_webservice.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../webservice/auth_webservice.dart';
@@ -21,17 +23,20 @@ class AuthRepository {
         user.email,
         user.password,
       );
-      final userData = UserFirebaseModel(
+      final mongoUser = UserMongoModel(
         uid: credential.user!.uid,
         email: credential.user!.email!,
-        name: user.name,
-        phone: user.phone,
-        address: user.address,
+        username: user.name,
+        phoneNumber: user.phone,
+        addresses: [user.address],
       );
+      await UserMongoWebService().saveUserToMongo(mongoUser);
+
       // handel save user to mongoDB after registration
     } on FirebaseAuthException catch (e) {
       throw Exception(_mapFirebaseError(e));
     } catch (e) {
+      print(e.toString());
       throw Exception('Unexpected error during registration');
     }
   }
@@ -54,10 +59,8 @@ class AuthRepository {
     try {
       return await _authWebservice.loginUser(email, password);
     } on FirebaseAuthException catch (e) {
-      print('error from repository: ${_mapFirebaseError(e)}');
       throw Exception(e.code);
     } catch (e) {
-      print('Unexpected error during login: $e');
       throw Exception('Unexpected error during login');
     }
   }
@@ -77,6 +80,25 @@ class AuthRepository {
       throw Exception(_mapFirebaseError(e));
     } catch (e) {
       throw Exception('Failed to send password reset email');
+    }
+  }
+
+  Future<User?> signInWithGoogle() async {
+    try {
+      final userCredential = await _authWebservice.signInWithGoogle();
+      return userCredential.user;
+    } catch (e) {
+      throw Exception("Google sign-in failed: $e");
+    }
+  }
+
+  Future<User?> signInWithFacebook() async {
+    try {
+      final userCredential = await _authWebservice.signInWithFacebook();
+      return userCredential.user;
+    } catch (e) {
+      print('Facebook sign-in failed: $e');
+      throw Exception("Facebook sign-in failed: $e");
     }
   }
 
