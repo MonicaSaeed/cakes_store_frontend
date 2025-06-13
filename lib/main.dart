@@ -1,3 +1,4 @@
+import 'package:cakes_store_frontend/core/services/service_locator.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/screen/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,8 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await PreferencesManager().init();
   await ThemeController().init();
+  setupLocator();
+
   runApp(const MyApp());
 }
 

@@ -1,15 +1,20 @@
+import 'package:cakes_store_frontend/core/components/rating_bar_widget.dart';
+import 'package:cakes_store_frontend/core/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class CustomCard extends StatelessWidget {
   CustomCard({
     super.key,
     required this.cardtitle,
     required this.price,
+    required this.rating,
     required this.imageUrl,
     required this.favicon,
     required this.addcartIcon,
     this.onPressedCart,
+
     this.onPressedFav,
     this.onPressedcard,
   });
@@ -17,6 +22,7 @@ class CustomCard extends StatelessWidget {
   final String cardtitle;
   final String price;
   final String imageUrl;
+  final double rating;
   final IconData favicon;
   final IconData addcartIcon;
   final void Function()? onPressedCart;
@@ -85,15 +91,21 @@ class CustomCard extends StatelessWidget {
                   horizontal: 12,
                   vertical: 8,
                 ),
-                child: Text(
-                  cardtitle,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    overflow: TextOverflow.ellipsis,
+                child: SizedBox(
+                  height: 50,
+                  child: Text(
+                    cardtitle,
+                    maxLines: 2,
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      letterSpacing: 2,
+                      fontSize: 18,
+                    ),
                   ),
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+                child: RatingBarWidget(rating: rating, reviewCount: 28),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -106,16 +118,22 @@ class CustomCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         '\$$price',
-                        style: TextStyle(
+                        style: Theme.of(
+                          context,
+                        ).textTheme.headlineMedium?.copyWith(
+                          letterSpacing: 2,
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
-                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ),
                     IconButton(
                       onPressed: onPressedCart,
-                      icon: Icon(addcartIcon, color: Colors.teal, size: 30),
+                      icon: Icon(
+                        addcartIcon,
+                        color: LightThemeColors.primary,
+                        size: 30,
+                      ),
                     ),
                   ],
                 ),
