@@ -93,7 +93,9 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
     return Navigator(
       key: _navigatorKeys[index],
       onGenerateRoute: (settings) {
-        return AppRouter().generateRoute(settings);
+        return AppRouter().generateRoute(
+          RouteSettings(name: _routes[index], arguments: settings.arguments),
+        );
       },
     );
   }
