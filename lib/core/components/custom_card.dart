@@ -53,7 +53,7 @@ class CustomCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AspectRatio(
-                  aspectRatio: 1,
+                  aspectRatio: 1, //Width and height will be equal
                   child: Stack(
                     alignment: Alignment.topRight,
                     children: [
@@ -88,31 +88,29 @@ class CustomCard extends StatelessWidget {
                       vertical: 6,
                     ),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           cardtitle,
-                          maxLines: 1,
+                          maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.titleMedium?.copyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: Theme.of(context).textTheme.headlineMedium
+                              ?.copyWith(letterSpacing: 2, fontSize: 16),
                         ),
+                        SizedBox(height: 5),
                         RatingBarWidget(rating: rating, reviewCount: 28),
+                        Spacer(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              '\$$price',
+                              '$price EGP',
                               style: Theme.of(
                                 context,
-                              ).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                              ).textTheme.headlineMedium?.copyWith(
+                                letterSpacing: 2,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                             IconButton(
