@@ -8,6 +8,6 @@ class ProductsRepository extends BaseProductsRepository {
   ProductsRepository(this._productDataSource);
 
   @override
-  Future<List<ProductModel>> getProductList() =>
-      _productDataSource.getProductList();
+  Future<List<ProductModel>> getfilteredProductList(filterbody) =>
+      _productDataSource.getfilteredProductList(filterbody);
 }

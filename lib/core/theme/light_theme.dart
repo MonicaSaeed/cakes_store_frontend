@@ -17,8 +17,10 @@ ThemeData lightTheme = ThemeData(
     elevation: 3,
     titleTextStyle: TextStyle(
       color: LightThemeColors.primary,
-      fontFamily: 'Pacifico',
+      // fontFamily: 'Pacifico',
       fontSize: 24,
+      letterSpacing: 2,
+      fontFamily: 'times new roman',
       fontWeight: FontWeight.w500,
     ),
   ),
@@ -27,6 +29,11 @@ ThemeData lightTheme = ThemeData(
       fontFamily: 'Pacifico',
       fontSize: 32,
       color: LightThemeColors.primary,
+    ),
+    headlineMedium: TextStyle(
+      fontFamily: 'Poppins',
+      fontSize: 16,
+      color: LightThemeColors.textDark,
     ),
     bodyLarge: TextStyle(
       fontFamily: 'Poppins',
@@ -123,7 +130,10 @@ ThemeData lightTheme = ThemeData(
       color: LightThemeColors.textDark,
     ),
     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+      side: BorderSide.none,
+    ),
   ),
 
   dividerTheme: const DividerThemeData(

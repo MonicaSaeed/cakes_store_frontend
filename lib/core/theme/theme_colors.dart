@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class LightThemeColors {
-  static const Color primary = Color(0xFFFB909A); // Logo pink
+  static const Color primary = Color(0xFF432c23); // Logo pink
+  // static const Color primary = Color(0xFF245383); // Logo pink
   static const Color secondary = Color.fromARGB(
     255,
     255,
@@ -12,6 +13,7 @@ class LightThemeColors {
   static const Color textDark = Color(0xFF333333);
   static const Color textLight = Color(0xFF888888);
   static const Color white = Colors.white;
+  static const Color backgroundGrey = Color(0xFFf3f4f6);
   static const Color black = Colors.black;
   static const Color error = Color(0xFFFF5252);
 }
