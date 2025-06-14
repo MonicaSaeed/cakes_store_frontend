@@ -10,7 +10,7 @@ class NavigationBarScreen extends StatefulWidget {
 }
 
 class _NavigationBarScreenState extends State<NavigationBarScreen> {
-  int _currentIndex = 3;
+  int _currentIndex = 0;
   final List<String> _routes = [
     AppRouter.home,
     AppRouter.favorites,
@@ -92,9 +92,9 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
   Widget _buildNavigator(int index) {
     return Navigator(
       key: _navigatorKeys[index],
-      onGenerateRoute: (settings) {
-        return AppRouter().generateRoute(settings);
-      },
+      onGenerateRoute:
+          (settings) =>
+              AppRouter().generateRoute(RouteSettings(name: _routes[index])),
     );
   }
 }
