@@ -16,22 +16,22 @@ import '../../features/auth/data/webservice/auth_webservice.dart';
 final sl = GetIt.instance;
 
 void setupLocator() {
-  // Services
-  sl.registerLazySingleton<ProductDataSource>(() => ProductDataSource());
+  // Auth
   sl.registerLazySingleton<AuthWebservice>(() => AuthWebservice());
+  sl.registerLazySingleton<AuthRepository>(() => AuthRepository(sl()));
+
   //Dio
   sl.registerLazySingleton<Dio>(
     () => Dio(BaseOptions(baseUrl: ApiConstance.baseUrl)),
   );
 
-  //Shop Feature
+  //Shop
   sl.registerLazySingleton<ProductDataSource>(() => ProductDataSource());
   sl.registerLazySingleton<BaseProductsRepository>(
     () => ProductsRepository(sl<ProductDataSource>()),
   );
 
-  sl.registerLazySingleton<AuthRepository>(() => AuthRepository(sl()));
-  //Home Feature
+  //Home
   sl.registerLazySingleton<HomeRemoteDatasource>(
     () => HomeRemoteDatasource(sl<Dio>()),
   );
