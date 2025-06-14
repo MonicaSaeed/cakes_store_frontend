@@ -14,7 +14,9 @@ class HomeCubit extends Cubit<HomeState> {
     emit(HomeLoading());
     try {
       final products = await getAllProductsUseCase();
-      emit(HomeLoaded(products));
+      final sortedProdcts = List<Product>.from(products)
+        ..sort((a, b) => b.updatedAt!.compareTo(a.updatedAt!));
+      emit(HomeLoaded(sortedProdcts));
     } catch (e) {
       emit(HomeError(e.toString()));
     }
