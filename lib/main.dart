@@ -10,8 +10,6 @@ import 'core/theme/dark_theme.dart';
 import 'core/theme/light_theme.dart';
 import 'core/theme/theme_controller.dart';
 import 'features/auth/business/auth_cubit.dart';
-import 'features/auth/data/repository/auth_repository.dart';
-import 'features/auth/data/webservice/auth_webservice.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -33,9 +31,7 @@ class MyApp extends StatelessWidget {
       valueListenable: ThemeController.themeNotifier,
       builder: (_, value, _) {
         return BlocProvider(
-          create:
-              (_) =>
-                  AuthCubit(AuthRepository(AuthWebservice()))..getCurrentUser(),
+          create: (_) => AuthCubit(sl())..getCurrentUser(),
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'YumSlice',
