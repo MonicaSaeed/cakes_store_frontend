@@ -1,6 +1,5 @@
 import 'package:cakes_store_frontend/core/constants/api_constants.dart';
 import 'package:cakes_store_frontend/features/home/data/repositories/home_repository.dart';
-import 'package:cakes_store_frontend/features/home/domain/repositories/base_home_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:cakes_store_frontend/features/home/data/datasource/home_remote_datasource.dart';
 import 'package:cakes_store_frontend/features/home/domain/usecases/get_all_products_usecase.dart';
