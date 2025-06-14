@@ -78,6 +78,7 @@ class _CustomPasswordTextfieldState extends State<CustomPasswordTextfield> {
                 onPressed: _togglePasswordVisibility,
               ),
             ),
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             textInputAction: TextInputAction.next,
           ),
         ],

@@ -81,6 +81,7 @@ class CustomTextField extends StatelessWidget {
               prefixIcon: prefixIcon,
               suffixIcon: suffixIcon,
             ),
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             textInputAction: TextInputAction.next,
           ),
         ],

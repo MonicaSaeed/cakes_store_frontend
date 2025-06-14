@@ -55,7 +55,7 @@ ThemeData lightTheme = ThemeData(
       decorationColor: LightThemeColors.secondary,
     ),
     labelSmall: TextStyle(
-      color: LightThemeColors.black,
+      color: Colors.black,
       fontSize: 16,
       letterSpacing: 0.5,
     ),
