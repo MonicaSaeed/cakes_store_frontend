@@ -1,4 +1,3 @@
-import 'package:cakes_store_frontend/core/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreenTest extends StatelessWidget {
@@ -86,7 +85,7 @@ class CakeCard extends StatelessWidget {
       width: 180,
       margin: const EdgeInsets.only(right: 16),
       decoration: BoxDecoration(
-        color: LightThemeColors.white,
+        color: Theme.of(context).colorScheme.background,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 4)),
@@ -119,7 +118,7 @@ class CakeCard extends StatelessWidget {
                 Text(
                   price,
                   style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                    color: LightThemeColors.primary,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ],

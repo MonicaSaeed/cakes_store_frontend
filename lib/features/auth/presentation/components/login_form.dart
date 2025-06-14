@@ -1,10 +1,10 @@
+import 'package:cakes_store_frontend/core/theme/theme_controller.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/components/custom_password_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cakes_store_frontend/core/components/custom_elevated_button.dart';
 import 'package:cakes_store_frontend/core/components/custom_text_field.dart';
 import 'package:cakes_store_frontend/core/services/toast_helper.dart';
-import 'package:cakes_store_frontend/core/theme/theme_colors.dart';
 import 'package:cakes_store_frontend/features/auth/business/auth_cubit.dart';
 
 class LoginForm extends StatefulWidget {
@@ -35,20 +35,19 @@ class _LoginFormState extends State<LoginForm> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.background,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withAlpha((0.2 * 255).toInt()),
+            color:
+                ThemeController.isDark()
+                    ? Theme.of(
+                      context,
+                    ).colorScheme.background.withValues(alpha: 0.2)
+                    : Colors.grey.withValues(alpha: 0.4),
             blurRadius: 15,
             spreadRadius: 2,
             offset: const Offset(4, 4),
-          ),
-          const BoxShadow(
-            color: Colors.white,
-            blurRadius: 15,
-            spreadRadius: 2,
-            offset: Offset(-4, -4),
           ),
         ],
       ),
@@ -62,7 +61,7 @@ class _LoginFormState extends State<LoginForm> {
               controller: widget.emailController,
               prefixIcon: Icon(
                 Icons.email_outlined,
-                color: LightThemeColors.primary,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
             SizedBox(height: 8),
@@ -73,7 +72,7 @@ class _LoginFormState extends State<LoginForm> {
               obscureText: !widget.isPasswordVisible,
               prefixIcon: Icon(
                 Icons.lock_outline,
-                color: LightThemeColors.primary,
+                color: Theme.of(context).colorScheme.primary,
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -124,7 +123,7 @@ class _LoginFormState extends State<LoginForm> {
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
                           valueColor: AlwaysStoppedAnimation<Color>(
-                            LightThemeColors.primary,
+                            Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       ),
@@ -132,7 +131,7 @@ class _LoginFormState extends State<LoginForm> {
                       Text(
                         'Logging in...',
                         style: TextStyle(
-                          color: LightThemeColors.primary,
+                          color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
                         ),

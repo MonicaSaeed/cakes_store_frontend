@@ -1,6 +1,5 @@
 import 'package:cakes_store_frontend/core/components/navigation_bar.dart';
 import 'package:cakes_store_frontend/core/services/toast_helper.dart';
-import 'package:cakes_store_frontend/core/theme/theme_colors.dart';
 import 'package:cakes_store_frontend/features/auth/business/auth_cubit.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/components/auth_divider.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/components/login_form.dart';
@@ -109,9 +108,9 @@ class _LoginScreenState extends State<LoginScreen>
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.white,
-                    LightThemeColors.primary.withAlpha((0.2 * 255).toInt()),
-                    LightThemeColors.primary.withAlpha((0.1 * 255).toInt()),
+                    Theme.of(context).colorScheme.background,
+                    Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                    Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   ],
                   stops: const [0.0, 0.5, 1.0],
                 ),

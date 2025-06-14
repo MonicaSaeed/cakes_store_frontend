@@ -11,7 +11,8 @@ ThemeData darkTheme = ThemeData(
     background: DarkThemeColors.background,
     surface: DarkThemeColors.surface,
     brightness: Brightness.dark,
-    tertiary: LightThemeColors.textLight,
+    //Add
+    tertiary: DarkThemeColors.textLight,
   ),
   appBarTheme: const AppBarTheme(
     backgroundColor: DarkThemeColors.surface,
@@ -84,6 +85,7 @@ ThemeData darkTheme = ThemeData(
         color: const Color.fromARGB(255, 218, 216, 216),
       ),
     ),
+    //Add
     hintStyle: const TextStyle(
       fontFamily: 'Poppins',
       color: DarkThemeColors.textLight,

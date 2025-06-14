@@ -1,8 +1,6 @@
 import 'package:cakes_store_frontend/core/extensions/extensions.dart';
 import 'package:flutter/material.dart';
 
-import '../theme/theme_colors.dart';
-
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
@@ -39,7 +37,7 @@ class CustomTextField extends StatelessWidget {
                   TextSpan(
                     text: ' *',
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: LightThemeColors.error,
+                      color: Theme.of(context).colorScheme.error,
                     ),
                   ),
               ],

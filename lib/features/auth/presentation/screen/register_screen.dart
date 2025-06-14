@@ -1,3 +1,4 @@
+import 'package:cakes_store_frontend/core/theme/theme_controller.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/components/auth_divider.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/components/custom_password_textfield.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/components/social_auth_buttons.dart';
@@ -7,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cakes_store_frontend/core/components/custom_elevated_button.dart';
 import 'package:cakes_store_frontend/core/components/custom_text_field.dart';
 import 'package:cakes_store_frontend/core/services/toast_helper.dart';
-import 'package:cakes_store_frontend/core/theme/theme_colors.dart';
 import 'package:cakes_store_frontend/features/auth/business/auth_cubit.dart';
 import 'package:cakes_store_frontend/features/auth/data/model/user_firebase_model.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/screen/login_screen.dart';
@@ -104,9 +104,13 @@ class _RegisterScreenState extends State<RegisterScreen>
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.white,
-                    LightThemeColors.primary.withValues(alpha: 0.2),
-                    LightThemeColors.primary.withValues(alpha: 0.1),
+                    Theme.of(context).colorScheme.background,
+                    Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.2),
+                    Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.1),
                   ],
                 ),
               ),
@@ -148,20 +152,22 @@ class _RegisterScreenState extends State<RegisterScreen>
                             Container(
                               padding: const EdgeInsets.all(24),
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.background,
                                 borderRadius: BorderRadius.circular(20),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withValues(alpha: 0.2),
+                                    color:
+                                        ThemeController.isDark()
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .background
+                                                .withValues(alpha: 0.2)
+                                            : Colors.grey.withValues(
+                                              alpha: 0.4,
+                                            ),
                                     blurRadius: 15,
                                     spreadRadius: 2,
                                     offset: const Offset(4, 4),
-                                  ),
-                                  const BoxShadow(
-                                    color: Colors.white,
-                                    blurRadius: 15,
-                                    spreadRadius: 2,
-                                    offset: Offset(-4, -4),
                                   ),
                                 ],
                               ),
@@ -175,7 +181,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                                       controller: _nameController,
                                       prefixIcon: Icon(
                                         Icons.person_outline,
-                                        color: LightThemeColors.primary,
+                                        color:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.primary,
                                       ),
                                     ),
                                     const SizedBox(height: 8),
@@ -185,7 +194,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                                       controller: _emailController,
                                       prefixIcon: Icon(
                                         Icons.email_outlined,
-                                        color: LightThemeColors.primary,
+                                        color:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.primary,
                                       ),
                                     ),
                                     const SizedBox(height: 8),
@@ -195,7 +207,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                                       controller: _phoneController,
                                       prefixIcon: Icon(
                                         Icons.phone_outlined,
-                                        color: LightThemeColors.primary,
+                                        color:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.primary,
                                       ),
                                     ),
                                     const SizedBox(height: 8),
@@ -205,7 +220,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                                       controller: _addressController,
                                       prefixIcon: Icon(
                                         Icons.home_outlined,
-                                        color: LightThemeColors.primary,
+                                        color:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.primary,
                                       ),
                                     ),
                                     const SizedBox(height: 8),
@@ -216,7 +234,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                                       obscureText: !_isPasswordVisible,
                                       prefixIcon: Icon(
                                         Icons.lock_outline,
-                                        color: LightThemeColors.primary,
+                                        color:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.primary,
                                       ),
                                     ),
                                     const SizedBox(height: 20),
@@ -237,8 +258,9 @@ class _RegisterScreenState extends State<RegisterScreen>
                                                       AlwaysStoppedAnimation<
                                                         Color
                                                       >(
-                                                        LightThemeColors
-                                                            .primary,
+                                                        Theme.of(
+                                                          context,
+                                                        ).colorScheme.primary,
                                                       ),
                                                 ),
                                               ),
@@ -247,7 +269,9 @@ class _RegisterScreenState extends State<RegisterScreen>
                                                 'Creating......',
                                                 style: TextStyle(
                                                   color:
-                                                      LightThemeColors.primary,
+                                                      Theme.of(
+                                                        context,
+                                                      ).colorScheme.primary,
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 14,
                                                 ),

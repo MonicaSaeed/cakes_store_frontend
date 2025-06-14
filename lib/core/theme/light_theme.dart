@@ -48,7 +48,7 @@ ThemeData lightTheme = ThemeData(
     ),
     //Added
     displaySmall: TextStyle(
-      fontSize: 12,
+      fontSize: 14,
       color: LightThemeColors.primary,
       decoration: TextDecoration.underline,
       fontWeight: FontWeight.bold,
@@ -84,6 +84,7 @@ ThemeData lightTheme = ThemeData(
         color: const Color.fromARGB(255, 218, 216, 216),
       ),
     ),
+    //Add
     hintStyle: const TextStyle(
       color: LightThemeColors.textLight,
       fontSize: 12,
