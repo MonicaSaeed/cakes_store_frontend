@@ -8,9 +8,9 @@ import 'package:cakes_store_frontend/features/shop/presentation/cubit/product_li
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductListCubit extends Cubit<ProductListState> {
-  ProductListCubit() : super(const ProductListLoading());
+  ProductListCubit() : super(ProductListInitial());
   int selectedCategory = 0;
-  int selectedfilter = 0;
+  int selectedSortfilter = 0;
   List<String> categories = [
     "All Items",
     "Birthday",
@@ -20,21 +20,25 @@ class ProductListCubit extends Cubit<ProductListState> {
     "Cupcakes",
     "Molten Cakes",
   ];
-  List<String> filtersOptions = [
+  List<String> filterSortOptions = [
     "Newest First",
     "Price: Low to High",
     "Price: High to Low",
     "Customer Ratings",
   ];
-  getProductList() async {
+  List<ProductModel> filteredProducts = [];
+  var filterbody = {};
+  getfilteredProductList() async {
+    emit(ProductListLoading());
     try {
-      List<ProductModel>? products =
-          await GetProductListUseCase(
-            sl<BaseProductsRepository>(),
-          ).getProductList();
+      List<ProductModel>? products = await GetProductListUseCase(
+        sl<BaseProductsRepository>(),
+      ).getfilteredProductList(filterbody);
       if (products != null) {
+        filteredProducts = products;
         print('from cubit $products');
-        emit(ProductListLoaded(products));
+        // filterbody = {};
+        emit(ProductListLoaded(filteredProducts));
       } else {
         print('in the else statement');
         emit(ProductListError('product list return with null'));

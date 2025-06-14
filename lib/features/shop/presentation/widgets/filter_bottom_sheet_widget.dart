@@ -4,16 +4,27 @@ import 'package:cakes_store_frontend/features/shop/presentation/widgets/interact
 import 'package:cakes_store_frontend/features/shop/presentation/widgets/price_range_slider.dart';
 import 'package:flutter/material.dart';
 
-class FilterBottomSheetWidget extends StatelessWidget {
-  final int selectedOne;
+class FilterBottomSheetWidget extends StatefulWidget {
+  final String selectedOne;
   final List<String> categories;
-  final void Function(int index)? onItemSelected;
+  final void Function(Map<String, dynamic> filterbody)? onItemSelected;
   FilterBottomSheetWidget({
     super.key,
     required this.selectedOne,
     required this.categories,
     required this.onItemSelected,
   });
+
+  @override
+  State<FilterBottomSheetWidget> createState() =>
+      _FilterBottomSheetWidgetState();
+}
+
+class _FilterBottomSheetWidgetState extends State<FilterBottomSheetWidget> {
+  bool value = false;
+  // for the in stock switch
+  var filterbody = {};
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -71,10 +82,12 @@ class FilterBottomSheetWidget extends StatelessWidget {
               ),
               SizedBox(height: 20),
               CategorySelector(
-                categories: categories,
-                selectedIndex: selectedOne,
+                categories: widget.categories,
+                selectedCategory: filterbody['category'] ?? widget.selectedOne,
                 // need to think of how to provide it the context of the cubit
                 onCategorySelected: (onCategorySelectedindex) {
+                  filterbody['category'] =
+                      widget.categories[onCategorySelectedindex];
                   // context.read<ProductListCubit>().selectedCategory =
                   //     onCategorySelectedindex;
                 },
@@ -93,7 +106,16 @@ class FilterBottomSheetWidget extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 4),
-                  Switch(value: true, onChanged: (onChanged) {}),
+                  Switch(
+                    value: value,
+                    onChanged: (onChanged) {
+                      setState(() {
+                        value = onChanged;
+                        filterbody['inStock'] = onChanged;
+                        // context.read<ProductListCubit>().inStock = onChanged;
+                      });
+                    },
+                  ),
                 ],
               ),
               SizedBox(height: 20),
@@ -106,12 +128,23 @@ class FilterBottomSheetWidget extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 4),
-              InteractiveRating(onRatingUpdate: (double) {}),
+              InteractiveRating(
+                onRatingUpdate: (double) {
+                  filterbody['rating'] = double;
+                  // context.read<ProductListCubit>().selectedRating = double;
+                },
+              ),
               SizedBox(height: 20),
               Row(
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        value = false; // Reset the switch
+                        filterbody.clear(); // Clear the filter body
+                        // context.read<ProductListCubit>().resetFilters();
+                      });
+                    },
                     style: ElevatedButton.styleFrom(
                       fixedSize: Size(
                         MediaQuery.of(context).size.width / 2 - 30,
@@ -132,8 +165,40 @@ class FilterBottomSheetWidget extends StatelessWidget {
                         50,
                       ),
                     ),
-                    onPressed: () {},
-                    child: Text('Apply Filters'),
+                    onPressed:
+                        isLoading
+                            ? null
+                            : () async {
+                              setState(() {
+                                isLoading = true;
+                              });
+
+                              await Future.delayed(
+                                const Duration(milliseconds: 100),
+                              );
+                              widget.onItemSelected?.call(
+                                filterbody.cast<String, dynamic>(),
+                              );
+
+                              if (mounted) {
+                                Navigator.pop(context);
+                              }
+
+                              setState(() {
+                                isLoading = false;
+                              });
+                            },
+                    child:
+                        isLoading
+                            ? const SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2.5,
+                              ),
+                            )
+                            : const Text('Apply Filters'),
                   ),
                 ],
               ),

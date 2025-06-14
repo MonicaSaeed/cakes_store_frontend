@@ -5,9 +5,9 @@ import 'package:cakes_store_frontend/features/shop/domain/repository/base_produc
 class GetProductListUseCase {
   final BaseProductsRepository _repo;
   GetProductListUseCase(this._repo);
-  Future<List<ProductModel>>? getProductList() {
+  Future<List<ProductModel>>? getfilteredProductList(filterbody) {
     try {
-      return _repo.getProductList();
+      return _repo.getfilteredProductList(filterbody);
     } catch (e) {
       print('error in usecase');
       return null;

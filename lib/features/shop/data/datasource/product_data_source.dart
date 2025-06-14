@@ -6,8 +6,12 @@ import 'package:http/http.dart' as http;
 import 'package:cakes_store_frontend/features/shared_product/data/models/product_model.dart';
 
 class ProductDataSource {
-  Future<List<ProductModel>> getProductList() async {
-    final response = await http.get(Uri.parse('${ApiConstance.productsUrl}'));
+  Future<List<ProductModel>> getfilteredProductList(filterbody) async {
+    final response = await http.post(
+      Uri.parse('${ApiConstance.productsUrl}/filter'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(filterbody),
+    );
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
       return List<ProductModel>.from(

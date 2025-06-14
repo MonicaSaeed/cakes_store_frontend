@@ -17,7 +17,7 @@ class ShopProductScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // print('products $products');
     return BlocProvider(
-      create: (context) => ProductListCubit()..getProductList(),
+      create: (context) => ProductListCubit()..getfilteredProductList(),
       child: BlocBuilder<ProductListCubit, ProductListState>(
         builder: (context, state) {
           return Scaffold(
@@ -32,11 +32,11 @@ class ShopProductScreen extends StatelessWidget {
                         context.read<ProductListCubit>().categories;
                     final products = state.products;
                     final filters =
-                        context.read<ProductListCubit>().filtersOptions;
+                        context.read<ProductListCubit>().filterSortOptions;
                     int selectedCategory =
                         context.read<ProductListCubit>().selectedCategory;
                     int selectedFilterSort =
-                        context.read<ProductListCubit>().selectedfilter;
+                        context.read<ProductListCubit>().selectedSortfilter;
                     return Column(
                       children: [
                         SizedBox(height: 20),
@@ -50,11 +50,30 @@ class ShopProductScreen extends StatelessWidget {
                               scrollDirection: Axis.horizontal,
 
                               itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
+                                final selected =
                                     context
                                         .read<ProductListCubit>()
-                                        .selectedCategory = index;
+                                        .filterbody['category'] ??
+                                    "All Items";
+                                return GestureDetector(
+                                  onTap: () {
+                                    if (index == 0) {
+                                      context
+                                          .read<ProductListCubit>()
+                                          .filterbody
+                                          .remove('category');
+                                    } else {
+                                      context
+                                          .read<ProductListCubit>()
+                                          .selectedCategory = index;
+                                      context
+                                              .read<ProductListCubit>()
+                                              .filterbody['category'] =
+                                          categories[index];
+                                    }
+                                    context
+                                        .read<ProductListCubit>()
+                                        .getfilteredProductList();
                                   },
                                   child: Material(
                                     elevation: 2, // Controls shadow intensity
@@ -65,7 +84,7 @@ class ShopProductScreen extends StatelessWidget {
                                         categories[index],
                                         style: TextStyle(
                                           color:
-                                              selectedCategory == index
+                                              selected == categories[index]
                                                   ? Colors.white
                                                   : Color(0xFF252c39),
                                           letterSpacing: 2,
@@ -77,7 +96,7 @@ class ShopProductScreen extends StatelessWidget {
                                               .none, // This ensures MaterialState outline is removed
 
                                       backgroundColor:
-                                          selectedCategory == index
+                                          selected == categories[index]
                                               ? Theme.of(
                                                 context,
                                               ).colorScheme.primary
@@ -138,7 +157,18 @@ class ShopProductScreen extends StatelessWidget {
                                       filterBottomSheet(
                                         context,
                                         categories,
-                                        selectedCategory,
+                                        context
+                                                .read<ProductListCubit>()
+                                                .filterbody['category'] ??
+                                            "All Items",
+                                        (filterbody1) {
+                                          context
+                                              .read<ProductListCubit>()
+                                              .filterbody = filterbody1;
+                                          context
+                                              .read<ProductListCubit>()
+                                              .getfilteredProductList();
+                                        },
                                       );
                                     },
                                     child: Row(
@@ -175,7 +205,17 @@ class ShopProductScreen extends StatelessWidget {
                                         selectedFilterSort,
                                         filters,
                                         (selectedIndex) {
-                                          selectedFilterSort = selectedIndex;
+                                          context
+                                                  .read<ProductListCubit>()
+                                                  .selectedSortfilter =
+                                              selectedIndex;
+                                          context
+                                                  .read<ProductListCubit>()
+                                                  .filterbody['sortOption'] =
+                                              filters[selectedIndex];
+                                          context
+                                              .read<ProductListCubit>()
+                                              .getfilteredProductList();
                                         },
                                       );
                                     },
@@ -264,6 +304,8 @@ class ShopProductScreen extends StatelessWidget {
                         ],
                       ),
                     );
+                  case ProductListInitial():
+                    return Container();
                 }
               },
             ),
@@ -276,7 +318,8 @@ class ShopProductScreen extends StatelessWidget {
   Future<dynamic> filterBottomSheet(
     BuildContext context,
     List<String> categories,
-    int selectedCategory,
+    String selectedCategory,
+    final void Function(Map<String, dynamic> filterbody)? onItemSelected,
   ) {
     return showModalBottomSheet(
       context: context,
@@ -286,7 +329,7 @@ class ShopProductScreen extends StatelessWidget {
         return FilterBottomSheetWidget(
           selectedOne: selectedCategory,
           categories: categories,
-          onItemSelected: (int index) {},
+          onItemSelected: onItemSelected,
         );
       },
     );

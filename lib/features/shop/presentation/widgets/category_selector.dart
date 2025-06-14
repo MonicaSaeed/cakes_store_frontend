@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 
-class CategorySelector extends StatelessWidget {
+class CategorySelector extends StatefulWidget {
   final List<String> categories;
-  final int selectedIndex;
+  String selectedCategory;
   final Function(int) onCategorySelected;
 
-  const CategorySelector({
+  CategorySelector({
     super.key,
     required this.categories,
-    required this.selectedIndex,
+    required this.selectedCategory,
     required this.onCategorySelected,
   });
 
+  @override
+  State<CategorySelector> createState() => _CategorySelectorState();
+}
+
+class _CategorySelectorState extends State<CategorySelector> {
   // You can map your categories to icons here
   IconData _getIcon(String category) {
     switch (category) {
@@ -42,31 +47,38 @@ class CategorySelector extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: categories.length,
+        itemCount: widget.categories.length,
         separatorBuilder: (_, __) => const SizedBox(width: 22),
         itemBuilder: (context, index) {
-          final isSelected = index == selectedIndex;
+          final isSelected =
+              widget.categories[index] == widget.selectedCategory;
           final bgColor =
               isSelected ? brown.withOpacity(0.1) : Colors.transparent;
           final iconColor = isSelected ? brown : brown.withOpacity(0.6);
           final textColor = isSelected ? brown : Colors.black;
 
           return GestureDetector(
-            onTap: () => onCategorySelected(index),
+            onTap:
+                () => {
+                  setState(() {
+                    widget.selectedCategory = widget.categories[index];
+                    widget.onCategorySelected(index);
+                  }),
+                },
             child: Column(
               children: [
                 CircleAvatar(
                   radius: 40,
                   backgroundColor: bgColor,
                   child: Icon(
-                    _getIcon(categories[index]),
+                    _getIcon(widget.categories[index]),
                     color: iconColor,
                     size: 40,
                   ),
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  categories[index],
+                  widget.categories[index],
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,

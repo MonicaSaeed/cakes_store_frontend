@@ -8,6 +8,10 @@ sealed class ProductListState extends Equatable {
   List<Object?> get props => [];
 }
 
+class ProductListInitial extends ProductListState {
+  const ProductListInitial();
+}
+
 class ProductListLoading extends ProductListState {
   const ProductListLoading();
 }
