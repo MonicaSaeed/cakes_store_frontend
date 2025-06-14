@@ -14,7 +14,6 @@ class CustomCard extends StatelessWidget {
     required this.favicon,
     required this.addcartIcon,
     this.onPressedCart,
-
     this.onPressedFav,
     this.onPressedcard,
   });

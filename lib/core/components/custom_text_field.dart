@@ -1,8 +1,6 @@
 import 'package:cakes_store_frontend/core/extensions/extensions.dart';
 import 'package:flutter/material.dart';
 
-import '../theme/theme_colors.dart';
-
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
@@ -10,17 +8,21 @@ class CustomTextField extends StatelessWidget {
     this.hintText,
     required this.controller,
     this.obscureText = false,
+    this.prefixIcon,
+    this.suffixIcon,
   });
 
   final String title;
   final String? hintText;
   final TextEditingController controller;
   final bool obscureText;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.only(top: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -35,7 +37,7 @@ class CustomTextField extends StatelessWidget {
                   TextSpan(
                     text: ' *',
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: LightThemeColors.error,
+                      color: Theme.of(context).colorScheme.error,
                     ),
                   ),
               ],
@@ -46,6 +48,7 @@ class CustomTextField extends StatelessWidget {
           TextFormField(
             controller: controller,
             obscureText: obscureText,
+            style: Theme.of(context).textTheme.labelSmall,
             validator: (value) {
               final trimmed = value?.trim() ?? '';
               final cleanTitle = title.replaceAll('*', '').trim().toLowerCase();
@@ -73,7 +76,13 @@ class CustomTextField extends StatelessWidget {
                   return trimmed.isEmpty ? 'This field is required' : null;
               }
             },
-            decoration: InputDecoration(hintText: hintText),
+            decoration: InputDecoration(
+              hintText: hintText,
+              prefixIcon: prefixIcon,
+              suffixIcon: suffixIcon,
+            ),
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            textInputAction: TextInputAction.next,
           ),
         ],
       ),

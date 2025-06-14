@@ -16,9 +16,9 @@ class HomeScreen extends StatelessWidget {
           ElevatedButton(
             onPressed: () async {
               await context.read<AuthCubit>().logoutUser();
-              Navigator.of(context).pushAndRemoveUntil(
+              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (_) => const LoginScreen()),
-                (route) => false, // removes all previous routes
+                (route) => false,
               );
             },
             child: const Text('logout'),

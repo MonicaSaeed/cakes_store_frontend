@@ -80,7 +80,6 @@ class ToastHelper {
           'icon': const Icon(Icons.warning, color: Colors.orange),
         };
       case ToastType.info:
-      default:
         return {
           'type': ToastificationType.info,
           'title': 'Notice',
