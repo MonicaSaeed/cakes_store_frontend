@@ -153,11 +153,10 @@ class _LoginScreenState extends State<LoginScreen>
                                   children: [
                                     Text(
                                       'Don’t have an account? ',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.bodySmall?.copyWith(
-                                        color: Colors.grey.shade600,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(fontSize: 16),
                                     ),
                                     InkWell(
                                       onTap: () {

@@ -50,7 +50,7 @@ class CustomTextField extends StatelessWidget {
           TextFormField(
             controller: controller,
             obscureText: obscureText,
-            style: Theme.of(context).textTheme.bodySmall,
+            style: Theme.of(context).textTheme.labelSmall,
             validator: (value) {
               final trimmed = value?.trim() ?? '';
               final cleanTitle = title.replaceAll('*', '').trim().toLowerCase();
@@ -82,7 +82,6 @@ class CustomTextField extends StatelessWidget {
               hintText: hintText,
               prefixIcon: prefixIcon,
               suffixIcon: suffixIcon,
-              hintStyle: Theme.of(context).textTheme.labelSmall,
             ),
             textInputAction: TextInputAction.next,
           ),

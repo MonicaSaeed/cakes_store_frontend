@@ -10,6 +10,7 @@ ThemeData lightTheme = ThemeData(
     background: LightThemeColors.background,
     surface: LightThemeColors.white,
     brightness: Brightness.light,
+    //Add
     tertiary: LightThemeColors.textLight,
   ),
   appBarTheme: const AppBarTheme(
@@ -45,6 +46,7 @@ ThemeData lightTheme = ThemeData(
       color: LightThemeColors.textDark,
       fontWeight: FontWeight.w400,
     ),
+    //Added
     displaySmall: TextStyle(
       fontSize: 12,
       color: LightThemeColors.primary,
@@ -53,14 +55,8 @@ ThemeData lightTheme = ThemeData(
       decorationColor: LightThemeColors.secondary,
     ),
     labelSmall: TextStyle(
-      color: LightThemeColors.textLight,
-      fontSize: 12,
-      fontStyle: FontStyle.italic,
-      letterSpacing: 0.5,
-    ),
-    bodySmall: TextStyle(
       color: LightThemeColors.black,
-      fontSize: 12,
+      fontSize: 16,
       letterSpacing: 0.5,
     ),
   ),
@@ -89,8 +85,10 @@ ThemeData lightTheme = ThemeData(
       ),
     ),
     hintStyle: const TextStyle(
-      fontFamily: 'Poppins',
       color: LightThemeColors.textLight,
+      fontSize: 12,
+      fontStyle: FontStyle.italic,
+      letterSpacing: 0.5,
     ),
   ),
   iconTheme: const IconThemeData(color: LightThemeColors.primary),

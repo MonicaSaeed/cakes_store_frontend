@@ -63,7 +63,7 @@ class _CustomPasswordTextfieldState extends State<CustomPasswordTextfield> {
           TextFormField(
             controller: widget.controller,
             obscureText: !_isPasswordVisible,
-            style: Theme.of(context).textTheme.bodySmall,
+            style: Theme.of(context).textTheme.labelSmall,
             validator: widget.validator,
             decoration: InputDecoration(
               hintText: widget.hintText,
@@ -78,7 +78,6 @@ class _CustomPasswordTextfieldState extends State<CustomPasswordTextfield> {
                 ),
                 onPressed: _togglePasswordVisibility,
               ),
-              hintStyle: Theme.of(context).textTheme.labelSmall,
             ),
             textInputAction: TextInputAction.next,
           ),

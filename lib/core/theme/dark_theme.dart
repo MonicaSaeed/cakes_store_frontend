@@ -46,6 +46,7 @@ ThemeData darkTheme = ThemeData(
       color: DarkThemeColors.textDark,
       fontWeight: FontWeight.w400,
     ),
+    //Added
     displaySmall: TextStyle(
       fontSize: 12,
       color: DarkThemeColors.primary,
@@ -54,12 +55,6 @@ ThemeData darkTheme = ThemeData(
       decorationColor: DarkThemeColors.secondary,
     ),
     labelSmall: TextStyle(
-      color: DarkThemeColors.textLight,
-      fontSize: 12,
-      fontStyle: FontStyle.italic,
-      letterSpacing: 0.5,
-    ),
-    bodySmall: TextStyle(
       color: DarkThemeColors.black,
       fontSize: 14,
       letterSpacing: 0.5,
@@ -92,6 +87,9 @@ ThemeData darkTheme = ThemeData(
     hintStyle: const TextStyle(
       fontFamily: 'Poppins',
       color: DarkThemeColors.textLight,
+      fontSize: 12,
+      fontStyle: FontStyle.italic,
+      letterSpacing: 0.5,
     ),
   ),
   iconTheme: const IconThemeData(color: DarkThemeColors.primary),
