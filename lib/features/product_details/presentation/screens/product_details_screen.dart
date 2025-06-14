@@ -44,7 +44,7 @@ class ProductDetailsScreen extends StatelessWidget {
                             '${product.imageUrl}',
                             height: 250,
                             width: double.infinity,
-                            fit: BoxFit.cover,
+                            fit: BoxFit.contain,
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(
