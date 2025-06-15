@@ -24,7 +24,7 @@ class ProductDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final productId = ModalRoute.of(context)!.settings.arguments as String;
     return BlocProvider(
-      create: (_) => ProductListCubit()..getProduct(productId),
+      create: (_) => ProductListCubit(userId: null)..getProduct(productId),
       child: BlocBuilder<ProductListCubit, ProductDetailsState>(
         builder: (context, state) {
           return Scaffold(

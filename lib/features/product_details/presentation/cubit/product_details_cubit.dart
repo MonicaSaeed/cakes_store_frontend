@@ -7,7 +7,7 @@ import '../../../shared_product/data/models/product_model.dart';
 import '../../domain/repository/base_product_details_repository.dart';
 
 class ProductListCubit extends Cubit<ProductDetailsState> {
-  ProductListCubit() : super(const ProductDetailsLoading());
+  ProductListCubit({required userId}) : super(const ProductDetailsLoading());
 
   getProduct(String productId) async {
     try {
