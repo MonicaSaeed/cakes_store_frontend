@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import '../../app_router.dart';
 
 class NavigationBarScreen extends StatefulWidget {
-  const NavigationBarScreen({super.key});
+  int currentIndex;
+  NavigationBarScreen({super.key, this.currentIndex = 0});
 
   @override
   State<NavigationBarScreen> createState() => _NavigationBarScreenState();
 }
 
 class _NavigationBarScreenState extends State<NavigationBarScreen> {
-  int _currentIndex = 0;
   final List<String> _routes = [
     AppRouter.home,
     AppRouter.favorites,
@@ -36,7 +36,8 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
       onPopInvokedWithResult: (bool didPop, dynamic result) async {
         if (!didPop) {
           final isFirstRouteInCurrentTab =
-              !await _navigatorKeys[_currentIndex].currentState!.maybePop();
+              !await _navigatorKeys[widget.currentIndex].currentState!
+                  .maybePop();
           if (isFirstRouteInCurrentTab) {
             return;
           }
@@ -44,7 +45,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
       },
       child: Scaffold(
         body: IndexedStack(
-          index: _currentIndex,
+          index: widget.currentIndex,
           children: [
             _buildNavigator(0),
             _buildNavigator(1),
@@ -54,16 +55,16 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
+          currentIndex: widget.currentIndex,
           onTap: (index) {
-            if (index == _currentIndex) {
+            if (index == widget.currentIndex) {
               // Pop to first route if already on this tab
               _navigatorKeys[index].currentState?.popUntil(
                 (route) => route.isFirst,
               );
             }
             setState(() {
-              _currentIndex = index;
+              widget.currentIndex = index;
             });
           },
           items: const [

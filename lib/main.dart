@@ -58,7 +58,7 @@ class AuthGate extends StatelessWidget {
             body: const Center(child: CircularProgressIndicator()),
           );
         } else if (state is AuthSuccess) {
-          return const NavigationBarScreen();
+          return NavigationBarScreen();
         } else {
           return const LoginScreen();
         }

@@ -1,93 +1,16 @@
 import 'package:cakes_store_frontend/core/components/custom_card.dart';
 import 'package:cakes_store_frontend/core/services/service_locator.dart';
-import 'package:cakes_store_frontend/core/theme/theme_colors.dart';
+import 'package:cakes_store_frontend/features/auth/business/auth_cubit.dart';
+import 'package:cakes_store_frontend/features/auth/presentation/screen/login_screen.dart';
+import 'package:cakes_store_frontend/features/home/presentation/components/category_list.dart';
+import 'package:cakes_store_frontend/features/home/presentation/components/image_slide_show.dart';
+import 'package:cakes_store_frontend/features/home/presentation/components/shimmer_home_loader.dart';
 import 'package:cakes_store_frontend/features/home/presentation/cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  Widget _buildCategoryList(BuildContext context) {
-    final List<Map<String, dynamic>> categories = [
-      {'name': 'Birthday', 'svgIcon': 'assets/svg/birthday.svg'},
-      {'name': 'Wedding', 'svgIcon': 'assets/svg/wedding.svg'},
-      {'name': 'Cheesecakes', 'svgIcon': 'assets/svg/cheesecake.svg'},
-      {'name': 'Cupcakes', 'svgIcon': 'assets/svg/cupcakes.svg'},
-      {'name': 'Molten Cakes', 'svgIcon': 'assets/svg/molten.svg'},
-    ];
-
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return SizedBox(
-      height: 130,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: categories.length,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        separatorBuilder: (_, __) => const SizedBox(width: 12), // Fixed spacing
-        itemBuilder: (_, index) {
-          final category = categories[index];
-          return GestureDetector(
-            onTap: () {
-              // Navigate to product list by category name
-              // Navigator.pushNamed(context, AppRouter.productList, arguments: category['name']);
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 66,
-                  height: 66,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: colorScheme.primary,
-                    boxShadow: [
-                      BoxShadow(
-                        color: colorScheme.primary.withOpacity(0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: SvgPicture.asset(
-                      category['svgIcon'],
-                      width: 32,
-                      height: 32,
-                      colorFilter: ColorFilter.mode(
-                        LightThemeColors.iconColor,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  width: 80,
-                  child: Tooltip(
-                    message: category['name'],
-                    child: Text(
-                      category['name'],
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,39 +23,35 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
           title: const Text("YumSlice Store"),
-          centerTitle: true,
           elevation: 0,
           actions: [
             IconButton(
               icon: Icon(Icons.shopping_cart, color: colorScheme.primary),
               onPressed: () {},
             ),
+            IconButton(
+              icon: Icon(Icons.logout, color: colorScheme.primary),
+              onPressed: () async {
+                await context.read<AuthCubit>().logoutUser();
+                Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                  (route) => false,
+                );
+              },
+            ),
           ],
         ),
         body: BlocBuilder<HomeCubit, HomeState>(
           builder: (context, state) {
             if (state is HomeLoading) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(color: colorScheme.primary),
-                    const SizedBox(height: 16),
-                    Text(
-                      "Loading delicious cakes...",
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.primary,
-                      ),
-                    ),
-                  ],
-                ),
-              );
+              return const ShimmerHomeLoader();
             } else if (state is HomeLoaded) {
               return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 16),
+                    ImageSlideShow(),
+                    const SizedBox(height: 24),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: Text(
@@ -144,7 +63,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    _buildCategoryList(context),
+                    const CategoryList(),
                     const SizedBox(height: 24),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
