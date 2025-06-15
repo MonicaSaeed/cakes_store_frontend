@@ -1,41 +1,12 @@
 import 'package:cakes_store_frontend/core/components/navigation_bar.dart';
+import 'package:cakes_store_frontend/features/shared_product/domain/entities/product.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class ImageSlideShow extends StatefulWidget {
-  ImageSlideShow({super.key});
+  final Product? latestProduct;
 
-  final List<Map<String, dynamic>> slides = [
-    {
-      'imageUrl': 'assets/images/wedding_cake.jpg',
-      'title': 'Wedding Cakes',
-      'buttonTitle': 'Show Collection',
-      "onButtonPressed": (context) {
-        //  Navigator.pushNamed(context, AppRouter.categoryList, arguments: 'wedding');
-      },
-    },
-    {
-      'imageUrl': 'assets/images/chocolate_cake.jpg',
-      'title': 'Chocolate Cakes',
-      'buttonTitle': 'Shop Now',
-      "onButtonPressed": (context) {
-        Navigator.of(context, rootNavigator: true).push(
-          MaterialPageRoute(
-            builder: (_) => NavigationBarScreen(currentIndex: 3),
-          ),
-          // (route) => false,
-        );
-      },
-    },
-    {
-      'imageUrl': 'assets/images/cupcakes.jpg',
-      'title': 'Cupcakes Collection',
-      'buttonTitle': 'Show Collection',
-      "onButtonPressed": (context) {
-        //  Navigator.pushNamed(context, AppRouter.categoryList, arguments: 'cupcakes');
-      },
-    },
-  ];
+  const ImageSlideShow({super.key, this.latestProduct});
 
   @override
   State<ImageSlideShow> createState() => _ImageSlideShowState();
@@ -44,8 +15,63 @@ class ImageSlideShow extends StatefulWidget {
 class _ImageSlideShowState extends State<ImageSlideShow> {
   int _currentIndex = 0;
 
+  List<Map<String, dynamic>> getSlides(BuildContext context) {
+    final slides = <Map<String, dynamic>>[];
+
+    if (widget.latestProduct != null) {
+      slides.add({
+        'imageUrl': widget.latestProduct!.imageUrl,
+        'title': 'Try Our New ${widget.latestProduct!.name}!',
+        'buttonTitle': 'View Details',
+        'discount': widget.latestProduct!.discountPercentage,
+        'onButtonPressed': (context) {
+          // Navigator.pushNamed(
+          //   context,
+          //   AppRouter.productDetails,
+          //   arguments: widget.latestProduct!.id,
+          // );
+        },
+      });
+    }
+
+    slides.addAll([
+      // {
+      //   'imageUrl': 'assets/images/wedding_cake.jpg',
+      //   'title': 'Wedding Cakes',
+      //   'buttonTitle': 'Show Collection',
+      //   "onButtonPressed": (context) {
+      //     // Navigator.pushNamed(context, AppRouter.categoryList, arguments: 'wedding');
+      //   },
+      // },
+      {
+        'imageUrl': 'assets/images/chocolate_cake.jpg',
+        'title': 'Chocolate Cakes',
+        'buttonTitle': 'Shop Now',
+        "onButtonPressed": (context) {
+          Navigator.of(context, rootNavigator: true).push(
+            MaterialPageRoute(
+              builder: (_) => NavigationBarScreen(currentIndex: 3),
+            ),
+          );
+        },
+      },
+      {
+        'imageUrl': 'assets/images/cupcakes.jpg',
+        'title': 'Cupcakes Collection',
+        'buttonTitle': 'Show Collection',
+        "onButtonPressed": (context) {
+          // Navigator.pushNamed(context, AppRouter.categoryList, arguments: 'cupcakes');
+        },
+      },
+    ]);
+
+    return slides;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final slides = getSlides(context);
+
     return Stack(
       children: [
         CarouselSlider(
@@ -65,71 +91,105 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
             },
           ),
           items:
-              widget.slides.map((slide) {
+              slides.map((slide) {
                 return Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage(slide['imageUrl']!),
+                      image:
+                          slide['imageUrl'].toString().startsWith('http')
+                              ? NetworkImage(slide['imageUrl']) as ImageProvider
+                              : AssetImage(slide['imageUrl']),
                       fit: BoxFit.cover,
                     ),
                   ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.7),
-                          Colors.transparent,
-                        ],
-                        stops: [0.2, 0.6],
-                      ),
-                    ),
-                    child: Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              slide['title']!,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                shadows: [
-                                  Shadow(
-                                    color: Colors.black45,
-                                    blurRadius: 6,
-                                    offset: Offset(1, 1),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed:
-                                  () => slide['onButtonPressed'](context),
-                              child: Text(
-                                slide['buttonTitle']!,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                          ],
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: [
+                              Colors.black.withOpacity(0.7),
+                              Colors.transparent,
+                            ],
+                            stops: [0.2, 0.6],
+                          ),
                         ),
                       ),
-                    ),
+
+                      // Discount
+                      if (slide['discount'] != null)
+                        Positioned(
+                          top: 16,
+                          right: 16,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              '${slide['discount']}% OFF',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                      // Bottom Content
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                slide['title'],
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.black45,
+                                      blurRadius: 6,
+                                      offset: Offset(1, 1),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed:
+                                    () => slide['onButtonPressed'](context),
+                                child: Text(
+                                  slide['buttonTitle'],
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 );
               }).toList(),
         ),
-        // Dot indicators
+
+        // Indicator Dots
         Positioned(
           left: 0,
           right: 0,
@@ -137,7 +197,7 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children:
-                widget.slides.asMap().entries.map((entry) {
+                slides.asMap().entries.map((entry) {
                   return Container(
                     width: 8.0,
                     height: 8.0,

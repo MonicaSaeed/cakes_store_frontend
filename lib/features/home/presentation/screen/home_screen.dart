@@ -50,7 +50,9 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ImageSlideShow(),
+                    ImageSlideShow(
+                      latestProduct: context.read<HomeCubit>().latestProduct,
+                    ),
                     const SizedBox(height: 24),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),

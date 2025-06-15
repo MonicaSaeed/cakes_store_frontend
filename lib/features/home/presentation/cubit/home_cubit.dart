@@ -10,13 +10,15 @@ class HomeCubit extends Cubit<HomeState> {
 
   HomeCubit(this.getAllProductsUseCase) : super(HomeInitial());
 
+  late final Product? latestProduct;
+
   void fetchProducts() async {
-    if (isClosed) return;
-    emit(HomeLoading());
+    if (!isClosed) emit(HomeLoading());
     try {
       final products = await getAllProductsUseCase();
       final sortedProdcts = List<Product>.from(products)
         ..sort((a, b) => b.updatedAt!.compareTo(a.updatedAt!));
+      latestProduct = sortedProdcts.isNotEmpty ? sortedProdcts.first : null;
       if (!isClosed) emit(HomeLoaded(sortedProdcts));
     } catch (e) {
       if (!isClosed) emit(HomeError(e.toString()));
