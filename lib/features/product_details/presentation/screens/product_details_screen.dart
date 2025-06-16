@@ -3,8 +3,8 @@ import 'package:cakes_store_frontend/features/product_details/presentation/cubit
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/components/rating_component.dart';
 import '../components/quantity_selector.dart';
-import '../components/rating_component.dart';
 
 // to navigate to this screen, you can use the following code snippet:
 // onPressed: () {
