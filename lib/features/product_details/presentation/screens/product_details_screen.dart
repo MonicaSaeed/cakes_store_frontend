@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/components/rating_component.dart';
+import '../../../reviews/presentation/cubit/reviews_cubit.dart';
+import '../../../reviews/presentation/screens/review_details_screen.dart';
 import '../components/quantity_selector.dart';
 
 // to navigate to this screen, you can use the following code snippet:
@@ -23,8 +25,11 @@ class ProductDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productId = ModalRoute.of(context)!.settings.arguments as String;
-    return BlocProvider(
-      create: (_) => ProductListCubit()..getProduct(productId),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => ProductListCubit()..getProduct(productId)),
+        BlocProvider(create: (_) => ReviewsCubit()..getReviews(productId)),
+      ],
       child: BlocBuilder<ProductListCubit, ProductDetailsState>(
         builder: (context, state) {
           return Scaffold(
@@ -55,15 +60,36 @@ class ProductDetailsScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(height: 8),
-                                Text(
-                                  '${product.name}',
-                                  style:
-                                      Theme.of(context).textTheme.headlineLarge,
+                                Row(
+                                  children: [
+                                    Text(
+                                      '${product.name}',
+                                      style:
+                                          Theme.of(
+                                            context,
+                                          ).textTheme.headlineLarge,
+                                    ),
+                                    const Spacer(),
+                                    IconButton(
+                                      icon: const Icon(Icons.favorite_border),
+                                      onPressed: () {
+                                        // Handle favorite action
+                                      },
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(height: 16),
-                                RatingComponent(
-                                  rating: product.totalRating ?? 0.0,
-                                  reviewCount: 0,
+                                BlocBuilder<ReviewsCubit, ReviewsState>(
+                                  builder: (context, reviewState) {
+                                    int reviewCount = 0;
+                                    if (reviewState is ReviewsLoaded) {
+                                      reviewCount = reviewState.reviews.length;
+                                    }
+                                    return RatingComponent(
+                                      rating: product.totalRating ?? 0.0,
+                                      reviewCount: reviewCount,
+                                    );
+                                  },
                                 ),
                                 const SizedBox(height: 16),
                                 Row(
@@ -118,6 +144,44 @@ class ProductDetailsScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 8),
                                 QuantitySelector(quantity: 1),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Customer Reviews',
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
+                                ),
+                                const SizedBox(height: 8),
+                                BlocBuilder<ReviewsCubit, ReviewsState>(
+                                  builder: (context, state) {
+                                    switch (state) {
+                                      case ReviewsLoading():
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      case ReviewsLoaded():
+                                        return ListView.builder(
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemCount: state.reviews.length,
+                                          itemBuilder: (context, index) {
+                                            final review = state.reviews[index];
+                                            return ReviewDetailsScreen(
+                                              review: review,
+                                            );
+                                          },
+                                        );
+                                      case ReviewsEmpty():
+                                        return const Text('No reviews yet.');
+                                      case ReviewsError():
+                                        return Text(
+                                          'Error loading reviews: ${state.errorMessage}',
+                                        );
+                                      default:
+                                        return const Text('Loading reviews...');
+                                    }
+                                  },
+                                ),
                               ],
                             ),
                           ),
