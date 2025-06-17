@@ -589,8 +589,29 @@ class _ProductsGridSection extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (state is ProductListError) {
-          return const Center(
-            child: Icon(Icons.error, size: 64, color: Colors.red),
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(Icons.error, size: 64, color: Colors.red),
+                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: const Text(
+                    'Error loading the data',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    context.read<ProductListCubit>().getfilteredProductList();
+                  },
+                  child: Text('Try again'),
+                ),
+              ],
+            ),
           );
         }
         if (state is! ProductListLoaded) return const SizedBox.shrink();
