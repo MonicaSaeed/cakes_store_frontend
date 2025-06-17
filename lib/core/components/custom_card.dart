@@ -211,14 +211,14 @@ class CustomCard extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(6.0),
                         child: Container(
-                          width: 32,
-                          height: 32,
+                          width: 40,
+                          height: 40,
                           decoration: const BoxDecoration(
                             color: Colors.white,
                             shape: BoxShape.circle,
                           ),
                           child: IconButton(
-                            icon: Icon(favicon, size: 16),
+                            icon: Icon(favicon, size: 22),
                             onPressed: onPressedFav,
                             padding: EdgeInsets.zero,
                           ),
@@ -262,7 +262,7 @@ class CustomCard extends StatelessWidget {
                             IconButton(
                               icon: Icon(
                                 addcartIcon,
-                                size: 20,
+                                size: 22,
                                 color: LightThemeColors.primary,
                               ),
                               onPressed: onPressedCart,
