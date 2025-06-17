@@ -217,10 +217,19 @@ class CustomCard extends StatelessWidget {
                             color: Colors.white,
                             shape: BoxShape.circle,
                           ),
-                          child: IconButton(
-                            icon: favicon,
-                            onPressed: onPressedFav,
-                            padding: EdgeInsets.zero,
+                          child: AnimatedSwitcher(
+                            duration: Duration(milliseconds: 300),
+                            transitionBuilder: (child, animation) {
+                              return ScaleTransition(
+                                scale: animation,
+                                child: child,
+                              );
+                            },
+                            child: IconButton(
+                              icon: favicon,
+                              onPressed: onPressedFav,
+                              padding: EdgeInsets.zero,
+                            ),
                           ),
                         ),
                       ),

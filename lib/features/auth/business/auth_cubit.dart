@@ -12,13 +12,13 @@ class AuthCubit extends Cubit<AuthState> {
   final AuthRepository _repository;
   AuthCubit(this._repository) : super(AuthInitial());
 
-  UserMongoModel? get currentUser =>
-      (state is AuthSuccess) ? (state as AuthSuccess).userfromMongo : null;
+  User? get currentUser =>
+      (state is AuthSuccess) ? (state as AuthSuccess).user : null;
   Future<void> getCurrentUser() async {
     emit(AuthLoadingCurrentUser());
     try {
       final user = await _repository.getCurrentUser();
-      final userfromMongo = await _repository.getUserFromMongo(user?.uid ?? '');
+      // final userfromMongo = await _repository.getUserFromMongo(user?.uid ?? '');
       if (user != null) {
         if (!user.emailVerified) {
           emit(
@@ -26,7 +26,7 @@ class AuthCubit extends Cubit<AuthState> {
           );
           return;
         } else {
-          emit(AuthSuccess(user, userfromMongo!));
+          emit(AuthSuccess(user));
         }
       } else {
         emit(AuthLoggedOut());
@@ -65,9 +65,10 @@ class AuthCubit extends Cubit<AuthState> {
       final user = credential.user;
       if (user != null) {
         if (user.emailVerified) {
-          final userMongo = await _repository.getUserFromMongo(user.uid ?? '');
+          // final userMongo = await _repository.getUserFromMongo(user.uid ?? '');
 
-          emit(AuthSuccess(user, userMongo!));
+          // emit(AuthSuccess(user, userMongo!));
+          emit(AuthSuccess(user));
         } else {
           emit(
             AuthEmailNotVerified('Please verify your email before logging in.'),

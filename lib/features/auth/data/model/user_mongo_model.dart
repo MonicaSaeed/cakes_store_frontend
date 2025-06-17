@@ -1,6 +1,5 @@
 class UserMongoModel {
   final String uid;
-  final String? id;
   final String email;
   final String? username;
   final String? phoneNumber;
@@ -8,7 +7,6 @@ class UserMongoModel {
   final String? image;
 
   UserMongoModel({
-    this.id,
     required this.uid,
     required this.email,
     this.username,
@@ -19,7 +17,6 @@ class UserMongoModel {
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
       'uid': uid,
       'email': email,
       'username': username,
@@ -31,7 +28,6 @@ class UserMongoModel {
 
   factory UserMongoModel.fromJson(Map<String, dynamic> json) {
     return UserMongoModel(
-      id: json['_id'].toString(),
       uid: json['uid'],
       email: json['email'],
       username: json['username'],

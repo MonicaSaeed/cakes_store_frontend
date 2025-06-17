@@ -39,7 +39,7 @@ class ProductListCubit extends Cubit<ProductListState> {
   ];
 
   String _searchQuery = '';
-
+  String selectedCategoryName = 'All Items';
   // Add this getter
   String get searchQuery => _searchQuery;
 

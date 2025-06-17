@@ -8,6 +8,7 @@ import 'package:cakes_store_frontend/features/shop/presentation/cubit/product_li
 import 'package:cakes_store_frontend/features/shop/presentation/widgets/filter_bottom_sheet_widget.dart';
 import 'package:cakes_store_frontend/features/shop/presentation/widgets/paginated_product_list.dart';
 import 'package:cakes_store_frontend/features/shop/presentation/widgets/sort_bottom_sheet.dart';
+import 'package:cakes_store_frontend/features/user_shared_feature/presentation/cubit/user_cubit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -375,19 +376,19 @@ class ShopProductScreen extends StatelessWidget {
         BlocProvider(
           create: (context) {
             final cubit = ProductListCubit(
-              userId: context.read<AuthCubit>().currentUser?.id,
+              userId: context.read<UserCubit>().currentUser?.id,
             );
             // Delay the fetch until after first build
             Future.microtask(() => cubit.getfilteredProductList());
             return cubit;
           },
         ),
-        BlocProvider(
-          create:
-              (context) =>
-                  FavCubit(userId: context.read<AuthCubit>().currentUser?.id)
-                    ..loadAllFavourites(),
-        ),
+        // BlocProvider(
+        //   create:
+        //       (context) =>
+        //           FavCubit(userId: context.read<UserCubit>().currentUser?.id)
+        //             ..loadAllFavourites(),
+        // ),
       ],
       child: Scaffold(
         appBar: AppBar(title: const Center(child: Text('Shop Now'))),
@@ -415,6 +416,7 @@ class _FixedControlsSection extends StatelessWidget {
         // Only rebuild when categories or filter options change
         return current is ProductListLoaded &&
             (previous is! ProductListLoaded ||
+                previous.products != current.products ||
                 previous.categories != current.categories ||
                 previous.filterSortOptions != current.filterSortOptions);
       },
@@ -425,7 +427,7 @@ class _FixedControlsSection extends StatelessWidget {
         final categories = cubit.categories;
         final filters = cubit.filterSortOptions;
         final selectedCategory = cubit.filterbody['category'] ?? "All Items";
-        print('from cubit ${cubit.filterbody}');
+        print('from cubittt ${cubit.filterbody}');
         return Column(
           children: [
             const SizedBox(height: 20),

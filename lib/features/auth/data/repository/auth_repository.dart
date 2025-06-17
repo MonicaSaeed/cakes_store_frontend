@@ -177,13 +177,13 @@ class AuthRepository {
     }
   }
 
-  Future<UserMongoModel?> getUserFromMongo(String uid) async {
-    // print('Fetching user from MongoDB with UID: $uid');
+  // Future<UserMongoModel?> getUserFromMongo(String uid) async {
+  //   // print('Fetching user from MongoDB with UID: $uid');
 
-    try {
-      return await UserMongoWebService().getUserByUid(uid);
-    } catch (e) {
-      throw Exception('Failed to get user from MongoDB: $e');
-    }
-  }
+  //   try {
+  //     return await UserMongoWebService().getUserByUid(uid);
+  //   } catch (e) {
+  //     throw Exception('Failed to get user from MongoDB: $e');
+  //   }
+  // }
 }

@@ -15,12 +15,14 @@ class FavCubit extends Cubit<FavState> {
 
   List<ProductModel> favouritesProducts = [];
   loadAllFavourites() async {
+    print('Loading all favourites for userId: $userId');
     emit(FavLoading());
     try {
       favouritesProducts =
           await GetAllFavsUsecase(sl<BaseFavRepo>()).getAllFavs(userId!) ?? [];
       emit(FavLoaded(favProducts: favouritesProducts));
     } catch (e) {
+      print('Error loading favourites: $e');
       emit(FavError(errorMessage: e.toString()));
     }
   }
@@ -29,6 +31,8 @@ class FavCubit extends Cubit<FavState> {
     // Implement the toggle favorite functionality
     // print('Toggling favorite for productId: $productId');
     // print('userId: $userId');
+    print('Toggling favorite for productId: $productId');
+    print('userId: $userId');
     if (state is! FavLoaded) return;
     try {
       favouritesProducts =
@@ -47,6 +51,7 @@ class FavCubit extends Cubit<FavState> {
       }
       emit(FavLoaded(favProducts: favouritesProducts));
     } catch (e) {
+      print('Error toggling favorite: $e');
       emit(FavError(errorMessage: e.toString()));
     }
   }

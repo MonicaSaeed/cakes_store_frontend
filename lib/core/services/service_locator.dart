@@ -7,6 +7,9 @@ import 'package:cakes_store_frontend/features/product_details/presentation/cubit
 import 'package:cakes_store_frontend/features/shop/data/datasource/product_data_source.dart';
 import 'package:cakes_store_frontend/features/shop/data/repository/products_repository.dart';
 import 'package:cakes_store_frontend/features/shop/domain/repository/base_products_repository.dart';
+import 'package:cakes_store_frontend/features/user_shared_feature/data/datasource/user_shared_datasource.dart';
+import 'package:cakes_store_frontend/features/user_shared_feature/data/repository/user_repo.dart';
+import 'package:cakes_store_frontend/features/user_shared_feature/domain/repository/base_user_repo.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../features/auth/data/repository/auth_repository.dart';
@@ -26,7 +29,10 @@ void setupLocator() {
   sl.registerLazySingleton<ProductDetailsDataSource>(
     () => ProductDetailsDataSource(),
   );
+  // for fav
   sl.registerLazySingleton<FavDatasource>(() => FavDatasource());
+  // for user
+  sl.registerLazySingleton<UserSharedDatasource>(() => UserSharedDatasource());
 
   // Repository
   sl.registerLazySingleton<BaseProductsRepository>(
@@ -37,4 +43,7 @@ void setupLocator() {
     () => ProductDetailsRepository(sl<ProductDetailsDataSource>()),
   );
   sl.registerLazySingleton<BaseFavRepo>(() => FavRepo(sl<FavDatasource>()));
+  sl.registerLazySingleton<BaseUserRepo>(
+    () => UserRepo(sl<UserSharedDatasource>()),
+  );
 }
