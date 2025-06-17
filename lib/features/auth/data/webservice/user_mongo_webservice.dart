@@ -24,4 +24,21 @@ class UserMongoWebService {
       throw Exception('Error saving user to MongoDB: $e');
     }
   }
+
+  Future<UserMongoModel> getUserByUid(String userId) async {
+    try {
+      print('Fetching user with ID: $userId');
+      final response = await _dio.get('${ApiConstance.usersUrl}/uid/$userId');
+
+      if (response.statusCode == 200) {
+        print('User fetched successfully: ${response.data}');
+        final userData = response.data['data'];
+        return UserMongoModel.fromJson(userData);
+      } else {
+        throw Exception('Failed to fetch user');
+      }
+    } catch (e) {
+      throw Exception('Error fetching user from MongoDB: $e');
+    }
+  }
 }

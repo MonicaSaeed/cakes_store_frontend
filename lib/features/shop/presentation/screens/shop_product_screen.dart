@@ -374,7 +374,7 @@ class ShopProductScreen extends StatelessWidget {
         BlocProvider(
           create: (context) {
             final cubit = ProductListCubit(
-              userId: context.read<AuthCubit>().currentUser?.uid.toString(),
+              userId: context.read<AuthCubit>().currentUser?.id,
             );
             // Delay the fetch until after first build
             Future.microtask(() => cubit.getfilteredProductList());
@@ -384,7 +384,7 @@ class ShopProductScreen extends StatelessWidget {
         BlocProvider(
           create:
               (context) =>
-                  FavCubit(userId: context.read<AuthCubit>().currentUser?.uid)
+                  FavCubit(userId: context.read<AuthCubit>().currentUser?.id)
                     ..loadAllFavourites(),
         ),
       ],
@@ -653,7 +653,9 @@ class _ProductsGridSection extends StatelessWidget {
                 rating: product.totalRating!,
                 imageUrl: product.imageUrl!,
                 favicon:
-                    favProducts.contains(product)
+                    context.read<FavCubit>().favouritesProducts.any(
+                          (favProduct) => favProduct.id == product.id,
+                        )
                         ? Icon(Icons.favorite, color: Colors.red)
                         : Icon(Icons.favorite_border),
                 addcartIcon: Icon(Icons.shopping_cart_outlined),
@@ -661,6 +663,8 @@ class _ProductsGridSection extends StatelessWidget {
                   // context.read<ProductListCubit>().toggleFavorite(
                   //   productId: product.id!,
                   // );
+                  print('Toggling favorite for productId: ${product.id}');
+                  print('userId: ${context.read<AuthCubit>().currentUser?.id}');
                   context.read<FavCubit>().toggleFavourite(
                     productId: product.id!,
                   );

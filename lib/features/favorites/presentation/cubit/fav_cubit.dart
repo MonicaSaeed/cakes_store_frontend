@@ -6,6 +6,7 @@ import 'package:cakes_store_frontend/features/favorites/domain/usecases/remove_f
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_state.dart';
 import 'package:cakes_store_frontend/features/shared_product/data/models/product_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class FavCubit extends Cubit<FavState> {
   final String? userId;
@@ -26,12 +27,27 @@ class FavCubit extends Cubit<FavState> {
 
   toggleFavourite({required String productId}) async {
     // Implement the toggle favorite functionality
-    favouritesProducts =
-        await GetAllFavsUsecase(sl<BaseFavRepo>()).getAllFavs(userId!) ?? [];
-    if (favouritesProducts.any((product) => product.id == productId)) {
-      RemoveFromFavUsecase(sl<BaseFavRepo>()).removeFromFav(productId, userId!);
-    } else {
-      AddToFavUsecase(sl<BaseFavRepo>()).addToFav(productId, userId!);
+    // print('Toggling favorite for productId: $productId');
+    // print('userId: $userId');
+    if (state is! FavLoaded) return;
+    try {
+      favouritesProducts =
+          await GetAllFavsUsecase(sl<BaseFavRepo>()).getAllFavs(userId!) ?? [];
+      if (favouritesProducts.any((product) => product.id == productId)) {
+        RemoveFromFavUsecase(
+          sl<BaseFavRepo>(),
+        ).removeFromFav(productId, userId!);
+        favouritesProducts.removeWhere((product) => product.id == productId);
+      } else {
+        await AddToFavUsecase(sl<BaseFavRepo>()).addToFav(productId, userId!);
+        final updatedFavs = await GetAllFavsUsecase(
+          sl<BaseFavRepo>(),
+        ).getAllFavs(userId!);
+        favouritesProducts = updatedFavs ?? favouritesProducts;
+      }
+      emit(FavLoaded(favProducts: favouritesProducts));
+    } catch (e) {
+      emit(FavError(errorMessage: e.toString()));
     }
   }
 }

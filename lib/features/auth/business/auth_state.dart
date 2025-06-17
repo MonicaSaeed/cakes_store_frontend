@@ -23,9 +23,10 @@ class AuthVerificationEmailSent extends AuthState {
 
 class AuthSuccess extends AuthState {
   final User user;
-  AuthSuccess(this.user);
+  final UserMongoModel userfromMongo;
+  AuthSuccess(this.user, this.userfromMongo);
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [user, userfromMongo];
 }
 
 class AuthSuccessWithGoogle extends AuthState {

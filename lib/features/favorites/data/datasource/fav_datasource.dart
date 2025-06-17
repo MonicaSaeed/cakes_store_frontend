@@ -52,10 +52,16 @@ class FavDatasource {
     );
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
+      print('from datasource');
+      print(decoded);
       return List<ProductModel>.from(
-        (decoded['data'] as List).map((e) => ProductModel.fromJson(e)),
+        (decoded['data']['products'] as List).map(
+          (e) => ProductModel.fromJson(e),
+        ),
       );
     } else {
+      print('user id : $userId');
+      print('response status code: ${response.statusCode}');
       print(response.body);
       throw Exception('Failed to get favorites from datasource');
     }

@@ -6,6 +6,8 @@ class GetAllFavsUsecase {
   GetAllFavsUsecase(this._repo);
   Future<List<ProductModel>>? getAllFavs(String userId) {
     try {
+      print('from usecase');
+      print('userId: $userId');
       return _repo.getAllFavs(userId);
     } catch (e) {
       print('error in usecase');

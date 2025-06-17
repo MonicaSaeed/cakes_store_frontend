@@ -13,6 +13,11 @@ import 'package:cakes_store_frontend/features/shop/presentation/cubit/product_li
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductListCubit extends Cubit<ProductListState> {
+  // for pagination
+  int _page = 1;
+  bool _isFetching = false;
+  final int _pageSize = 10;
+
   final String? userId;
   ProductListCubit({this.userId}) : super(ProductListInitial());
   int selectedCategory = 0;
@@ -51,6 +56,8 @@ class ProductListCubit extends Cubit<ProductListState> {
     getfilteredProductList();
   }
 
+  List<ProductModel> _allProducts = [];
+
   List<ProductModel> filteredProducts = [];
   var filterbody = {};
   getfilteredProductList() async {
@@ -61,7 +68,7 @@ class ProductListCubit extends Cubit<ProductListState> {
       ).getfilteredProductList(filterbody);
       if (products != null) {
         filteredProducts = products;
-        print('from cubit $products');
+        print('from cubit ${products}');
         // filterbody = {};
         emit(
           ProductListLoaded(
