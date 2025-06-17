@@ -14,9 +14,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductListCubit extends Cubit<ProductListState> {
   // for pagination
+  final int _pageSize = 10;
   int _page = 1;
   bool _isFetching = false;
-  final int _pageSize = 10;
 
   final String? userId;
   ProductListCubit({this.userId}) : super(ProductListInitial());
@@ -56,17 +56,35 @@ class ProductListCubit extends Cubit<ProductListState> {
     getfilteredProductList();
   }
 
-  List<ProductModel> _allProducts = [];
-
   List<ProductModel> filteredProducts = [];
   var filterbody = {};
-  getfilteredProductList() async {
-    emit(ProductListLoading());
+  List<ProductModel> _allProducts = [];
+
+  getfilteredProductList({bool reset = true}) async {
+    // emit(ProductListLoading());
+
+    if (_isFetching) return;
+    _isFetching = true;
+
+    if (reset) {
+      _page = 1;
+      _allProducts.clear();
+    }
+
+    if (state is ProductListLoaded) {
+      emit((state as ProductListLoaded).copyWith(isLoadingMore: true));
+    } else {
+      emit(ProductListLoading());
+    }
+
     try {
+      filterbody['page'] = _page;
+      filterbody['limit'] = _pageSize;
       List<ProductModel>? products = await GetProductListUseCase(
         sl<BaseProductsRepository>(),
       ).getfilteredProductList(filterbody);
       if (products != null) {
+        _allProducts.addAll(products);
         filteredProducts = products;
         print('from cubit ${products}');
         // filterbody = {};
@@ -75,16 +93,23 @@ class ProductListCubit extends Cubit<ProductListState> {
             products: filteredProducts,
             categories: categories,
             filterSortOptions: filterSortOptions,
+            isLoadingMore: false,
+            hasMore: products.length == _pageSize,
           ),
         );
+        _page++;
       } else {
         print('in the else statement');
         emit(ProductListError('product list return with null'));
       }
     } catch (e) {
       emit(ProductListError(e.toString()));
+    } finally {
+      _isFetching = false;
     }
   }
+
+  void loadMore() => getfilteredProductList(reset: false);
 
   // int _currentPage = 1;
   // final int _itemsPerPage = 10;

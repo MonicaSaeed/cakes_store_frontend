@@ -15,10 +15,10 @@ class FavDatasource {
       },
     );
     if (response.statusCode == 200) {
-      print(jsonDecode(response.body));
+      // print(jsonDecode(response.body));
       return jsonDecode(response.body);
     } else {
-      print(response.body);
+      // print(response.body);
       throw Exception('Failed to add product to favorites');
     }
   }
@@ -33,10 +33,10 @@ class FavDatasource {
       },
     );
     if (response.statusCode == 200) {
-      print(jsonDecode(response.body));
+      // print(jsonDecode(response.body));
       return jsonDecode(response.body);
     } else {
-      print(response.body);
+      // print(response.body);
       throw Exception('Failed to remove product from favorites');
     }
   }
@@ -52,17 +52,17 @@ class FavDatasource {
     );
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
-      print('from datasource');
-      print(decoded);
+      // print('from datasource');
+      // print(decoded);
       return List<ProductModel>.from(
         (decoded['data']['products'] as List).map(
           (e) => ProductModel.fromJson(e),
         ),
       );
     } else {
-      print('user id : $userId');
-      print('response status code: ${response.statusCode}');
-      print(response.body);
+      // print('user id : $userId');
+      // print('response status code: ${response.statusCode}');
+      // print(response.body);
       throw Exception('Failed to get favorites from datasource');
     }
   }

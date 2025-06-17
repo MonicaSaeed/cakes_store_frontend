@@ -25,12 +25,29 @@ class ProductListLoaded extends ProductListState {
   final List<ProductModel> products;
   final List<String> categories;
   final List<String> filterSortOptions;
-
+  final bool hasMore;
+  final bool isLoadingMore;
   const ProductListLoaded({
     required this.products,
     required this.categories,
     required this.filterSortOptions,
+    required this.hasMore,
+    required this.isLoadingMore,
   });
+
+  ProductListLoaded copyWith({
+    List<ProductModel>? products,
+    bool? hasMore,
+    bool? isLoadingMore,
+  }) {
+    return ProductListLoaded(
+      products: products ?? this.products,
+      categories: this.categories,
+      filterSortOptions: this.filterSortOptions,
+      hasMore: hasMore ?? this.hasMore,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+    );
+  }
 
   @override
   List<Object?> get props => [products, categories, filterSortOptions];

@@ -14,7 +14,6 @@ class ProductDetailsDataSource {
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
       return ProductModel.fromJson(decoded['data']);
-      print('Product details: ${decoded['data'].name}');
     } else if (response.statusCode == 404) {
       throw Exception('Product not found');
     } else {
