@@ -167,8 +167,8 @@ class CustomCard extends StatelessWidget {
   final String price;
   final String imageUrl;
   final double rating;
-  final IconData favicon;
-  final IconData addcartIcon;
+  final Icon favicon;
+  final Icon addcartIcon;
   final void Function()? onPressedCart;
   final void Function()? onPressedFav;
   final void Function()? onPressedcard;
@@ -218,7 +218,7 @@ class CustomCard extends StatelessWidget {
                             shape: BoxShape.circle,
                           ),
                           child: IconButton(
-                            icon: Icon(favicon, size: 22),
+                            icon: favicon,
                             onPressed: onPressedFav,
                             padding: EdgeInsets.zero,
                           ),
@@ -260,11 +260,12 @@ class CustomCard extends StatelessWidget {
                               ),
                             ),
                             IconButton(
-                              icon: Icon(
-                                addcartIcon,
-                                size: 22,
-                                color: LightThemeColors.primary,
-                              ),
+                              // icon: Icon(
+                              //   addcartIcon,
+                              //   size: 22,
+                              //   color: LightThemeColors.primary,
+                              // ),
+                              icon: addcartIcon,
                               onPressed: onPressedCart,
                               padding: EdgeInsets.zero,
                             ),

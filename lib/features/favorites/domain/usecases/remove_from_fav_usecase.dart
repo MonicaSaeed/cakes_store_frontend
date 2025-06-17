@@ -1,9 +1,7 @@
-import 'package:cakes_store_frontend/features/shared_product/data/models/product_model.dart';
-import 'package:cakes_store_frontend/features/shared_product/domain/entities/product.dart';
-import 'package:cakes_store_frontend/features/shop/domain/repository/base_products_repository.dart';
+import 'package:cakes_store_frontend/features/favorites/domain/repository/base_fav_repo.dart';
 
 class RemoveFromFavUsecase {
-  final BaseProductsRepository _repo;
+  final BaseFavRepo _repo;
   RemoveFromFavUsecase(this._repo);
   Future<void>? removeFromFav(String productId, String userId) {
     try {

@@ -10,16 +10,4 @@ class ProductsRepository extends BaseProductsRepository {
   @override
   Future<List<ProductModel>> getfilteredProductList(filterbody) =>
       _productDataSource.getfilteredProductList(filterbody);
-
-  @override
-  Future<void> addToFav(String productId, String userId) =>
-      _productDataSource.addToFav(productId, userId);
-
-  @override
-  Future<void> removeFromFav(String productId, String userId) =>
-      _productDataSource.removeFromFav(productId, userId);
-
-  @override
-  Future<List<ProductModel>> getAllFavs(String userId) =>
-      _productDataSource.getAllFavs(userId);
 }

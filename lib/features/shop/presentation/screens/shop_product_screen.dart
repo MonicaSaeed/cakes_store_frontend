@@ -1,13 +1,11 @@
 import 'package:cakes_store_frontend/core/components/custom_card.dart';
-import 'package:cakes_store_frontend/core/services/service_locator.dart';
-import 'package:cakes_store_frontend/core/theme/theme_colors.dart';
+
 import 'package:cakes_store_frontend/features/auth/business/auth_cubit.dart';
+import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
+import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_state.dart';
 import 'package:cakes_store_frontend/features/shop/presentation/cubit/product_list_cubit.dart';
 import 'package:cakes_store_frontend/features/shop/presentation/cubit/product_list_state.dart';
-import 'package:cakes_store_frontend/features/shop/presentation/widgets/category_selector.dart';
 import 'package:cakes_store_frontend/features/shop/presentation/widgets/filter_bottom_sheet_widget.dart';
-import 'package:cakes_store_frontend/features/shop/presentation/widgets/interactive_rating.dart';
-import 'package:cakes_store_frontend/features/shop/presentation/widgets/price_range_slider.dart';
 import 'package:cakes_store_frontend/features/shop/presentation/widgets/sort_bottom_sheet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -371,11 +369,25 @@ class ShopProductScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create:
-          (context) => ProductListCubit(
-            userId: context.read<AuthCubit>().currentUser?.uid,
-          )..getfilteredProductList(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) {
+            final cubit = ProductListCubit(
+              userId: context.read<AuthCubit>().currentUser?.uid.toString(),
+            );
+            // Delay the fetch until after first build
+            Future.microtask(() => cubit.getfilteredProductList());
+            return cubit;
+          },
+        ),
+        BlocProvider(
+          create:
+              (context) =>
+                  FavCubit(userId: context.read<AuthCubit>().currentUser?.uid)
+                    ..loadAllFavourites(),
+        ),
+      ],
       child: Scaffold(
         appBar: AppBar(title: const Center(child: Text('Shop Now'))),
         body: Column(
@@ -585,7 +597,9 @@ class _ProductsGridSection extends StatelessWidget {
                 !listEquals(previous.products, current.products));
       },
       builder: (context, state) {
-        if (state is ProductListLoading) {
+        final favState = context.watch<FavCubit>().state;
+
+        if (state is ProductListLoading || favState is FavLoading) {
           return const Center(child: CircularProgressIndicator());
         }
         if (state is ProductListError) {
@@ -614,11 +628,13 @@ class _ProductsGridSection extends StatelessWidget {
             ),
           );
         }
-        if (state is! ProductListLoaded) return const SizedBox.shrink();
+        if (state is! ProductListLoaded || favState is! FavLoaded)
+          return const SizedBox.shrink();
 
         final screenWidth = MediaQuery.of(context).size.width;
         final itemWidth = screenWidth / 2;
         final itemHeight = itemWidth / 0.6;
+        final favProducts = favState.favProducts;
 
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -636,10 +652,16 @@ class _ProductsGridSection extends StatelessWidget {
                 price: '${product.price}',
                 rating: product.totalRating!,
                 imageUrl: product.imageUrl!,
-                favicon: Icons.favorite_border,
-                addcartIcon: Icons.shopping_cart_outlined,
+                favicon:
+                    favProducts.contains(product)
+                        ? Icon(Icons.favorite, color: Colors.red)
+                        : Icon(Icons.favorite_border),
+                addcartIcon: Icon(Icons.shopping_cart_outlined),
                 onPressedFav: () {
-                  context.read<ProductListCubit>().toggleFavorite(
+                  // context.read<ProductListCubit>().toggleFavorite(
+                  //   productId: product.id!,
+                  // );
+                  context.read<FavCubit>().toggleFavourite(
                     productId: product.id!,
                   );
                 },
