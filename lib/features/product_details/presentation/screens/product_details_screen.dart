@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/components/rating_component.dart';
 import '../../../reviews/presentation/cubit/reviews_cubit.dart';
-import '../../../reviews/presentation/screens/review_details_screen.dart';
+import '../../../reviews/presentation/screens/reviews_screen.dart';
 import '../components/quantity_selector.dart';
 
 // to navigate to this screen, you can use the following code snippet:
@@ -151,37 +151,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                       Theme.of(context).textTheme.titleMedium,
                                 ),
                                 const SizedBox(height: 8),
-                                BlocBuilder<ReviewsCubit, ReviewsState>(
-                                  builder: (context, state) {
-                                    switch (state) {
-                                      case ReviewsLoading():
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      case ReviewsLoaded():
-                                        return ListView.builder(
-                                          shrinkWrap: true,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemCount: state.reviews.length,
-                                          itemBuilder: (context, index) {
-                                            final review = state.reviews[index];
-                                            return ReviewDetailsScreen(
-                                              review: review,
-                                            );
-                                          },
-                                        );
-                                      case ReviewsEmpty():
-                                        return const Text('No reviews yet.');
-                                      case ReviewsError():
-                                        return Text(
-                                          'Error loading reviews: ${state.errorMessage}',
-                                        );
-                                      default:
-                                        return const Text('Loading reviews...');
-                                    }
-                                  },
-                                ),
+                                const ReviewsSection(),
                               ],
                             ),
                           ),
