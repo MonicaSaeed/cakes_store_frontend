@@ -69,7 +69,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                 Row(
                                   children: [
                                     Text(
-                                      ' \$${(product.price ?? 0) * (1 - (product.discountPercentage ?? 0) / 100)}',
+                                      ' EGP ${(product.price! - (product.discountPercentage ?? 0) / 100 * product.price!).toStringAsFixed(2)}',
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodyLarge?.copyWith(
@@ -78,7 +78,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
-                                      '\$${product.price?.toStringAsFixed(2)}',
+                                      ' EGP ${product.price!.toStringAsFixed(2)}',
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodyMedium?.copyWith(
