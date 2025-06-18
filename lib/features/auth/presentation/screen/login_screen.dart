@@ -6,6 +6,9 @@ import 'package:cakes_store_frontend/features/auth/presentation/components/login
 import 'package:cakes_store_frontend/features/auth/presentation/components/login_header.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/components/social_auth_buttons.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/screen/register_screen.dart';
+import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
+import 'package:cakes_store_frontend/features/user_shared_feature/presentation/cubit/user_cubit.dart';
+import 'package:cakes_store_frontend/features/user_shared_feature/presentation/cubit/user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -65,7 +68,63 @@ class _LoginScreenState extends State<LoginScreen>
               );
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => NavigationBarScreen()),
+                MaterialPageRoute(
+                  builder:
+                      (context) => BlocProvider<UserCubit>(
+                        create:
+                            (_) =>
+                                UserCubit()..getUserByUid(
+                                  context.read<AuthCubit>().currentUser?.uid ??
+                                      '',
+                                ),
+                        child: BlocBuilder<UserCubit, UserState>(
+                          builder: (context, userState) {
+                            if (userState is UserLoading ||
+                                userState is UserInitial) {
+                              return const Scaffold(
+                                body: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            }
+
+                            if (userState is UserLoaded) {
+                              return BlocProvider<FavCubit>(
+                                create:
+                                    (_) =>
+                                        FavCubit(userId: userState.user.id)
+                                          ..loadAllFavourites(),
+                                child: NavigationBarScreen(),
+                              );
+                            }
+                            return Center(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Failed to load user data.',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                  SizedBox(height: 16),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => const LoginScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text('Retry'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                ),
               );
             } else if (state is AuthPasswordResetEmailSent) {
               ToastHelper.showToast(

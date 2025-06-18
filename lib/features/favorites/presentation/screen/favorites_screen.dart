@@ -31,6 +31,13 @@ class FavoritesScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   const Text('please try again later.'),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<FavCubit>().loadAllFavourites();
+                    },
+                    child: const Text('Retry'),
+                  ),
                 ],
               ),
             );

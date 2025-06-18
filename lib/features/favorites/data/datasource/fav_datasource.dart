@@ -53,12 +53,32 @@ class FavDatasource {
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
       // print('from datasource');
+      final data = decoded['data'];
+
+      if (data == null || data is List) {
+        return []; // either null or an empty array
+      }
+
+      if (data is Map && data.containsKey('products')) {
+        final productList = data['products'] as List;
+        return productList.map((e) => ProductModel.fromJson(e)).toList();
+      }
+
+      return []; // fallback for unexpected shapes
       // print(decoded);
-      return List<ProductModel>.from(
-        (decoded['data']['products'] as List).map(
-          (e) => ProductModel.fromJson(e),
-        ),
-      );
+      // if (decoded['data'] == null || decoded['data']['products'] == null) {
+      //   return [];
+      // }
+
+      // final productList = decoded['data']['products'] as List;
+      // if (productList.isEmpty) {
+      //   return [];
+      // }
+      // return List<ProductModel>.from(
+      //   (decoded['data']['products'] as List).map(
+      //     (e) => ProductModel.fromJson(e),
+      //   ),
+      // );
     } else {
       // print('user id : $userId');
       // print('response status code: ${response.statusCode}');

@@ -20,6 +20,7 @@ class UserCubit extends Cubit<UserState> {
       print('User fetched SUCCESS: $user');
       emit(UserLoaded(user));
     } catch (e) {
+      print('Error fetching user: $e');
       emit(UserError(e.toString()));
     }
   }
