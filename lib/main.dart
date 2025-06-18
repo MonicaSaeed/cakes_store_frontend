@@ -79,7 +79,7 @@ class AuthGate extends StatelessWidget {
                         (_) =>
                             FavCubit(userId: userState.user.id)
                               ..loadAllFavourites(),
-                    child: const NavigationBarScreen(),
+                    child: NavigationBarScreen(),
                   );
                 }
 
