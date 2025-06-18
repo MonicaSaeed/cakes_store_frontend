@@ -73,31 +73,4 @@ void setupLocator() {
   );
 
   sl.registerFactory<HomeCubit>(() => HomeCubit(sl<GetAllProductsUseCase>()));
-
-  // // Services
-  // // for product
-  // sl.registerLazySingleton<ProductDataSource>(() => ProductDataSource());
-  // // for auth
-  // sl.registerLazySingleton<AuthWebservice>(() => AuthWebservice());
-  // // for product details
-  // sl.registerLazySingleton<ProductDetailsDataSource>(
-  //   () => ProductDetailsDataSource(),
-  // );
-  // // for fav
-  // sl.registerLazySingleton<FavDatasource>(() => FavDatasource());
-  // // for user
-  // sl.registerLazySingleton<UserSharedDatasource>(() => UserSharedDatasource());
-
-  // // Repository
-  // sl.registerLazySingleton<BaseProductsRepository>(
-  //   () => ProductsRepository(sl<ProductDataSource>()),
-  // );
-  // sl.registerLazySingleton<AuthRepository>(() => AuthRepository(sl()));
-  // sl.registerLazySingleton<BaseProductDetailsRepository>(
-  //   () => ProductDetailsRepository(sl<ProductDetailsDataSource>()),
-  // );
-  // sl.registerLazySingleton<BaseFavRepo>(() => FavRepo(sl<FavDatasource>()));
-  // sl.registerLazySingleton<BaseUserRepo>(
-  //   () => UserRepo(sl<UserSharedDatasource>()),
-  // );
 }
