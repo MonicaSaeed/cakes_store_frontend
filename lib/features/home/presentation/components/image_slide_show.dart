@@ -2,6 +2,7 @@ import 'package:cakes_store_frontend/core/components/navigation_bar.dart';
 import 'package:cakes_store_frontend/features/shared_product/domain/entities/product.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ImageSlideShow extends StatefulWidget {
   final Product? latestProduct;
@@ -35,14 +36,6 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
     }
 
     slides.addAll([
-      // {
-      //   'imageUrl': 'assets/images/wedding_cake.jpg',
-      //   'title': 'Wedding Cakes',
-      //   'buttonTitle': 'Show Collection',
-      //   "onButtonPressed": (context) {
-      //     // Navigator.pushNamed(context, AppRouter.categoryList, arguments: 'wedding');
-      //   },
-      // },
       {
         'imageUrl': 'assets/images/chocolate_cake.jpg',
         'title': 'Chocolate Cakes',
@@ -76,7 +69,7 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
       children: [
         CarouselSlider(
           options: CarouselOptions(
-            height: 240,
+            height: 220.h, // Responsive height
             autoPlay: true,
             aspectRatio: 16 / 9,
             autoPlayInterval: const Duration(seconds: 4),
@@ -122,22 +115,23 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
                       // Discount
                       if (slide['discount'] != null)
                         Positioned(
-                          top: 16,
-                          right: 16,
+                          top: 16.h,
+                          right: 16.w,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 4,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.w,
+                              vertical: 4.h,
                             ),
                             decoration: BoxDecoration(
                               color: Colors.red,
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(20.r),
                             ),
                             child: Text(
                               '${slide['discount']}% OFF',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
+                                fontSize: 12.sp,
                               ),
                             ),
                           ),
@@ -147,38 +141,45 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Padding(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: EdgeInsets.all(20.w),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 slide['title'],
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 24,
+                                  fontSize: 20.sp,
                                   fontWeight: FontWeight.bold,
                                   shadows: [
                                     Shadow(
                                       color: Colors.black45,
                                       blurRadius: 6,
-                                      offset: Offset(1, 1),
+                                      offset: const Offset(1, 1),
                                     ),
                                   ],
                                 ),
                               ),
+                              SizedBox(height: 4.h),
                               ElevatedButton(
                                 onPressed:
                                     () => slide['onButtonPressed'](context),
+                                style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 16.w,
+                                    vertical: 8.h,
+                                  ),
+                                ),
                                 child: Text(
                                   slide['buttonTitle'],
-                                  style: const TextStyle(
-                                    fontSize: 14,
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 12),
+                              SizedBox(height: 12.h),
                             ],
                           ),
                         ),
@@ -193,15 +194,15 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
         Positioned(
           left: 0,
           right: 0,
-          bottom: 10,
+          bottom: 28.h,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children:
                 slides.asMap().entries.map((entry) {
                   return Container(
-                    width: 8.0,
-                    height: 8.0,
-                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                    width: 8.w,
+                    height: 8.h,
+                    margin: EdgeInsets.symmetric(horizontal: 4.w),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color:

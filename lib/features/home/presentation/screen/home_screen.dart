@@ -8,6 +8,7 @@ import 'package:cakes_store_frontend/features/home/presentation/components/shimm
 import 'package:cakes_store_frontend/features/home/presentation/cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -17,155 +18,214 @@ class HomeScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return BlocProvider(
-      create: (_) => sl<HomeCubit>()..fetchProducts(),
-      child: Scaffold(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        appBar: AppBar(
-          title: const Text("YumSlice Store"),
-          elevation: 0,
-          actions: [
-            IconButton(
-              icon: Icon(Icons.shopping_cart, color: colorScheme.primary),
-              onPressed: () {},
+    return ScreenUtilInit(
+      designSize: const Size(
+        360,
+        690,
+      ), // Default design size, All responsive calculations are based on this reference size
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (_, child) {
+        return BlocProvider(
+          create: (_) => sl<HomeCubit>()..fetchProducts(),
+          child: Scaffold(
+            backgroundColor: theme.scaffoldBackgroundColor,
+            appBar: AppBar(
+              title: Text(
+                "YumSlice Store",
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              elevation: 0,
+              actions: [
+                IconButton(
+                  icon: Icon(
+                    Icons.shopping_cart,
+                    color: colorScheme.primary,
+                    size: 16.w,
+                  ),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.logout,
+                    color: colorScheme.primary,
+                    size: 16.w,
+                  ),
+                  onPressed: () async {
+                    await context.read<AuthCubit>().logoutUser();
+                    Navigator.of(
+                      context,
+                      rootNavigator: true,
+                    ).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                      (route) => false,
+                    );
+                  },
+                ),
+              ],
             ),
-            IconButton(
-              icon: Icon(Icons.logout, color: colorScheme.primary),
-              onPressed: () async {
-                await context.read<AuthCubit>().logoutUser();
-                Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (_) => const LoginScreen()),
-                  (route) => false,
-                );
-              },
-            ),
-          ],
-        ),
-        body: BlocBuilder<HomeCubit, HomeState>(
-          builder: (context, state) {
-            if (state is HomeLoading) {
-              return const ShimmerHomeLoader();
-            } else if (state is HomeLoaded) {
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ImageSlideShow(
-                      latestProduct: context.read<HomeCubit>().latestProduct,
-                    ),
-                    const SizedBox(height: 24),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Text(
-                        "Categories",
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    const CategoryList(),
-                    const SizedBox(height: 24),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Freshly Baked",
-                            style: theme.textTheme.headlineMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: colorScheme.primary,
+            body: BlocBuilder<HomeCubit, HomeState>(
+              builder: (context, state) {
+                if (state is HomeLoading) {
+                  return const ShimmerHomeLoader();
+                } else if (state is HomeLoaded) {
+                  return LayoutBuilder(
+                    builder: (context, constraints) {
+                      double screenWidth = constraints.maxWidth;
+                      int gridCrossAxisCount = (screenWidth ~/ 170).clamp(2, 6);
+                      double gridChildAspectRatio = 0.65;
+
+                      return SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 240.h,
+                              child: ImageSlideShow(
+                                latestProduct:
+                                    context.read<HomeCubit>().latestProduct,
+                              ),
                             ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 24.w),
+                              child: Text(
+                                "Categories",
+                                style: theme.textTheme.headlineMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: colorScheme.primary,
+                                  fontSize: 14.sp,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 110.h,
+                              child: const CategoryList(),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 24.w),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Freshly Baked",
+                                    style: theme.textTheme.headlineMedium
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: colorScheme.primary,
+                                          fontSize: 14.sp,
+                                        ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {},
+                                    child: Text(
+                                      "See all",
+                                      style: theme.textTheme.headlineMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: colorScheme.primary,
+                                            decoration:
+                                                TextDecoration.underline,
+                                            decorationColor:
+                                                theme.colorScheme.primary,
+                                          ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.w),
+                              child: GridView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: state.products.take(10).length,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: gridCrossAxisCount,
+                                      crossAxisSpacing: 12.w,
+                                      mainAxisSpacing: 12.h,
+                                      childAspectRatio: gridChildAspectRatio,
+                                    ),
+                                itemBuilder: (_, index) {
+                                  final product = state.products[index];
+                                  return CustomCard(
+                                    cardtitle: product.name!,
+                                    price: '${product.price}',
+                                    rating: product.totalRating!,
+                                    imageUrl: product.imageUrl!,
+                                    favicon: Icons.favorite_border,
+                                    addcartIcon: Icons.shopping_cart_outlined,
+                                  );
+                                },
+                              ),
+                            ),
+                            SizedBox(height: 16.h),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                } else if (state is HomeError) {
+                  return Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(24.w),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.error_outline,
+                            size: 48.w,
+                            color: theme.colorScheme.error,
                           ),
-                          TextButton(
-                            onPressed: () {},
+                          SizedBox(height: 16.h),
+                          Text(
+                            "Oops! Something went wrong",
+                            style: theme.textTheme.headlineMedium?.copyWith(
+                              color: theme.colorScheme.primary,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            state.message,
+                            textAlign: TextAlign.center,
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                          SizedBox(height: 16.h),
+                          ElevatedButton(
+                            onPressed:
+                                () => context.read<HomeCubit>().fetchProducts(),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: colorScheme.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 24.w,
+                                vertical: 12.h,
+                              ),
+                            ),
                             child: Text(
-                              "See all",
-                              style: theme.textTheme.displaySmall,
+                              "Try Again",
+                              style: theme.textTheme.labelLarge?.copyWith(
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: state.products.take(10).length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 10,
-                              mainAxisSpacing: 10,
-                              childAspectRatio: 0.55,
-                            ),
-                        itemBuilder: (_, index) {
-                          final product = state.products[index];
-                          return CustomCard(
-                            cardtitle: product.name!,
-                            price: '${product.price}',
-                            rating: product.totalRating!,
-                            imageUrl: product.imageUrl!,
-                            favicon: Icons.favorite_border,
-                            addcartIcon: Icons.shopping_cart_outlined,
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            } else if (state is HomeError) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      size: 48,
-                      color: theme.colorScheme.error,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      "Oops! Something went wrong",
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      state.message,
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed:
-                          () => context.read<HomeCubit>().fetchProducts(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: colorScheme.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: Text(
-                        "Try Again",
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        ),
-      ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }
