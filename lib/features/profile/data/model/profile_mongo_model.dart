@@ -28,12 +28,37 @@ class ProfileModel {
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
-      uid: json['uid'],
-      email: json['email'],
-      username: json['username'],
-      phoneNumber: json['phoneNumber'],
-      addresses: List<String>.from(json['addresses'] ?? []),
-      image: json['image'],
+      uid: json['uid'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      username: json['username'] as String?,
+      phoneNumber: json['phoneNumber'] as String?,
+      addresses: (json['addresses'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
+      image: json['image'] as String?,
     );
+  }
+
+  ProfileModel copyWith({
+    String? username,
+    String? phoneNumber,
+    List<String>? addresses,
+    String? image,
+  }) {
+    return ProfileModel(
+      uid: uid,
+      email: email,
+      username: username ?? this.username,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      addresses: addresses ?? this.addresses,
+      image: image ?? this.image,
+    );
+  }
+
+  @override
+  List<Object?> get props => [uid, email, username, phoneNumber, addresses, image];
+
+
+    @override
+  String toString() {
+    return 'ProfileModel(username: $username, email: $email, phoneNumber: $phoneNumber, addresses: $addresses)';
   }
 }
