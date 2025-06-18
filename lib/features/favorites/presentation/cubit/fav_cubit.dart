@@ -38,7 +38,7 @@ class FavCubit extends Cubit<FavState> {
       favouritesProducts =
           await GetAllFavsUsecase(sl<BaseFavRepo>()).getAllFavs(userId!) ?? [];
       if (favouritesProducts.any((product) => product.id == productId)) {
-        RemoveFromFavUsecase(
+        await RemoveFromFavUsecase(
           sl<BaseFavRepo>(),
         ).removeFromFav(productId, userId!);
         favouritesProducts.removeWhere((product) => product.id == productId);

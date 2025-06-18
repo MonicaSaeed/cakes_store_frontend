@@ -81,10 +81,37 @@ class AuthGate extends StatelessWidget {
                               ..loadAllFavourites(),
                     child: const NavigationBarScreen(),
                   );
+
+                  // return BlocProvider<FavCubit>(
+                  //   create:
+                  //       (_) =>
+                  //           FavCubit(userId: userState.user.id)
+                  //             ..loadAllFavourites(),
+                  //   child: const NavigationBarScreen(),
+                  // );
                 }
 
-                return const Scaffold(
-                  body: Center(child: Text("Failed to load user.")),
+                return Scaffold(
+                  body: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Failed to load user."),
+                        SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ),
+                            );
+                          },
+                          child: const Text('Retry'),
+                        ),
+                      ],
+                    ),
+                  ),
                 );
               },
             ),

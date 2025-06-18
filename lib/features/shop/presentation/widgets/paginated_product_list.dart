@@ -119,7 +119,20 @@ class _PaginatedProductListState extends State<PaginatedProductList> {
             ],
           );
         } else if (state is ProductListError) {
-          return Center(child: Text(state.errorMessage));
+          return Center(
+            child: Column(
+              children: [
+                Text(state.errorMessage),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    context.read<ProductListCubit>().getfilteredProductList();
+                  },
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          );
         }
 
         return const SizedBox.shrink();
