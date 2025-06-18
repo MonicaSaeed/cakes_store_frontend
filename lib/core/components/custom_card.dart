@@ -145,7 +145,6 @@
 //   }
 // }
 import 'package:cakes_store_frontend/core/components/rating_bar_widget.dart';
-import 'package:cakes_store_frontend/core/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 

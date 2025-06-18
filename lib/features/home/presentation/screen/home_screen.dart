@@ -45,7 +45,7 @@ class HomeScreen extends StatelessWidget {
                   icon: Icon(
                     Icons.shopping_cart,
                     color: colorScheme.primary,
-                    size: 16.w,
+                    size: 18.w,
                   ),
                   onPressed: () {},
                 ),
@@ -53,7 +53,7 @@ class HomeScreen extends StatelessWidget {
                   icon: Icon(
                     Icons.logout,
                     color: colorScheme.primary,
-                    size: 16.w,
+                    size: 18.w,
                   ),
                   onPressed: () async {
                     await context.read<AuthCubit>().logoutUser();

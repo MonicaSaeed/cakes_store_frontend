@@ -24,4 +24,17 @@ class HomeCubit extends Cubit<HomeState> {
       if (!isClosed) emit(HomeError(e.toString()));
     }
   }
+
+  List<Product> getProductsByCategory(String categoryName) {
+    if (state is HomeLoaded) {
+      final allProducts = (state as HomeLoaded).products;
+      return allProducts
+          .where(
+            (product) =>
+                product.category?.toLowerCase() == categoryName.toLowerCase(),
+          )
+          .toList();
+    }
+    return [];
+  }
 }

@@ -1,10 +1,10 @@
+import 'package:cakes_store_frontend/core/components/navigation_index_notifier.dart';
 import 'package:flutter/material.dart';
 
 import '../../app_router.dart';
 
 class NavigationBarScreen extends StatefulWidget {
-  int currentIndex;
-  NavigationBarScreen({super.key, this.currentIndex = 0});
+  NavigationBarScreen({super.key});
 
   @override
   State<NavigationBarScreen> createState() => _NavigationBarScreenState();
@@ -36,56 +36,58 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
       onPopInvokedWithResult: (bool didPop, dynamic result) async {
         if (!didPop) {
           final isFirstRouteInCurrentTab =
-              !await _navigatorKeys[widget.currentIndex].currentState!
+              !await _navigatorKeys[navIndexNotifier.value].currentState!
                   .maybePop();
           if (isFirstRouteInCurrentTab) {
             return;
           }
         }
       },
-      child: Scaffold(
-        body: IndexedStack(
-          index: widget.currentIndex,
-          children: [
-            _buildNavigator(0),
-            _buildNavigator(1),
-            _buildNavigator(2),
-            _buildNavigator(3),
-            _buildNavigator(4),
-          ],
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: widget.currentIndex,
-          onTap: (index) {
-            if (index == widget.currentIndex) {
-              // Pop to first route if already on this tab
-              _navigatorKeys[index].currentState?.popUntil(
-                (route) => route.isFirst,
-              );
-            }
-            setState(() {
-              widget.currentIndex = index;
-            });
-          },
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.favorite),
-              label: 'Favorites',
+      child: ValueListenableBuilder<int>(
+        valueListenable: navIndexNotifier,
+        builder: (context, currentIndex, _) {
+          return Scaffold(
+            body: IndexedStack(
+              index: currentIndex,
+              children: List.generate(
+                _routes.length,
+                (index) => _buildNavigator(index),
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.list_alt),
-              label: 'Orders',
+            bottomNavigationBar: BottomNavigationBar(
+              currentIndex: currentIndex,
+              onTap: (index) {
+                if (index == currentIndex) {
+                  _navigatorKeys[index].currentState?.popUntil(
+                    (route) => route.isFirst,
+                  );
+                }
+                navIndexNotifier.value = index;
+              },
+              items: const [
+                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.favorite),
+                  label: 'Favorites',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.list_alt),
+                  label: 'Orders',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.shopping_bag_outlined),
+                  label: 'Shop',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'Profile',
+                ),
+              ],
+              type: BottomNavigationBarType.fixed,
+              selectedItemColor: Theme.of(context).colorScheme.primary,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_bag_outlined),
-              label: 'Shop',
-            ),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-          ],
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: Theme.of(context).colorScheme.primary,
-        ),
+          );
+        },
       ),
     );
   }

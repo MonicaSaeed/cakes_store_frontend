@@ -1,7 +1,10 @@
-import 'package:cakes_store_frontend/core/components/navigation_bar.dart';
+import 'package:cakes_store_frontend/core/components/navigation_index_notifier.dart';
+import 'package:cakes_store_frontend/features/home/presentation/cubit/home_cubit.dart';
+import 'package:cakes_store_frontend/features/home/presentation/screen/category_screen.dart';
 import 'package:cakes_store_frontend/features/shared_product/domain/entities/product.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ImageSlideShow extends StatefulWidget {
@@ -40,20 +43,25 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
         'imageUrl': 'assets/images/chocolate_cake.jpg',
         'title': 'Chocolate Cakes',
         'buttonTitle': 'Shop Now',
-        "onButtonPressed": (context) {
-          Navigator.of(context, rootNavigator: true).push(
-            MaterialPageRoute(
-              builder: (_) => NavigationBarScreen(currentIndex: 3),
-            ),
-          );
+        'onButtonPressed': (context) {
+          navIndexNotifier.value = 3;
         },
       },
       {
         'imageUrl': 'assets/images/cupcakes.jpg',
         'title': 'Cupcakes Collection',
         'buttonTitle': 'Show Collection',
-        "onButtonPressed": (context) {
-          // Navigator.pushNamed(context, AppRouter.categoryList, arguments: 'cupcakes');
+        'onButtonPressed': (BuildContext outerContext) {
+          Navigator.push(
+            outerContext,
+            MaterialPageRoute(
+              builder:
+                  (context) => BlocProvider.value(
+                    value: outerContext.read<HomeCubit>(),
+                    child: CategoryScreen(categoryName: 'Cupcakes'),
+                  ),
+            ),
+          );
         },
       },
     ]);

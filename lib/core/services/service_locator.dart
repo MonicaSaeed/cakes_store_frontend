@@ -1,5 +1,4 @@
 import 'package:cakes_store_frontend/core/constants/api_constants.dart';
-import 'package:cakes_store_frontend/features/auth/business/auth_cubit.dart';
 import 'package:cakes_store_frontend/features/favorites/data/datasource/fav_datasource.dart';
 import 'package:cakes_store_frontend/features/favorites/data/repository/fav_repo.dart';
 import 'package:cakes_store_frontend/features/favorites/domain/repository/base_fav_repo.dart';
@@ -8,7 +7,6 @@ import 'package:cakes_store_frontend/features/home/data/repositories/home_reposi
 import 'package:cakes_store_frontend/features/home/domain/usecases/get_all_products_usecase.dart';
 import 'package:cakes_store_frontend/features/home/presentation/cubit/home_cubit.dart';
 import 'package:cakes_store_frontend/features/product_details/data/datasource/product_details_data_source.dart';
-import 'package:cakes_store_frontend/features/product_details/presentation/cubit/product_details_cubit.dart';
 import 'package:cakes_store_frontend/features/shop/data/datasource/product_data_source.dart';
 import 'package:cakes_store_frontend/features/shop/data/repository/products_repository.dart';
 import 'package:cakes_store_frontend/features/shop/domain/repository/base_products_repository.dart';
@@ -63,14 +61,11 @@ void setupLocator() {
   sl.registerLazySingleton<HomeRemoteDatasource>(
     () => HomeRemoteDatasource(sl<Dio>()),
   );
-
   sl.registerLazySingleton<HomeRepository>(
     () => HomeRepository(sl<HomeRemoteDatasource>()),
   );
-
   sl.registerLazySingleton<GetAllProductsUseCase>(
     () => GetAllProductsUseCase(sl<HomeRepository>()),
   );
-
   sl.registerFactory<HomeCubit>(() => HomeCubit(sl<GetAllProductsUseCase>()));
 }

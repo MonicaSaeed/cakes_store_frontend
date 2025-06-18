@@ -1,5 +1,8 @@
 import 'package:cakes_store_frontend/core/theme/theme_colors.dart';
+import 'package:cakes_store_frontend/features/home/presentation/cubit/home_cubit.dart';
+import 'package:cakes_store_frontend/features/home/presentation/screen/category_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -40,7 +43,17 @@ class _CategoryListState extends State<CategoryList> {
             setState(() {
               _selectedIndex = index;
             });
-            // Navigator.pushNamed(context, AppRouter.productList, arguments: category['name']);
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (_) => BlocProvider.value(
+                      value: context.read<HomeCubit>(),
+                      child: CategoryScreen(categoryName: category['name']!),
+                    ),
+              ),
+            ).then((_) => _selectedIndex = -1);
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
