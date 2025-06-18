@@ -2,6 +2,8 @@ import 'package:cakes_store_frontend/core/components/custom_card.dart';
 import 'package:cakes_store_frontend/core/services/service_locator.dart';
 import 'package:cakes_store_frontend/features/auth/business/auth_cubit.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/screen/login_screen.dart';
+import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
+import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_state.dart';
 import 'package:cakes_store_frontend/features/home/presentation/components/category_list.dart';
 import 'package:cakes_store_frontend/features/home/presentation/components/image_slide_show.dart';
 import 'package:cakes_store_frontend/features/home/presentation/components/shimmer_home_loader.dart';
@@ -73,9 +75,10 @@ class HomeScreen extends StatelessWidget {
                 } else if (state is HomeLoaded) {
                   return LayoutBuilder(
                     builder: (context, constraints) {
-                      double screenWidth = constraints.maxWidth;
-                      int gridCrossAxisCount = (screenWidth ~/ 170).clamp(2, 6);
-                      double gridChildAspectRatio = 0.65;
+                      // Calculate responsive values based on screen size
+                      final isSmallScreen = constraints.maxWidth < 350;
+                      final gridCrossAxisCount = isSmallScreen ? 2 : 2;
+                      final gridChildAspectRatio = isSmallScreen ? 0.6 : 0.55;
 
                       return SingleChildScrollView(
                         child: Column(
@@ -130,6 +133,7 @@ class HomeScreen extends StatelessWidget {
                                                 TextDecoration.underline,
                                             decorationColor:
                                                 theme.colorScheme.primary,
+                                            // fontSize: 14.sp,
                                           ),
                                     ),
                                   ),
@@ -145,24 +149,58 @@ class HomeScreen extends StatelessWidget {
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: gridCrossAxisCount,
-                                      crossAxisSpacing: 12.w,
-                                      mainAxisSpacing: 12.h,
+                                      crossAxisSpacing: 10.w,
+                                      mainAxisSpacing: 10.h,
                                       childAspectRatio: gridChildAspectRatio,
                                     ),
                                 itemBuilder: (_, index) {
                                   final product = state.products[index];
-                                  return CustomCard(
-                                    cardtitle: product.name!,
-                                    price: '${product.price}',
-                                    rating: product.totalRating!,
-                                    imageUrl: product.imageUrl!,
-                                    favicon: Icons.favorite_border,
-                                    addcartIcon: Icons.shopping_cart_outlined,
+
+                                  return BlocBuilder<FavCubit, FavState>(
+                                    builder: (context, favState) {
+                                      // final isFav =
+                                      //     favState is FavLoaded &&
+                                      //     favState.favProducts.any(
+                                      //       (fav) => fav.id == product.id,
+                                      //     );
+                                      return CustomCard(
+                                        cardtitle: product.name!,
+                                        price: '${product.price}',
+                                        rating: product.totalRating!,
+                                        imageUrl: product.imageUrl!,
+                                        favicon:
+                                            context
+                                                    .read<FavCubit>()
+                                                    .favouritesProducts
+                                                    .any(
+                                                      (favProduct) =>
+                                                          favProduct.id ==
+                                                          product.id,
+                                                    )
+                                                ? const Icon(
+                                                  Icons.favorite,
+                                                  color: Colors.red,
+                                                )
+                                                : const Icon(
+                                                  Icons.favorite_border,
+                                                ),
+                                        addcartIcon: const Icon(
+                                          Icons.shopping_cart_outlined,
+                                        ),
+                                        onPressedFav: () {
+                                          context
+                                              .read<FavCubit>()
+                                              .toggleFavourite(
+                                                productId: product.id!,
+                                              );
+                                        },
+                                      );
+                                    },
                                   );
                                 },
                               ),
                             ),
-                            SizedBox(height: 16.h),
+                            SizedBox(height: 16.h), // Extra bottom padding
                           ],
                         ),
                       );
