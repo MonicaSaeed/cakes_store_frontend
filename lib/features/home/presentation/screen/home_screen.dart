@@ -1,4 +1,5 @@
 import 'package:cakes_store_frontend/core/components/custom_card.dart';
+import 'package:cakes_store_frontend/core/components/navigation_index_notifier.dart';
 import 'package:cakes_store_frontend/core/services/service_locator.dart';
 import 'package:cakes_store_frontend/features/auth/business/auth_cubit.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/screen/login_screen.dart';
@@ -122,7 +123,9 @@ class HomeScreen extends StatelessWidget {
                                         ),
                                   ),
                                   TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      navIndexNotifier.value = 3;
+                                    },
                                     child: Text(
                                       "See all",
                                       style: theme.textTheme.headlineMedium
@@ -158,11 +161,6 @@ class HomeScreen extends StatelessWidget {
 
                                   return BlocBuilder<FavCubit, FavState>(
                                     builder: (context, favState) {
-                                      // final isFav =
-                                      //     favState is FavLoaded &&
-                                      //     favState.favProducts.any(
-                                      //       (fav) => fav.id == product.id,
-                                      //     );
                                       return CustomCard(
                                         cardtitle: product.name!,
                                         price: '${product.price}',
@@ -200,7 +198,7 @@ class HomeScreen extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 16.h), // Extra bottom padding
+                            SizedBox(height: 16.h),
                           ],
                         ),
                       );
