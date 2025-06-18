@@ -15,13 +15,14 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
     AppRouter.home,
     AppRouter.favorites,
     AppRouter.orders,
-    // AppRouter.cart,
+    AppRouter.cart,
     AppRouter.shop,
     AppRouter.profile,
   ];
 
   // Maintain a navigator key for each tab
   final List<GlobalKey<NavigatorState>> _navigatorKeys = [
+    GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
@@ -51,6 +52,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
             _buildNavigator(2),
             _buildNavigator(3),
             _buildNavigator(4),
+            _buildNavigator(5),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -75,6 +77,10 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
             BottomNavigationBarItem(
               icon: Icon(Icons.list_alt),
               label: 'Orders',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart_outlined),
+              label: 'Cart',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.shopping_bag_outlined),
