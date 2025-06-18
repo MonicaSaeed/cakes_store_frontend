@@ -8,10 +8,10 @@ class CartRepository extends BaseCardRepository {
   CartRepository(this._cartDataSource);
 
   @override
-  Future<CartModel> getCartItems() async {
+  Future<CartModel> getCartItems(String? userId) async {
     try {
       print('repository: Getting cart items...${_cartDataSource}');
-      return await _cartDataSource.getCartItems();
+      return await _cartDataSource.getCartItems(userId);
     } on Exception catch (e) {
       if (e.toString().contains('Cart not found')) {
         throw Exception('Cart not found');
