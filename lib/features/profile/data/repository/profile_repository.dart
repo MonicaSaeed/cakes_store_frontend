@@ -1,9 +1,30 @@
-import '../webservice/profile_mongoservice.dart';
-import '../model/profile_mongo_model.dart';
+import 'package:cakes_store_frontend/features/profile/data/model/profile_mongo_model.dart';
+import 'package:cakes_store_frontend/features/profile/data/webservice/profile_mongoservice.dart';
 
 class ProfileRepository {
   final ProfileService _service = ProfileService();
 
-  Future<ProfileModel?> getProfile() => _service.getProfileFromMongo();
-  Future<void> updateProfile(ProfileModel profile) => _service.UpdateProfile(profile);
+  Future<ProfileModel?> getProfile() async {
+   try {
+      final profile = await _service.getProfileFromMongo();
+      print("repo: $profile");
+      return profile;
+    } catch (e) {
+      throw Exception('Failed to fetch profile: $e');
+    }
+  }
+
+  Future<void> updateProfile(ProfileModel profile) async {
+
+     try {
+      final updateprofile = await _service.UpdateProfile(profile);
+      print("updatedrepo: $profile");
+     return updateprofile;
+
+    } catch (e) {
+      throw Exception('Failed to fetch profile: $e');
+    }
+  }
 }
+
+
