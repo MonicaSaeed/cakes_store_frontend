@@ -16,7 +16,7 @@ class ProductModel extends Product {
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
-      id: json['id'],
+      id: json['_id'],
       name: json['name'],
       description: json['description'],
       imageUrl: json['imageUrl'],
@@ -27,5 +27,9 @@ class ProductModel extends Product {
       updatedAt: json['updatedAt'],
       stock: json['stock'],
     );
+  }
+  @override
+  String toString() {
+    return 'ProductModel(id: $id, name: $name, description: $description, imageUrl: $imageUrl, category: $category, price: $price, totalRating: $totalRating, discountPercentage: $discountPercentage, updatedAt: $updatedAt, stock: $stock)';
   }
 }

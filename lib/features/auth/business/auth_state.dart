@@ -23,6 +23,7 @@ class AuthVerificationEmailSent extends AuthState {
 
 class AuthSuccess extends AuthState {
   final User user;
+  // final UserMongoModel userfromMongo;
   AuthSuccess(this.user);
   @override
   List<Object?> get props => [user];
