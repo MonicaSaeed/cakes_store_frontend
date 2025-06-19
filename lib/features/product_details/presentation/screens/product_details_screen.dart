@@ -1,5 +1,6 @@
 import 'package:cakes_store_frontend/features/product_details/presentation/cubit/product_details_cubit.dart';
 import 'package:cakes_store_frontend/features/product_details/presentation/cubit/product_details_state.dart';
+import 'package:cakes_store_frontend/features/user_shared_feature/presentation/cubit/user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,7 +28,12 @@ class ProductDetailsScreen extends StatelessWidget {
     final productId = ModalRoute.of(context)!.settings.arguments as String;
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => ProductListCubit()..getProduct(productId)),
+        BlocProvider(
+          create:
+              (_) => ProductListCubit(
+                userId: context.read<UserCubit>().currentUser?.id,
+              )..getProduct(productId),
+        ),
         BlocProvider(create: (_) => ReviewsCubit()..getReviews(productId)),
       ],
       child: BlocBuilder<ProductListCubit, ProductDetailsState>(
@@ -64,9 +70,10 @@ class ProductDetailsScreen extends StatelessWidget {
                                   children: [
                                     Text(
                                       '${product.name}',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.headlineLarge,
+                                      style:
+                                          Theme.of(
+                                            context,
+                                          ).textTheme.headlineLarge,
                                     ),
                                     const Spacer(),
                                     IconButton(
@@ -95,23 +102,20 @@ class ProductDetailsScreen extends StatelessWidget {
                                   children: [
                                     Text(
                                       ' EGP ${(product.price! - (product.discountPercentage ?? 0) / 100 * product.price!).toStringAsFixed(2)}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyLarge?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
                                       ' EGP ${product.price!.toStringAsFixed(2)}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium
-                                          ?.copyWith(
-                                            decoration:
-                                                TextDecoration.lineThrough,
-                                          ),
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyMedium?.copyWith(
+                                        decoration: TextDecoration.lineThrough,
+                                      ),
                                     ),
                                     const SizedBox(width: 8),
                                     Container(
@@ -125,12 +129,11 @@ class ProductDetailsScreen extends StatelessWidget {
                                       ),
                                       child: Text(
                                         '${product.discountPercentage}% off',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(
-                                              color: const Color(0xFFFF8C8C),
-                                            ),
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyMedium?.copyWith(
+                                          color: const Color(0xFFFF8C8C),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -150,9 +153,8 @@ class ProductDetailsScreen extends StatelessWidget {
                                 const SizedBox(height: 16),
                                 Text(
                                   'Customer Reviews',
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.titleMedium,
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
                                 ),
                                 const SizedBox(height: 8),
                                 const ReviewsSection(),
