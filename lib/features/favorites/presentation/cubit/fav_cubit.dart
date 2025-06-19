@@ -6,7 +6,6 @@ import 'package:cakes_store_frontend/features/favorites/domain/usecases/remove_f
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_state.dart';
 import 'package:cakes_store_frontend/features/shared_product/data/models/product_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class FavCubit extends Cubit<FavState> {
   final String? userId;

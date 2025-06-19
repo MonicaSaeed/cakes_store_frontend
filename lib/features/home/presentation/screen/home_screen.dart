@@ -122,7 +122,7 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      navIndexNotifier.value = 3;
+                                      navIndexNotifier.value = 4;
                                     },
                                     child: Text(
                                       "See all",

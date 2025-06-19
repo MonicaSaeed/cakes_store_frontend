@@ -44,7 +44,7 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
         'title': 'Chocolate Cakes',
         'buttonTitle': 'Shop Now',
         'onButtonPressed': (context) {
-          navIndexNotifier.value = 3;
+          navIndexNotifier.value = 4;
         },
       },
       {

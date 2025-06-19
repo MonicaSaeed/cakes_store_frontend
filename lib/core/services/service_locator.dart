@@ -74,7 +74,4 @@ void setupLocator() {
     () => GetAllProductsUseCase(sl<HomeRepository>()),
   );
   sl.registerFactory<HomeCubit>(() => HomeCubit(sl<GetAllProductsUseCase>()));
-  sl.registerLazySingleton<BaseCardRepository>(
-    () => CartRepository(sl<CartDataSource>()),
-  );
 }
