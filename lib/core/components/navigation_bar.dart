@@ -11,7 +11,6 @@ class NavigationBarScreen extends StatefulWidget {
 }
 
 class _NavigationBarScreenState extends State<NavigationBarScreen> {
-  int _currentIndex = 0;
   final List<String> _routes = [
     AppRouter.home,
     AppRouter.favorites,
