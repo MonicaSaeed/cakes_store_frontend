@@ -4,24 +4,26 @@ import 'package:flutter/material.dart';
 import '../../app_router.dart';
 
 class NavigationBarScreen extends StatefulWidget {
-  NavigationBarScreen({super.key});
+  const NavigationBarScreen({super.key});
 
   @override
   State<NavigationBarScreen> createState() => _NavigationBarScreenState();
 }
 
 class _NavigationBarScreenState extends State<NavigationBarScreen> {
+  int _currentIndex = 0;
   final List<String> _routes = [
     AppRouter.home,
     AppRouter.favorites,
     AppRouter.orders,
-    // AppRouter.cart,
+    AppRouter.cart,
     AppRouter.shop,
     AppRouter.profile,
   ];
 
   // Maintain a navigator key for each tab
   final List<GlobalKey<NavigatorState>> _navigatorKeys = [
+    GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
@@ -38,9 +40,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
           final isFirstRouteInCurrentTab =
               !await _navigatorKeys[navIndexNotifier.value].currentState!
                   .maybePop();
-          if (isFirstRouteInCurrentTab) {
-            return;
-          }
+          if (isFirstRouteInCurrentTab) return;
         }
       },
       child: ValueListenableBuilder<int>(
@@ -50,7 +50,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
             body: IndexedStack(
               index: currentIndex,
               children: List.generate(
-                _routes.length,
+                _navigatorKeys.length,
                 (index) => _buildNavigator(index),
               ),
             ),
@@ -59,7 +59,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
               onTap: (index) {
                 if (index == currentIndex) {
                   _navigatorKeys[index].currentState?.popUntil(
-                    (route) => route.isFirst,
+                    (r) => r.isFirst,
                   );
                 }
                 navIndexNotifier.value = index;
@@ -73,6 +73,10 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.list_alt),
                   label: 'Orders',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.shopping_cart_outlined),
+                  label: 'Cart',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.shopping_bag_outlined),

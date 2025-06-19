@@ -1,4 +1,5 @@
 import 'package:cakes_store_frontend/core/constants/api_constants.dart';
+import 'package:cakes_store_frontend/features/cart/data/datasource/cart_data_source.dart';
 import 'package:cakes_store_frontend/features/favorites/data/datasource/fav_datasource.dart';
 import 'package:cakes_store_frontend/features/favorites/data/repository/fav_repo.dart';
 import 'package:cakes_store_frontend/features/favorites/domain/repository/base_fav_repo.dart';
@@ -18,43 +19,48 @@ import 'package:get_it/get_it.dart';
 
 import '../../features/auth/data/repository/auth_repository.dart';
 import '../../features/auth/data/webservice/auth_webservice.dart';
+import '../../features/cart/data/repository/cart_repository.dart';
+import '../../features/cart/domain/repository/base_cart_repository.dart';
 import '../../features/product_details/data/repository/product_details_repository.dart';
 import '../../features/product_details/domain/repository/base_product_details_repository.dart';
 
 final sl = GetIt.instance;
 
 void setupLocator() {
-  // Auth
+  // Services
+  // for product
+  sl.registerLazySingleton<ProductDataSource>(() => ProductDataSource());
+  // for auth
   sl.registerLazySingleton<AuthWebservice>(() => AuthWebservice());
-  sl.registerLazySingleton<AuthRepository>(() => AuthRepository(sl()));
-
-  //product details
+  // for product details
   sl.registerLazySingleton<ProductDetailsDataSource>(
     () => ProductDetailsDataSource(),
   );
+  // for fav
+  sl.registerLazySingleton<FavDatasource>(() => FavDatasource());
+  // for user
+  sl.registerLazySingleton<UserSharedDatasource>(() => UserSharedDatasource());
+  sl.registerLazySingleton<CartDataSource>(() => CartDataSource());
+
+  // Repository
+  sl.registerLazySingleton<BaseProductsRepository>(
+    () => ProductsRepository(sl<ProductDataSource>()),
+  );
+  sl.registerLazySingleton<AuthRepository>(() => AuthRepository(sl()));
   sl.registerLazySingleton<BaseProductDetailsRepository>(
     () => ProductDetailsRepository(sl<ProductDetailsDataSource>()),
   );
-
-  //fav
-  sl.registerLazySingleton<FavDatasource>(() => FavDatasource());
   sl.registerLazySingleton<BaseFavRepo>(() => FavRepo(sl<FavDatasource>()));
-
-  //user
-  sl.registerLazySingleton<UserSharedDatasource>(() => UserSharedDatasource());
   sl.registerLazySingleton<BaseUserRepo>(
     () => UserRepo(sl<UserSharedDatasource>()),
+  );
+  sl.registerLazySingleton<BaseCardRepository>(
+    () => CartRepository(sl<CartDataSource>()),
   );
 
   //Dio
   sl.registerLazySingleton<Dio>(
     () => Dio(BaseOptions(baseUrl: ApiConstance.baseUrl)),
-  );
-
-  //Shop
-  sl.registerLazySingleton<ProductDataSource>(() => ProductDataSource());
-  sl.registerLazySingleton<BaseProductsRepository>(
-    () => ProductsRepository(sl<ProductDataSource>()),
   );
 
   //Home
@@ -68,4 +74,7 @@ void setupLocator() {
     () => GetAllProductsUseCase(sl<HomeRepository>()),
   );
   sl.registerFactory<HomeCubit>(() => HomeCubit(sl<GetAllProductsUseCase>()));
+  sl.registerLazySingleton<BaseCardRepository>(
+    () => CartRepository(sl<CartDataSource>()),
+  );
 }
