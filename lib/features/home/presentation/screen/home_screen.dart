@@ -3,8 +3,6 @@ import 'package:cakes_store_frontend/core/components/navigation_index_notifier.d
 import 'package:cakes_store_frontend/core/services/service_locator.dart';
 import 'package:cakes_store_frontend/features/auth/business/auth_cubit.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/screen/login_screen.dart';
-import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
-import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_state.dart';
 import 'package:cakes_store_frontend/features/home/presentation/components/category_list.dart';
 import 'package:cakes_store_frontend/features/home/presentation/components/image_slide_show.dart';
 import 'package:cakes_store_frontend/features/home/presentation/components/shimmer_home_loader.dart';
@@ -158,43 +156,7 @@ class HomeScreen extends StatelessWidget {
                                     ),
                                 itemBuilder: (_, index) {
                                   final product = state.products[index];
-
-                                  return BlocBuilder<FavCubit, FavState>(
-                                    builder: (context, favState) {
-                                      return CustomCard(
-                                        cardtitle: product.name!,
-                                        price: '${product.price}',
-                                        rating: product.totalRating!,
-                                        imageUrl: product.imageUrl!,
-                                        favicon:
-                                            context
-                                                    .read<FavCubit>()
-                                                    .favouritesProducts
-                                                    .any(
-                                                      (favProduct) =>
-                                                          favProduct.id ==
-                                                          product.id,
-                                                    )
-                                                ? const Icon(
-                                                  Icons.favorite,
-                                                  color: Colors.red,
-                                                )
-                                                : const Icon(
-                                                  Icons.favorite_border,
-                                                ),
-                                        addcartIcon: const Icon(
-                                          Icons.shopping_cart_outlined,
-                                        ),
-                                        onPressedFav: () {
-                                          context
-                                              .read<FavCubit>()
-                                              .toggleFavourite(
-                                                productId: product.id!,
-                                              );
-                                        },
-                                      );
-                                    },
-                                  );
+                                  return CustomCard(product: product);
                                 },
                               ),
                             ),

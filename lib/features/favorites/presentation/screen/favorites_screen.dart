@@ -1,8 +1,6 @@
 import 'package:cakes_store_frontend/core/components/custom_card.dart';
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_state.dart';
-import 'package:cakes_store_frontend/features/user_shared_feature/presentation/cubit/user_cubit.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -155,30 +153,7 @@ class FavoritesScreen extends StatelessWidget {
                             );
                           },
 
-                          child: CustomCard(
-                            cardtitle: favorite.name!,
-                            price: '${favorite.price}',
-                            rating: favorite.totalRating!,
-                            imageUrl: favorite.imageUrl!,
-                            favicon:
-                                context.read<FavCubit>().favouritesProducts.any(
-                                      (favProduct) =>
-                                          favProduct.id == favorite.id,
-                                    )
-                                    ? const Icon(
-                                      Icons.favorite,
-                                      color: Colors.red,
-                                    )
-                                    : const Icon(Icons.favorite_border),
-                            addcartIcon: const Icon(
-                              Icons.shopping_cart_outlined,
-                            ),
-                            onPressedFav: () {
-                              context.read<FavCubit>().toggleFavourite(
-                                productId: favorite.id!,
-                              );
-                            },
-                          ),
+                          child: CustomCard(product: favorite),
                         );
                       },
                     ),

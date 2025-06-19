@@ -48,33 +48,7 @@ class CategoryScreen extends StatelessWidget {
                         final product = products[index];
                         return BlocBuilder<FavCubit, FavState>(
                           builder: (context, favState) {
-                            return CustomCard(
-                              cardtitle: product.name!,
-                              price: '${product.price}',
-                              rating: product.totalRating!,
-                              imageUrl: product.imageUrl!,
-                              favicon:
-                                  context
-                                          .read<FavCubit>()
-                                          .favouritesProducts
-                                          .any(
-                                            (favProduct) =>
-                                                favProduct.id == product.id,
-                                          )
-                                      ? const Icon(
-                                        Icons.favorite,
-                                        color: Colors.red,
-                                      )
-                                      : const Icon(Icons.favorite_border),
-                              addcartIcon: const Icon(
-                                Icons.shopping_cart_outlined,
-                              ),
-                              onPressedFav: () {
-                                context.read<FavCubit>().toggleFavourite(
-                                  productId: product.id!,
-                                );
-                              },
-                            );
+                            return CustomCard(product: product);
                           },
                         );
                       },

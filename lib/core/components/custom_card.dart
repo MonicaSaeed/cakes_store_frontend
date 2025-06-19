@@ -1,292 +1,237 @@
-// import 'package:cakes_store_frontend/core/components/rating_bar_widget.dart';
-// import 'package:cakes_store_frontend/core/theme/theme_colors.dart';
-// import 'package:flutter/material.dart';
-// import 'package:cached_network_image/cached_network_image.dart';
-// import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
-// class CustomCard extends StatelessWidget {
-//   CustomCard({
-//     super.key,
-//     required this.cardtitle,
-//     required this.price,
-//     required this.rating,
-//     required this.imageUrl,
-//     required this.favicon,
-//     required this.addcartIcon,
-//     this.onPressedCart,
-//     this.onPressedFav,
-//     this.onPressedcard,
-//   });
-
-//   final String cardtitle;
-//   final String price;
-//   final String imageUrl;
-//   final double rating;
-//   final IconData favicon;
-//   final IconData addcartIcon;
-//   final void Function()? onPressedCart;
-//   final void Function()? onPressedFav;
-//   final void Function()? onPressedcard;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       onTap: onPressedcard,
-//       child: Padding(
-//         padding: const EdgeInsets.only(bottom: 16.0, right: 8),
-//         child: Container(
-//           height: 550,
-//           decoration: BoxDecoration(
-//             color: Colors.white,
-//             borderRadius: BorderRadius.circular(16),
-//             boxShadow: [
-//               BoxShadow(
-//                 color: Colors.grey.withOpacity(0.2),
-//                 spreadRadius: 2,
-//                 blurRadius: 8,
-//                 offset: Offset(0, 4),
-//               ),
-//             ],
-//           ),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.stretch,
-//             children: [
-//               Stack(
-//                 alignment: Alignment.topRight,
-//                 children: [
-//                   Container(
-//                     height: 250,
-//                     width: double.infinity,
-//                     decoration: BoxDecoration(
-//                       borderRadius: BorderRadius.only(
-//                         topLeft: Radius.circular(16),
-//                         topRight: Radius.circular(16),
-//                       ),
-//                       image: DecorationImage(
-//                         image: CachedNetworkImageProvider(imageUrl),
-//                         fit: BoxFit.cover,
-//                       ),
-//                     ),
-//                   ),
-//                   Padding(
-//                     padding: const EdgeInsets.all(4.0),
-//                     child: Container(
-//                       width: 50,
-//                       padding: EdgeInsets.all(1),
-//                       decoration: BoxDecoration(
-//                         shape: BoxShape.circle,
-//                         color: Colors.white,
-//                       ),
-//                       child: IconButton(
-//                         icon: Icon(favicon, size: 25),
-//                         onPressed: onPressedFav,
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//               Padding(
-//                 padding: const EdgeInsets.symmetric(
-//                   horizontal: 12,
-//                   vertical: 8,
-//                 ),
-//                 child: SizedBox(
-//                   height: 50,
-//                   child: Text(
-//                     cardtitle,
-//                     maxLines: 2,
-//                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-//                       letterSpacing: 2,
-//                       fontSize: 18,
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//               Padding(
-//                 padding: const EdgeInsets.symmetric(horizontal: 6),
-//                 child: RatingBarWidget(rating: rating, reviewCount: 28),
-//               ),
-//               Padding(
-//                 padding: const EdgeInsets.symmetric(
-//                   horizontal: 12,
-//                   vertical: 4,
-//                 ),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children: [
-//                     Expanded(
-//                       child: Text(
-//                         '\$$price',
-//                         style: Theme.of(
-//                           context,
-//                         ).textTheme.headlineMedium?.copyWith(
-//                           letterSpacing: 2,
-//                           fontSize: 18,
-//                           fontWeight: FontWeight.w500,
-//                         ),
-//                       ),
-//                     ),
-//                     IconButton(
-//                       onPressed: onPressedCart,
-//                       icon: Icon(
-//                         addcartIcon,
-//                         color: LightThemeColors.primary,
-//                         size: 30,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-import 'package:cakes_store_frontend/core/components/rating_bar_widget.dart';
+import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
+import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_state.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class CustomCard extends StatelessWidget {
-  const CustomCard({
-    super.key,
-    required this.cardtitle,
-    required this.price,
-    required this.rating,
-    required this.imageUrl,
-    required this.favicon,
-    required this.addcartIcon,
-    this.onPressedCart,
-    this.onPressedFav,
-    this.onPressedcard,
-  });
+import 'package:cakes_store_frontend/core/components/rating_bar_widget.dart';
+import 'package:cakes_store_frontend/features/shared_product/domain/entities/product.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-  final String cardtitle;
-  final String price;
-  final String imageUrl;
-  final double rating;
-  final Icon favicon;
-  final Icon addcartIcon;
-  final void Function()? onPressedCart;
-  final void Function()? onPressedFav;
-  final void Function()? onPressedcard;
+class CustomCard extends StatelessWidget {
+  final Product product;
+
+  const CustomCard({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final theme = Theme.of(context);
+    final hasDiscount =
+        product.discountPercentage != null && product.discountPercentage! > 0;
+    final isOutOfStock = product.stock == 0;
+    final originalPrice = double.tryParse(product.price.toString()) ?? 0;
+    final discountedPrice =
+        hasDiscount
+            ? (originalPrice * (1 - product.discountPercentage! / 100))
+                .toStringAsFixed(2)
+            : product.price?.toStringAsFixed(2) ?? 0;
 
     return GestureDetector(
-      onTap: onPressedcard,
-      child: SizedBox(
-        width: screenWidth * 0.45,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 2,
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AspectRatio(
-                  aspectRatio: 1, //Width and height will be equal
-                  child: Stack(
-                    alignment: Alignment.topRight,
-                    children: [
-                      CachedNetworkImage(
-                        imageUrl: imageUrl,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                          ),
-                          child: AnimatedSwitcher(
-                            duration: Duration(milliseconds: 300),
-                            transitionBuilder: (child, animation) {
-                              return ScaleTransition(
-                                scale: animation,
-                                child: child,
-                              );
-                            },
-                            child: IconButton(
-                              icon: favicon,
-                              onPressed: onPressedFav,
-                              padding: EdgeInsets.zero,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
+      onTap: () {},
+      child: BlocBuilder<FavCubit, FavState>(
+        builder: (context, favState) {
+          return SizedBox(
+            width: screenWidth * 0.45,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 2,
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          cardtitle,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.headlineMedium
-                              ?.copyWith(letterSpacing: 2, fontSize: 16),
-                        ),
-                        SizedBox(height: 5),
-                        RatingBarWidget(rating: rating, reviewCount: 28),
-                        Spacer(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '$price EGP',
-                              style: Theme.of(
-                                context,
-                              ).textTheme.headlineMedium?.copyWith(
-                                letterSpacing: 2,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 1,
+                      child: Stack(
+                        alignment: Alignment.topRight,
+                        children: [
+                          CachedNetworkImage(
+                            imageUrl: product.imageUrl!,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          ),
+
+                          // Out of Stock Banner
+                          if (isOutOfStock)
+                            Positioned.fill(
+                              child: Container(
+                                color: Colors.black.withOpacity(0.4),
+                                child: const Center(
+                                  child: Text(
+                                    "Out of Stock",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                            IconButton(
-                              // icon: Icon(
-                              //   addcartIcon,
-                              //   size: 22,
-                              //   color: LightThemeColors.primary,
-                              // ),
-                              icon: addcartIcon,
-                              onPressed: onPressedCart,
-                              padding: EdgeInsets.zero,
+
+                          // Discount Badge
+                          if (hasDiscount)
+                            Positioned(
+                              top: 8,
+                              left: 8,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  "-${product.discountPercentage!.round()}%",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                          // Favorite Icon
+                          Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 300),
+                                transitionBuilder: (child, animation) {
+                                  return ScaleTransition(
+                                    scale: animation,
+                                    child: child,
+                                  );
+                                },
+                                child: IconButton(
+                                  icon:
+                                      context
+                                              .read<FavCubit>()
+                                              .favouritesProducts
+                                              .any(
+                                                (favProduct) =>
+                                                    favProduct.id == product.id,
+                                              )
+                                          ? const Icon(
+                                            Icons.favorite,
+                                            color: Colors.red,
+                                          )
+                                          : const Icon(Icons.favorite_border),
+                                  onPressed: () {
+                                    context.read<FavCubit>().toggleFavourite(
+                                      productId: product.id!,
+                                    );
+                                  },
+                                  padding: EdgeInsets.zero,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              product.name!,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.headlineMedium?.copyWith(
+                                letterSpacing: 2,
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            RatingBarWidget(
+                              rating: product.totalRating!,
+                              reviewCount: 28,
+                            ),
+                            const Spacer(),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      if (hasDiscount)
+                                        Text(
+                                          "${product.price} EGP",
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey,
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      Text(
+                                        "$discountedPrice EGP",
+                                        style: theme.textTheme.headlineMedium
+                                            ?.copyWith(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.black,
+                                            ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                if (!isOutOfStock)
+                                  SizedBox(
+                                    width: 32,
+                                    height: 32,
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.shopping_cart_outlined,
+                                      ),
+                                      iconSize: 20,
+                                      onPressed: isOutOfStock ? null : () {},
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(),
+                                      tooltip: "Add to Cart",
+                                    ),
+                                  ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
