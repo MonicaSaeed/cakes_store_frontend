@@ -9,7 +9,7 @@ class OrderRepositoryImpl implements BaseOrderRepository{
 
   @override
   Future<List<OrderEntity>> getUserOrders(String userId) async {
-    final orders = await remoteDataSource.fetchAllOrders();
-    return orders.where((order) => order.userId == userId).toList();
+    final orders = await remoteDataSource.fetchUserOrders(userId);
+    return orders;
   }
 }

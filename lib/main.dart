@@ -3,6 +3,7 @@ import 'package:cakes_store_frontend/features/auth/presentation/screen/login_scr
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
 import 'package:cakes_store_frontend/features/user_shared_feature/presentation/cubit/user_cubit.dart';
 import 'package:cakes_store_frontend/features/user_shared_feature/presentation/cubit/user_state.dart';
+import 'package:cakes_store_frontend/test_screens/api_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +23,7 @@ void main() async {
   await ThemeController().init();
   setupLocator();
 
+  ApiService().checkConnection();
   runApp(const MyApp());
 }
 

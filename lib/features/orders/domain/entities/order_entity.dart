@@ -4,8 +4,8 @@ class OrderEntity {
   final List<OrderItemEntity> orderItems;
   final String orderStatus;
   final double totalPrice;
-  final String promoCodeApplied;
-  final double discountApplied;
+  final String? promoCodeApplied;
+  final double? discountApplied;
   final String shippingAddress;
   final DateTime? deliveryDate;
   final String paymentStatus;
