@@ -30,10 +30,12 @@ class RatingComponent extends StatelessWidget {
                 const Icon(Icons.star_border, color: Colors.amber, size: 20),
           ),
         const SizedBox(width: 6),
-        Text(
-          '$rating ($reviewCount reviews)',
-          style: const TextStyle(fontSize: 14, color: Colors.black87),
-        ),
+        reviewCount > 0
+            ? Text(
+              '$rating ($reviewCount reviews)',
+              style: const TextStyle(fontSize: 14, color: Colors.black87),
+            )
+            : Text(''),
       ],
     );
   }

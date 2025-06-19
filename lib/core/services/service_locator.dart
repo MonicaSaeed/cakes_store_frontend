@@ -8,6 +8,7 @@ import 'package:cakes_store_frontend/features/home/data/repositories/home_reposi
 import 'package:cakes_store_frontend/features/home/domain/usecases/get_all_products_usecase.dart';
 import 'package:cakes_store_frontend/features/home/presentation/cubit/home_cubit.dart';
 import 'package:cakes_store_frontend/features/product_details/data/datasource/product_details_data_source.dart';
+import 'package:cakes_store_frontend/features/reviews/data/datasource/reviews_data_source.dart';
 import 'package:cakes_store_frontend/features/shop/data/datasource/product_data_source.dart';
 import 'package:cakes_store_frontend/features/shop/data/repository/products_repository.dart';
 import 'package:cakes_store_frontend/features/shop/domain/repository/base_products_repository.dart';
@@ -23,6 +24,8 @@ import '../../features/cart/data/repository/cart_repository.dart';
 import '../../features/cart/domain/repository/base_cart_repository.dart';
 import '../../features/product_details/data/repository/product_details_repository.dart';
 import '../../features/product_details/domain/repository/base_product_details_repository.dart';
+import '../../features/reviews/data/repository/reviews_repository.dart';
+import '../../features/reviews/domain/repository/base_reviews_repository.dart';
 
 final sl = GetIt.instance;
 
@@ -41,6 +44,7 @@ void setupLocator() {
   // for user
   sl.registerLazySingleton<UserSharedDatasource>(() => UserSharedDatasource());
   sl.registerLazySingleton<CartDataSource>(() => CartDataSource());
+  sl.registerLazySingleton<ReviewsDataSource>(() => ReviewsDataSource());
 
   // Repository
   sl.registerLazySingleton<BaseProductsRepository>(
@@ -74,4 +78,7 @@ void setupLocator() {
     () => GetAllProductsUseCase(sl<HomeRepository>()),
   );
   sl.registerFactory<HomeCubit>(() => HomeCubit(sl<GetAllProductsUseCase>()));
+  sl.registerLazySingleton<BaseReviewsRepository>(
+    () => ReviewsRepository(sl<ReviewsDataSource>()),
+  );
 }
