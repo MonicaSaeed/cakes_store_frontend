@@ -1,12 +1,12 @@
 import 'package:cakes_store_frontend/features/product_details/presentation/cubit/product_details_cubit.dart';
 import 'package:cakes_store_frontend/features/product_details/presentation/cubit/product_details_state.dart';
-import 'package:cakes_store_frontend/features/user_shared_feature/presentation/cubit/user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/components/rating_component.dart';
 import '../../../reviews/presentation/cubit/reviews_cubit.dart';
 import '../../../reviews/presentation/screens/reviews_screen.dart';
+import '../../../user_shared_feature/presentation/cubit/user_cubit.dart';
 import '../components/quantity_selector.dart';
 
 // to navigate to this screen, you can use the following code snippet:
@@ -21,18 +21,20 @@ import '../components/quantity_selector.dart';
 // },
 
 class ProductDetailsScreen extends StatelessWidget {
-  const ProductDetailsScreen({super.key});
+  final String productId;
+  const ProductDetailsScreen({super.key, required this.productId});
 
   @override
   Widget build(BuildContext context) {
-    final productId = ModalRoute.of(context)!.settings.arguments as String;
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create:
-              (_) => ProductListCubit(
-                userId: context.read<UserCubit>().currentUser?.id,
-              )..getProduct(productId),
+              (_) =>
+                  ProductListCubit()..getProduct(
+                    productId,
+                    context.read<UserCubit>().currentUser?.id,
+                  ),
         ),
         BlocProvider(create: (_) => ReviewsCubit()..getReviews(productId)),
       ],

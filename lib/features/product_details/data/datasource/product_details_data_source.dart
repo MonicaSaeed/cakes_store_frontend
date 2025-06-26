@@ -1,18 +1,24 @@
-import 'dart:convert';
-
 import 'package:cakes_store_frontend/core/constants/api_constants.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 import '../../../shared_product/data/models/product_model.dart';
 
 class ProductDetailsDataSource {
-  Future<ProductModel> getProduct(String productId) async {
-    final response = await http.get(
-      Uri.parse('${ApiConstance.productsUrl}/$productId'),
+  final Dio _dio;
+
+  ProductDetailsDataSource({Dio? dio})
+    : _dio =
+          dio ??
+          Dio(BaseOptions(headers: {'Content-Type': 'application/json'}));
+
+  Future<ProductModel> getProduct(String productId, String? userId) async {
+    final response = await _dio.get(
+      '${ApiConstance.productsUrl}/$productId',
+      data: {'userId': userId},
     );
-    print('Response status: ${response.statusCode}');
+
     if (response.statusCode == 200) {
-      final decoded = jsonDecode(response.body);
+      final decoded = response.data;
       return ProductModel.fromJson(decoded['data']);
     } else if (response.statusCode == 404) {
       throw Exception('Product not found');

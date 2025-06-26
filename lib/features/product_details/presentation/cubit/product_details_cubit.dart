@@ -7,14 +7,14 @@ import '../../../shared_product/data/models/product_model.dart';
 import '../../domain/repository/base_product_details_repository.dart';
 
 class ProductListCubit extends Cubit<ProductDetailsState> {
-  ProductListCubit({required userId}) : super(const ProductDetailsLoading());
+  ProductListCubit() : super(const ProductDetailsLoading());
 
-  getProduct(String productId) async {
+  getProduct(String productId, String? userId) async {
     try {
       emit(const ProductDetailsLoading());
       ProductModel? product = await GetProductDetailsUseCase(
         sl<BaseProductDetailsRepository>(),
-      ).getProduct(productId);
+      ).getProduct(productId, userId);
 
       if (product != null) {
         emit(ProductDetailsLoaded(product));

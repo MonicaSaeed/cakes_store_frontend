@@ -8,9 +8,9 @@ class ProductDetailsRepository extends BaseProductDetailsRepository {
   ProductDetailsRepository(this._productDetailsDataSource);
 
   @override
-  Future<ProductModel> getProduct(String productId) async {
+  Future<ProductModel> getProduct(String productId, String? userId) async {
     try {
-      return await _productDetailsDataSource.getProduct(productId);
+      return await _productDetailsDataSource.getProduct(productId, userId);
     } catch (e) {
       throw Exception('$e');
     }
