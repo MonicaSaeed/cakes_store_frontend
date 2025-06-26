@@ -1,14 +1,14 @@
 import 'package:cakes_store_frontend/core/theme/theme_controller.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/components/auth_divider.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/components/custom_password_textfield.dart';
-import 'package:cakes_store_frontend/features/auth/presentation/components/social_auth_buttons.dart';
+import 'package:cakes_store_frontend/features/auth/presentation/components/social_auth_button.dart';
 import 'package:cakes_store_frontend/features/home/presentation/screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cakes_store_frontend/core/components/custom_elevated_button.dart';
 import 'package:cakes_store_frontend/core/components/custom_text_field.dart';
 import 'package:cakes_store_frontend/core/services/toast_helper.dart';
-import 'package:cakes_store_frontend/features/auth/business/auth_cubit.dart';
+import 'package:cakes_store_frontend/features/auth/domain/auth_cubit.dart';
 import 'package:cakes_store_frontend/features/auth/data/model/user_firebase_model.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/screen/login_screen.dart';
 
@@ -285,13 +285,26 @@ class _RegisterScreenState extends State<RegisterScreen>
                                         textdata: 'Sign Up',
                                         onPressed: _onRegisterPressed,
                                       ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0,
+                                      ),
+                                      child: SocialAuthButton(
+                                        assetPath: 'assets/images/google.png',
+                                        onPressed: () {
+                                          context
+                                              .read<AuthCubit>()
+                                              .signInWithGoogle();
+                                        },
+                                        text: 'Sign Up with Google',
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
                             ),
                             const SizedBox(height: 20),
                             AuthDivider(text: 'Or sign up with'),
-                            SocialAuthButtons(),
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                 vertical: 12.0,

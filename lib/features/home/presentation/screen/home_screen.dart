@@ -1,7 +1,7 @@
 import 'package:cakes_store_frontend/core/components/custom_card.dart';
 import 'package:cakes_store_frontend/core/components/navigation_index_notifier.dart';
 import 'package:cakes_store_frontend/core/services/service_locator.dart';
-import 'package:cakes_store_frontend/features/auth/business/auth_cubit.dart';
+import 'package:cakes_store_frontend/features/auth/domain/auth_cubit.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/screen/login_screen.dart';
 import 'package:cakes_store_frontend/features/home/presentation/components/category_list.dart';
 import 'package:cakes_store_frontend/features/home/presentation/components/image_slide_show.dart';

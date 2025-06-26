@@ -1,10 +1,9 @@
 import 'package:cakes_store_frontend/core/components/navigation_bar.dart';
 import 'package:cakes_store_frontend/core/services/toast_helper.dart';
-import 'package:cakes_store_frontend/features/auth/business/auth_cubit.dart';
+import 'package:cakes_store_frontend/features/auth/domain/auth_cubit.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/components/auth_divider.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/components/login_form.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/components/login_header.dart';
-import 'package:cakes_store_frontend/features/auth/presentation/components/social_auth_buttons.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/screen/register_screen.dart';
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
 import 'package:cakes_store_frontend/features/user_shared_feature/presentation/cubit/user_cubit.dart';
@@ -200,7 +199,6 @@ class _LoginScreenState extends State<LoginScreen>
                               ),
                               const SizedBox(height: 20),
                               const AuthDivider(text: 'Or log in with'),
-                              const SocialAuthButtons(),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 12.0,

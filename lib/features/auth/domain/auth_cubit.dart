@@ -40,7 +40,6 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       await _repository.registerUser(user);
       final currentUser = await _repository.getCurrentUser();
-
       if (currentUser != null) {
         emit(AuthRegistrationSuccess(currentUser));
         await _repository.sendVerificationEmail(currentUser);
@@ -64,13 +63,14 @@ class AuthCubit extends Cubit<AuthState> {
       final user = credential.user;
       if (user != null) {
         if (user.emailVerified) {
-          // final userMongo = await _repository.getUserFromMongo(user.uid ?? '');
-
-          // emit(AuthSuccess(user, userMongo!));
           emit(AuthSuccess(user));
         } else {
+          final currentUser = await _repository.getCurrentUser();
+          await _repository.sendVerificationEmail(currentUser!);
           emit(
-            AuthEmailNotVerified('Please verify your email before logging in.'),
+            AuthEmailNotVerified(
+              'Your email is not verified. We’ve sent you another verification email.',
+            ),
           );
         }
       } else {
@@ -78,7 +78,14 @@ class AuthCubit extends Cubit<AuthState> {
       }
     } catch (e) {
       print('Error in loginUser: $e');
-      emit(AuthFailure(e.toString()));
+      if (e.toString().trim() ==
+          'Exception: Too many attempts. Please try again later.') {
+        emit(
+          AuthFailure("Your email is not verified. Please check your inbox."),
+        );
+      } else {
+        emit(AuthFailure(e.toString()));
+      }
     }
   }
 

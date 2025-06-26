@@ -12,7 +12,7 @@ import 'core/services/preference_manager.dart';
 import 'core/theme/dark_theme.dart';
 import 'core/theme/light_theme.dart';
 import 'core/theme/theme_controller.dart';
-import 'features/auth/business/auth_cubit.dart';
+import 'features/auth/domain/auth_cubit.dart';
 import 'firebase_options.dart';
 
 void main() async {
