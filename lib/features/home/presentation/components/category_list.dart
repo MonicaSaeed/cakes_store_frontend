@@ -1,6 +1,7 @@
+import 'package:cakes_store_frontend/app_router.dart';
 import 'package:cakes_store_frontend/core/theme/theme_colors.dart';
+import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
 import 'package:cakes_store_frontend/features/home/presentation/cubit/home_cubit.dart';
-import 'package:cakes_store_frontend/features/home/presentation/screen/category_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -43,17 +44,19 @@ class _CategoryListState extends State<CategoryList> {
             setState(() {
               _selectedIndex = index;
             });
-
-            Navigator.push(
+            Navigator.pushNamed(
               context,
-              MaterialPageRoute(
-                builder:
-                    (_) => BlocProvider.value(
-                      value: context.read<HomeCubit>(),
-                      child: CategoryScreen(categoryName: category['name']!),
-                    ),
-              ),
-            ).then((_) => _selectedIndex = -1);
+              AppRouter.category,
+              arguments: {
+                'categoryName': category['name'],
+                'homeCubit': context.read<HomeCubit>(),
+                'favCubit': context.read<FavCubit>(),
+              },
+            ).then(
+              (_) => setState(() {
+                _selectedIndex = -1;
+              }),
+            );
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

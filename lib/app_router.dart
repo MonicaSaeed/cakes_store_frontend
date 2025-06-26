@@ -1,7 +1,12 @@
+import 'package:cakes_store_frontend/core/services/service_locator.dart';
+import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
+import 'package:cakes_store_frontend/features/home/presentation/cubit/home_cubit.dart';
+import 'package:cakes_store_frontend/features/home/presentation/screen/category_screen.dart';
 import 'package:cakes_store_frontend/features/product_details/presentation/screens/product_details_screen.dart';
 import 'package:cakes_store_frontend/features/shop/presentation/screens/shop_product_screen.dart';
 import 'package:cakes_store_frontend/main.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/components/not_found_screen.dart';
 import 'features/auth/presentation/screen/login_screen.dart';
@@ -25,6 +30,7 @@ class AppRouter {
   static const String shop = '/shop';
   static const String productList = '/product-list';
   static const String productDetails = '/product-details';
+  static const String category = '/category-products';
 
   Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -52,7 +58,22 @@ class AppRouter {
               (_) =>
                   ProductDetailsScreen(productId: settings.arguments as String),
         );
+      case category:
+        final args = settings.arguments as Map<String, dynamic>;
+        final categoryName = args['categoryName'] as String;
+        final homeCubit = args['homeCubit'] as HomeCubit;
+        final favCubit = args['favCubit'] as FavCubit;
 
+        return CupertinoPageRoute(
+          builder:
+              (_) => MultiBlocProvider(
+                providers: [
+                  BlocProvider.value(value: homeCubit),
+                  BlocProvider.value(value: favCubit),
+                ],
+                child: CategoryScreen(categoryName: categoryName),
+              ),
+        );
       default:
         return CupertinoPageRoute(builder: (_) => const NotFoundScreen());
     }
