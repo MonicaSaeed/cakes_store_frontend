@@ -62,7 +62,7 @@ class OrdersScreen extends StatelessWidget {
                               MaterialPageRoute(
                                 builder:
                                     (context) =>
-                                        OrderDetailsScreen(orderId: order.id),
+                                        OrderDetailsScreen(order: order),
                               ),
                             );
                           },
