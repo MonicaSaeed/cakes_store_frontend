@@ -1,5 +1,6 @@
 import 'package:cakes_store_frontend/features/product_details/presentation/screens/product_details_screen.dart';
 import 'package:cakes_store_frontend/features/shop/presentation/screens/shop_product_screen.dart';
+import 'package:cakes_store_frontend/main.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'core/components/not_found_screen.dart';
@@ -13,7 +14,7 @@ import 'features/profile/presentation/screen/profile_screen.dart';
 
 class AppRouter {
   // Define your routes here
-  static const String home = '/';
+  static const String home = '/home';
   static const String profile = '/profile';
   static const String orders = '/orders';
   static const String favorites = '/favorites';
@@ -27,6 +28,8 @@ class AppRouter {
 
   Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case '/':
+        return CupertinoPageRoute(builder: (_) => const AuthGate());
       case home:
         return CupertinoPageRoute(builder: (_) => const HomeScreen());
       case profile:
@@ -45,8 +48,9 @@ class AppRouter {
         return CupertinoPageRoute(builder: (_) => const ShopProductScreen());
       case productDetails:
         return CupertinoPageRoute(
-          builder: (_) => const ProductDetailsScreen(),
-          settings: settings,
+          builder:
+              (_) =>
+                  ProductDetailsScreen(productId: settings.arguments as String),
         );
 
       default:

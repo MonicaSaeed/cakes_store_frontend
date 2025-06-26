@@ -1,7 +1,11 @@
-import 'package:cakes_store_frontend/core/components/navigation_index_notifier.dart';
 import 'package:flutter/material.dart';
 
-import '../../app_router.dart';
+import '../../features/cart/presentation/screen/cart_screen.dart';
+import '../../features/favorites/presentation/screen/favorites_screen.dart';
+import '../../features/home/presentation/screen/home_screen.dart';
+import '../../features/orders/presentation/screen/orders_screen.dart';
+import '../../features/profile/presentation/screen/profile_screen.dart';
+import '../../features/shop/presentation/screens/shop_product_screen.dart';
 
 class NavigationBarScreen extends StatefulWidget {
   const NavigationBarScreen({super.key});
@@ -11,98 +15,64 @@ class NavigationBarScreen extends StatefulWidget {
 }
 
 class _NavigationBarScreenState extends State<NavigationBarScreen> {
-  final List<String> _routes = [
-    AppRouter.home,
-    AppRouter.favorites,
-    AppRouter.orders,
-    AppRouter.cart,
-    AppRouter.shop,
-    AppRouter.profile,
-  ];
-
-  // Maintain a navigator key for each tab
-  final List<GlobalKey<NavigatorState>> _navigatorKeys = [
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-  ];
-
+  int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, dynamic result) async {
         if (!didPop) {
-          final isFirstRouteInCurrentTab =
-              !await _navigatorKeys[navIndexNotifier.value].currentState!
-                  .maybePop();
-          if (isFirstRouteInCurrentTab) return;
+          if (currentIndex != 0) {
+            setState(() {
+              currentIndex = 0;
+            });
+          } else {
+            // If already on Home, exit the app
+            return; // This will close the app
+          }
         }
       },
-      child: ValueListenableBuilder<int>(
-        valueListenable: navIndexNotifier,
-        builder: (context, currentIndex, _) {
-          return Scaffold(
-            body: IndexedStack(
-              index: currentIndex,
-              children: List.generate(
-                _navigatorKeys.length,
-                (index) => _buildNavigator(index),
-              ),
+      child: Scaffold(
+        body:
+            [
+              const HomeScreen(),
+              const FavoritesScreen(),
+              const OrdersScreen(),
+              const CartScreen(),
+              const ShopProductScreen(),
+              const ProfileScreen(),
+            ][currentIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: currentIndex,
+          onTap: (index) {
+            setState(() {
+              currentIndex = index;
+            });
+          },
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite),
+              label: 'Favorites',
             ),
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: currentIndex,
-              onTap: (index) {
-                if (index == currentIndex) {
-                  _navigatorKeys[index].currentState?.popUntil(
-                    (r) => r.isFirst,
-                  );
-                }
-                navIndexNotifier.value = index;
-              },
-              items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.favorite),
-                  label: 'Favorites',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.list_alt),
-                  label: 'Orders',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_cart_outlined),
-                  label: 'Cart',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_bag_outlined),
-                  label: 'Shop',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Profile',
-                ),
-              ],
-              type: BottomNavigationBarType.fixed,
-              selectedItemColor: Theme.of(context).colorScheme.primary,
+            BottomNavigationBarItem(
+              icon: Icon(Icons.list_alt),
+              label: 'Orders',
             ),
-          );
-        },
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart_outlined),
+              label: 'Cart',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_bag_outlined),
+              label: 'Shop',
+            ),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          ],
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: Theme.of(context).colorScheme.primary,
+        ),
       ),
-    );
-  }
-
-  Widget _buildNavigator(int index) {
-    return Navigator(
-      key: _navigatorKeys[index],
-      onGenerateRoute: (settings) {
-        return AppRouter().generateRoute(
-          RouteSettings(name: _routes[index], arguments: settings.arguments),
-        );
-      },
     );
   }
 }

@@ -6,9 +6,9 @@ class GetProductDetailsUseCase {
 
   GetProductDetailsUseCase(this._repo);
 
-  Future<ProductModel> getProduct(String productId) async {
+  Future<ProductModel> getProduct(String productId, String? userId) async {
     try {
-      return await _repo.getProduct(productId);
+      return await _repo.getProduct(productId, userId);
     } catch (e) {
       throw Exception('Failed to get product: $e');
     }
