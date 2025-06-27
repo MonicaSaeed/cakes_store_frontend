@@ -1,17 +1,12 @@
-import 'dart:developer';
-
-import 'package:cakes_store_frontend/core/services/service_locator.dart';
-import 'package:cakes_store_frontend/features/orders/domain/repos/base_order_repository.dart';
-import 'package:cakes_store_frontend/features/orders/presentation/cubit/get_orders_cubit.dart';
-import 'package:cakes_store_frontend/features/orders/presentation/cubit/order_cubit_states.dart';
+import 'package:cakes_store_frontend/features/orders/presentation/cubit/orders_cubit/get_orders_cubit.dart';
+import 'package:cakes_store_frontend/features/orders/presentation/cubit/orders_cubit/order_cubit_states.dart';
 import 'package:cakes_store_frontend/features/orders/presentation/screen/empty_order_screen.dart';
 import 'package:cakes_store_frontend/features/orders/presentation/screen/order_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OrdersScreen extends StatelessWidget {
-  final BaseOrderRepository orderRepository = sl<BaseOrderRepository>();
-  OrdersScreen({super.key});
+  const OrdersScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,4 @@
-import 'package:cakes_store_frontend/features/orders/presentation/cubit/get_orders_cubit.dart';
+import 'package:cakes_store_frontend/features/orders/presentation/cubit/orders_cubit/get_orders_cubit.dart';
 import 'package:cakes_store_frontend/features/product_details/presentation/screens/product_details_screen.dart';
 import 'package:cakes_store_frontend/features/shop/presentation/screens/shop_product_screen.dart';
 import 'package:cakes_store_frontend/features/user_shared_feature/presentation/cubit/user_cubit.dart';

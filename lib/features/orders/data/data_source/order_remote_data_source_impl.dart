@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:cakes_store_frontend/features/orders/data/models/product_model.dart';
+import 'package:cakes_store_frontend/features/orders/domain/entities/product_entity.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:cakes_store_frontend/core/constants/api_constants.dart';
@@ -33,6 +35,17 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       }
     } catch (e) {
       throw Exception("An error occurred while fetching user orders: $e");
+    }
+  }
+
+  @override
+  Future<ProductEntity> getProductById(String productId) async {
+    final response = await client.get(Uri.parse("${ApiConstance.productsUrl}/$productId"));
+
+    if (response.statusCode == 200) {
+      return ProductModel.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load product');
     }
   }
 }
