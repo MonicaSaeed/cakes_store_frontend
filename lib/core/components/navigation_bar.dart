@@ -1,4 +1,7 @@
+import 'package:cakes_store_frontend/features/orders/presentation/cubit/orders_cubit/get_orders_cubit.dart';
+import 'package:cakes_store_frontend/features/user_shared_feature/presentation/cubit/user_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../features/cart/presentation/screen/cart_screen.dart';
 import '../../features/favorites/presentation/screen/favorites_screen.dart';
@@ -37,7 +40,10 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
             [
               const HomeScreen(),
               const FavoritesScreen(),
-              const OrdersScreen(),
+               BlocProvider(
+                create: (_) => GetOrdersCubit()..getOrders(context.read<UserCubit>().currentUser?.id),
+                child: OrdersScreen(),
+              ),
               CartScreen(),
               const ShopProductScreen(),
               const ProfileScreen(),

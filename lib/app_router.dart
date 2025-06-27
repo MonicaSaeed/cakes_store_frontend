@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cakes_store_frontend/features/orders/presentation/cubit/orders_cubit/get_orders_cubit.dart';
 import 'package:cakes_store_frontend/features/product_details/presentation/screens/product_details_screen.dart';
 import 'package:cakes_store_frontend/features/shop/presentation/screens/shop_product_screen.dart';
@@ -5,8 +7,6 @@ import 'package:cakes_store_frontend/features/user_shared_feature/presentation/c
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
 import 'package:cakes_store_frontend/features/home/presentation/cubit/home_cubit.dart';
 import 'package:cakes_store_frontend/features/home/presentation/screen/category_screen.dart';
-import 'package:cakes_store_frontend/features/product_details/presentation/screens/product_details_screen.dart';
-import 'package:cakes_store_frontend/features/shop/presentation/screens/shop_product_screen.dart';
 import 'package:cakes_store_frontend/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,6 +44,7 @@ class AppRouter {
       case profile:
         return CupertinoPageRoute(builder: (_) => const ProfileScreen());
       case orders:
+      log('into ordewrsssssssssss');
         return CupertinoPageRoute(
           builder:
               (context) => BlocProvider(

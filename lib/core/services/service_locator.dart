@@ -9,14 +9,10 @@ import 'package:cakes_store_frontend/features/product_details/data/datasource/pr
 import 'package:cakes_store_frontend/core/constants/api_constants.dart';
 import 'package:cakes_store_frontend/features/cart/data/datasource/cart_data_source.dart';
 import 'package:cakes_store_frontend/features/cart/data/datasource/promo_code_data_source.dart';
-import 'package:cakes_store_frontend/features/favorites/data/datasource/fav_datasource.dart';
-import 'package:cakes_store_frontend/features/favorites/data/repository/fav_repo.dart';
-import 'package:cakes_store_frontend/features/favorites/domain/repository/base_fav_repo.dart';
 import 'package:cakes_store_frontend/features/home/data/datasource/home_remote_datasource.dart';
 import 'package:cakes_store_frontend/features/home/data/repositories/home_repository.dart';
 import 'package:cakes_store_frontend/features/home/domain/usecases/get_all_products_usecase.dart';
 import 'package:cakes_store_frontend/features/home/presentation/cubit/home_cubit.dart';
-import 'package:cakes_store_frontend/features/product_details/data/datasource/product_details_data_source.dart';
 import 'package:cakes_store_frontend/features/reviews/data/datasource/reviews_data_source.dart';
 import 'package:cakes_store_frontend/features/shop/data/datasource/product_data_source.dart';
 import 'package:cakes_store_frontend/features/shop/data/repository/products_repository.dart';
@@ -77,7 +73,7 @@ void setupLocator() {
     () => OrderRemoteDataSourceImpl(sl<http.Client>()),
   );
   sl.registerLazySingleton<BaseOrderRepository>(
-    () => OrderRepositoryImpl(sl<OrderRemoteDataSource>()),
+    () => OrderRepositoryImpl(sl<OrderRemoteDataSource>()),);
   sl.registerLazySingleton<BaseCardRepository>(
     () => CartRepository(sl<CartDataSource>()),
   );
