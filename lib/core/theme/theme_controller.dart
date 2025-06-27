@@ -10,6 +10,7 @@ class ThemeController {
   init() {
     bool result = PreferencesManager().getBool(PreferencesKeys.theme) ?? false;
     themeNotifier.value = result ? ThemeMode.dark : ThemeMode.light;
+    
   }
 
   static toggleTheme() async {

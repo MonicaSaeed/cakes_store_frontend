@@ -1,3 +1,4 @@
+import 'package:cakes_store_frontend/core/constants/preferences_keys.dart';
 import 'package:cakes_store_frontend/core/services/service_locator.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/screen/login_screen.dart';
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
@@ -21,9 +22,8 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await PreferencesManager().init();
   await ThemeController().init();
+  
   setupLocator();
-
-  ApiService().checkConnection();
   runApp(const MyApp());
 }
 
