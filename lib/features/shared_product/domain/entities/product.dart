@@ -9,6 +9,7 @@ class Product {
   final int? discountPercentage;
   final String? updatedAt;
   final int? stock;
+  final bool userOrdered;
 
   Product({
     required this.id,
@@ -21,5 +22,6 @@ class Product {
     required this.discountPercentage,
     required this.updatedAt,
     required this.stock,
+    this.userOrdered = false,
   });
 }

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../app_router.dart';
+import '../../features/cart/presentation/screen/cart_screen.dart';
+import '../../features/favorites/presentation/screen/favorites_screen.dart';
+import '../../features/home/presentation/screen/home_screen.dart';
+import '../../features/orders/presentation/screen/orders_screen.dart';
+import '../../features/profile/presentation/screen/profile_screen.dart';
+import '../../features/shop/presentation/screens/shop_product_screen.dart';
 
 class NavigationBarScreen extends StatefulWidget {
   const NavigationBarScreen({super.key});
@@ -10,60 +15,38 @@ class NavigationBarScreen extends StatefulWidget {
 }
 
 class _NavigationBarScreenState extends State<NavigationBarScreen> {
-  int _currentIndex = 0;
-  final List<String> _routes = [
-    AppRouter.home,
-    AppRouter.favorites,
-    AppRouter.orders,
-    // AppRouter.cart,
-    AppRouter.shop,
-    AppRouter.profile,
-  ];
-
-  // Maintain a navigator key for each tab
-  final List<GlobalKey<NavigatorState>> _navigatorKeys = [
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-  ];
-
+  int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, dynamic result) async {
         if (!didPop) {
-          final isFirstRouteInCurrentTab =
-              !await _navigatorKeys[_currentIndex].currentState!.maybePop();
-          if (isFirstRouteInCurrentTab) {
-            return;
+          if (currentIndex != 0) {
+            setState(() {
+              currentIndex = 0;
+            });
+          } else {
+            // If already on Home, exit the app
+            return; // This will close the app
           }
         }
       },
       child: Scaffold(
-        body: IndexedStack(
-          index: _currentIndex,
-          children: [
-            _buildNavigator(0),
-            _buildNavigator(1),
-            _buildNavigator(2),
-            _buildNavigator(3),
-            _buildNavigator(4),
-          ],
-        ),
+        body:
+            [
+              const HomeScreen(),
+              const FavoritesScreen(),
+              const OrdersScreen(),
+              CartScreen(),
+              const ShopProductScreen(),
+              const ProfileScreen(),
+            ][currentIndex],
         bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
+          currentIndex: currentIndex,
           onTap: (index) {
-            if (index == _currentIndex) {
-              // Pop to first route if already on this tab
-              _navigatorKeys[index].currentState?.popUntil(
-                (route) => route.isFirst,
-              );
-            }
             setState(() {
-              _currentIndex = index;
+              currentIndex = index;
             });
           },
           items: const [
@@ -77,6 +60,10 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
               label: 'Orders',
             ),
             BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart_outlined),
+              label: 'Cart',
+            ),
+            BottomNavigationBarItem(
               icon: Icon(Icons.shopping_bag_outlined),
               label: 'Shop',
             ),
@@ -86,17 +73,6 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
           selectedItemColor: Theme.of(context).colorScheme.primary,
         ),
       ),
-    );
-  }
-
-  Widget _buildNavigator(int index) {
-    return Navigator(
-      key: _navigatorKeys[index],
-      onGenerateRoute: (settings) {
-        return AppRouter().generateRoute(
-          RouteSettings(name: _routes[index], arguments: settings.arguments),
-        );
-      },
     );
   }
 }

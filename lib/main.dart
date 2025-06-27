@@ -1,4 +1,5 @@
 import 'package:cakes_store_frontend/core/constants/preferences_keys.dart';
+import 'package:cakes_store_frontend/app_router.dart';
 import 'package:cakes_store_frontend/core/services/service_locator.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/screen/login_screen.dart';
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
@@ -14,7 +15,7 @@ import 'core/services/preference_manager.dart';
 import 'core/theme/dark_theme.dart';
 import 'core/theme/light_theme.dart';
 import 'core/theme/theme_controller.dart';
-import 'features/auth/business/auth_cubit.dart';
+import 'features/auth/domain/auth_cubit.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -35,15 +36,21 @@ class MyApp extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: ThemeController.themeNotifier,
       builder: (_, value, _) {
-        return BlocProvider(
-          create: (_) => AuthCubit(sl())..getCurrentUser(),
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider<AuthCubit>(
+              create: (_) => AuthCubit(sl())..getCurrentUser(),
+            ),
+            BlocProvider<UserCubit>(create: (_) => UserCubit()),
+          ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'YumSlice',
             themeMode: value,
             theme: lightTheme,
             darkTheme: darkTheme,
-            home: const AuthGate(),
+            onGenerateRoute:
+                (RouteSettings settings) => AppRouter().generateRoute(settings),
           ),
         );
       },
@@ -81,7 +88,7 @@ class AuthGate extends StatelessWidget {
                         (_) =>
                             FavCubit(userId: userState.user.id)
                               ..loadAllFavourites(),
-                    child: const NavigationBarScreen(),
+                    child: NavigationBarScreen(),
                   );
 
                   // return BlocProvider<FavCubit>(

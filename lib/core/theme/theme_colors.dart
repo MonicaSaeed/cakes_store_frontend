@@ -16,6 +16,7 @@ class LightThemeColors {
   static const Color backgroundGrey = Color(0xFFf3f4f6);
   static const Color black = Colors.black;
   static const Color error = Color(0xFFFF5252);
+  static const Color iconColor = Color(0xfffff9c4);
 }
 
 class DarkThemeColors {
@@ -32,4 +33,5 @@ class DarkThemeColors {
   static const Color textLight = Color(0xFFBBBBBB); // Softer white
   static const Color white = Colors.white;
   static const Color black = Colors.black;
+  static const Color iconColor = Color(0xfffff9c4);
 }

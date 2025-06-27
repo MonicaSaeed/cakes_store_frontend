@@ -12,6 +12,7 @@ class ProductModel extends Product {
     required super.discountPercentage,
     required super.updatedAt,
     required super.stock,
+    super.userOrdered = false,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -26,10 +27,11 @@ class ProductModel extends Product {
       discountPercentage: json['discountPercentage'],
       updatedAt: json['updatedAt'],
       stock: json['stock'],
+      userOrdered: json['userOrdered'] ?? false,
     );
   }
   @override
   String toString() {
-    return 'ProductModel(id: $id, name: $name, description: $description, imageUrl: $imageUrl, category: $category, price: $price, totalRating: $totalRating, discountPercentage: $discountPercentage, updatedAt: $updatedAt, stock: $stock)';
+    return 'ProductModel(id: $id, name: $name, description: $description, imageUrl: $imageUrl, category: $category, price: $price, totalRating: $totalRating, discountPercentage: $discountPercentage, updatedAt: $updatedAt, stock: $stock, userOrdered: $userOrdered)';
   }
 }

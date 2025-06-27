@@ -3,8 +3,11 @@ import 'package:cakes_store_frontend/features/product_details/presentation/cubit
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/components/rating_component.dart';
+import '../../../reviews/presentation/cubit/reviews_cubit.dart';
+import '../../../reviews/presentation/screens/reviews_screen.dart';
+import '../../../user_shared_feature/presentation/cubit/user_cubit.dart';
 import '../components/quantity_selector.dart';
-import '../components/rating_component.dart';
 
 // to navigate to this screen, you can use the following code snippet:
 // onPressed: () {
@@ -18,13 +21,23 @@ import '../components/rating_component.dart';
 // },
 
 class ProductDetailsScreen extends StatelessWidget {
-  const ProductDetailsScreen({super.key});
+  final String productId;
+  const ProductDetailsScreen({super.key, required this.productId});
 
   @override
   Widget build(BuildContext context) {
-    final productId = ModalRoute.of(context)!.settings.arguments as String;
-    return BlocProvider(
-      create: (_) => ProductListCubit(userId: null)..getProduct(productId),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create:
+              (_) =>
+                  ProductListCubit()..getProduct(
+                    productId,
+                    context.read<UserCubit>().currentUser?.id,
+                  ),
+        ),
+        BlocProvider(create: (_) => ReviewsCubit()..getReviews(productId)),
+      ],
       child: BlocBuilder<ProductListCubit, ProductDetailsState>(
         builder: (context, state) {
           return Scaffold(
@@ -55,21 +68,42 @@ class ProductDetailsScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(height: 8),
-                                Text(
-                                  '${product.name}',
-                                  style:
-                                      Theme.of(context).textTheme.headlineLarge,
+                                Row(
+                                  children: [
+                                    Text(
+                                      '${product.name}',
+                                      style:
+                                          Theme.of(
+                                            context,
+                                          ).textTheme.headlineLarge,
+                                    ),
+                                    const Spacer(),
+                                    IconButton(
+                                      icon: const Icon(Icons.favorite_border),
+                                      onPressed: () {
+                                        // Handle favorite action
+                                      },
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(height: 16),
-                                RatingComponent(
-                                  rating: product.totalRating ?? 0.0,
-                                  reviewCount: 0,
+                                BlocBuilder<ReviewsCubit, ReviewsState>(
+                                  builder: (context, reviewState) {
+                                    int reviewCount = 0;
+                                    if (reviewState is ReviewsLoaded) {
+                                      reviewCount = reviewState.reviews.length;
+                                    }
+                                    return RatingComponent(
+                                      rating: product.totalRating ?? 0.0,
+                                      reviewCount: reviewCount,
+                                    );
+                                  },
                                 ),
                                 const SizedBox(height: 16),
                                 Row(
                                   children: [
                                     Text(
-                                      ' \$${(product.price ?? 0) * (1 - (product.discountPercentage ?? 0) / 100)}',
+                                      ' EGP ${(product.price! - (product.discountPercentage ?? 0) / 100 * product.price!).toStringAsFixed(2)}',
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodyLarge?.copyWith(
@@ -78,7 +112,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
-                                      '\$${product.price?.toStringAsFixed(2)}',
+                                      ' EGP ${product.price!.toStringAsFixed(2)}',
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodyMedium?.copyWith(
@@ -118,6 +152,14 @@ class ProductDetailsScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 8),
                                 QuantitySelector(quantity: 1),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Customer Reviews',
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
+                                ),
+                                const SizedBox(height: 8),
+                                const ReviewsSection(),
                               ],
                             ),
                           ),

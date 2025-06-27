@@ -1,11 +1,12 @@
 import 'package:cakes_store_frontend/core/theme/theme_controller.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/components/custom_password_textfield.dart';
+import 'package:cakes_store_frontend/features/auth/presentation/components/social_auth_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cakes_store_frontend/core/components/custom_elevated_button.dart';
 import 'package:cakes_store_frontend/core/components/custom_text_field.dart';
 import 'package:cakes_store_frontend/core/services/toast_helper.dart';
-import 'package:cakes_store_frontend/features/auth/business/auth_cubit.dart';
+import 'package:cakes_store_frontend/features/auth/domain/auth_cubit.dart';
 
 class LoginForm extends StatefulWidget {
   final TextEditingController emailController;
@@ -142,9 +143,19 @@ class _LoginFormState extends State<LoginForm> {
               )
             else
               CustomElevatedButton(
-                textdata: 'Login',
+                textdata: 'Log In',
                 onPressed: () => widget.onLoginPressed(context),
               ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: SocialAuthButton(
+                assetPath: 'assets/images/google.png',
+                onPressed: () {
+                  context.read<AuthCubit>().signInWithGoogle();
+                },
+                text: 'Log In with Google',
+              ),
+            ),
           ],
         ),
       ),

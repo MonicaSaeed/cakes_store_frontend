@@ -33,4 +33,33 @@ extension StringExtensions on String {
     final addressRegex = RegExp(r'^[a-zA-Z0-9\s.,-]{5,100}$');
     return addressRegex.hasMatch(this);
   }
+
+  /// Format date from ISO string (e.g. "2025-06-12T12:22:38.500Z") to "June 12, 2025"
+  String get formattedDate {
+    try {
+      final date = DateTime.parse(this);
+      final months = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+      ];
+
+      final day = date.day.toString().padLeft(2, '0');
+      final month = months[date.month - 1];
+      final year = date.year;
+
+      return '$month $day, $year'; // e.g., "June 12, 2025"
+    } catch (e) {
+      return this; // Return the original string if parsing fails
+    }
+  }
 }

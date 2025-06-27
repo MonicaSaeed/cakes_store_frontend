@@ -20,7 +20,7 @@ class AuthDivider extends StatelessWidget {
             ),
           ),
           Text(
-            text,
+            'or',
             style: TextStyle(
               color: color ?? Colors.grey.shade500,
               fontSize: 12,
