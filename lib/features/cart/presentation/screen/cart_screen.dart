@@ -2,18 +2,26 @@ import 'package:cakes_store_frontend/features/user_shared_feature/presentation/c
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../components/promo_code_component.dart';
 import '../cubit/cart_cubit.dart';
+import '../cubit/promo_code_cubit/promo_code_cubit.dart';
 
 class CartScreen extends StatelessWidget {
-  const CartScreen({super.key});
+  CartScreen({super.key});
+  double itemTotal = 0.0;
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create:
-          (_) =>
-              CartCubit(userId: context.read<UserCubit>().currentUser?.id)
-                ..getCartItems(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create:
+              (_) =>
+                  CartCubit(userId: context.read<UserCubit>().currentUser?.id)
+                    ..getCartItems(),
+        ),
+        BlocProvider(create: (_) => PromoCodeCubit(promoCode: '')),
+      ],
       child: BlocBuilder<CartCubit, CartState>(
         builder: (context, state) {
           return Scaffold(
@@ -60,7 +68,7 @@ class CartScreen extends StatelessWidget {
                                 final originalPrice = item.unitPrice;
                                 final discountedPrice =
                                     originalPrice * (1 - discount);
-                                final itemTotal = discountedPrice * quantity;
+                                itemTotal = discountedPrice * quantity;
 
                                 return Container(
                                   padding: const EdgeInsets.all(12),
@@ -157,38 +165,18 @@ class CartScreen extends StatelessWidget {
                                   ),
                                 );
                               } else {
-                                // Total section at the end
-                                return Container(
-                                  padding: const EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(
-                                      color: Colors.grey[300]!,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Total:',
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.headlineMedium?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        'EGP ${total.toStringAsFixed(2)}',
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.headlineMedium?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                return PromoCodeSection(
+                                  cartTotal: total,
+                                  onDiscountApplied: (discountedTotal) {
+                                    // use the discounted total if needed
+                                    print(
+                                      'Discounted total after promo code: $discountedTotal',
+                                    );
+                                    itemTotal = discountedTotal;
+                                    print(
+                                      'Item total after promo code: $itemTotal',
+                                    );
+                                  },
                                 );
                               }
                             },

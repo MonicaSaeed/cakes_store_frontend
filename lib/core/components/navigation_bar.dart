@@ -38,7 +38,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
               const HomeScreen(),
               const FavoritesScreen(),
               const OrdersScreen(),
-              const CartScreen(),
+              CartScreen(),
               const ShopProductScreen(),
               const ProfileScreen(),
             ][currentIndex],

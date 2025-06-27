@@ -1,4 +1,3 @@
-import 'package:cakes_store_frontend/core/services/service_locator.dart';
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
 import 'package:cakes_store_frontend/features/home/presentation/cubit/home_cubit.dart';
 import 'package:cakes_store_frontend/features/home/presentation/screen/category_screen.dart';
@@ -45,7 +44,7 @@ class AppRouter {
       case favorites:
         return CupertinoPageRoute(builder: (_) => const FavoritesScreen());
       case cart:
-        return CupertinoPageRoute(builder: (_) => const CartScreen());
+        return CupertinoPageRoute(builder: (_) => CartScreen());
       case login:
         return CupertinoPageRoute(builder: (_) => const LoginScreen());
       case register:
