@@ -1,6 +1,6 @@
 import 'package:cakes_store_frontend/core/components/custom_card.dart';
 
-import 'package:cakes_store_frontend/features/auth/business/auth_cubit.dart';
+import 'package:cakes_store_frontend/features/auth/domain/auth_cubit.dart';
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_state.dart';
 import 'package:cakes_store_frontend/features/shop/presentation/cubit/product_list_cubit.dart';
