@@ -1,3 +1,7 @@
+import 'package:cakes_store_frontend/features/orders/presentation/cubit/orders_cubit/get_orders_cubit.dart';
+import 'package:cakes_store_frontend/features/product_details/presentation/screens/product_details_screen.dart';
+import 'package:cakes_store_frontend/features/shop/presentation/screens/shop_product_screen.dart';
+import 'package:cakes_store_frontend/features/user_shared_feature/presentation/cubit/user_cubit.dart';
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
 import 'package:cakes_store_frontend/features/home/presentation/cubit/home_cubit.dart';
 import 'package:cakes_store_frontend/features/home/presentation/screen/category_screen.dart';
@@ -40,7 +44,13 @@ class AppRouter {
       case profile:
         return CupertinoPageRoute(builder: (_) => const ProfileScreen());
       case orders:
-        return CupertinoPageRoute(builder: (_) => const OrdersScreen());
+        return CupertinoPageRoute(
+          builder:
+              (context) => BlocProvider(
+                create: (_) => GetOrdersCubit()..getOrders(context.read<UserCubit>().currentUser?.id),
+                child: OrdersScreen(),
+              ),
+        );
       case favorites:
         return CupertinoPageRoute(builder: (_) => const FavoritesScreen());
       case cart:

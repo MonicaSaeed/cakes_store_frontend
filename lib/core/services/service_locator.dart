@@ -1,3 +1,11 @@
+import 'package:cakes_store_frontend/features/favorites/data/datasource/fav_datasource.dart';
+import 'package:cakes_store_frontend/features/favorites/data/repository/fav_repo.dart';
+import 'package:cakes_store_frontend/features/favorites/domain/repository/base_fav_repo.dart';
+import 'package:cakes_store_frontend/features/orders/data/data_source/order_remote_data_source.dart';
+import 'package:cakes_store_frontend/features/orders/data/data_source/order_remote_data_source_impl.dart';
+import 'package:cakes_store_frontend/features/orders/data/repositories/order_repository.dart';
+import 'package:cakes_store_frontend/features/orders/domain/repos/base_order_repository.dart';
+import 'package:cakes_store_frontend/features/product_details/data/datasource/product_details_data_source.dart';
 import 'package:cakes_store_frontend/core/constants/api_constants.dart';
 import 'package:cakes_store_frontend/features/cart/data/datasource/cart_data_source.dart';
 import 'package:cakes_store_frontend/features/cart/data/datasource/promo_code_data_source.dart';
@@ -18,6 +26,7 @@ import 'package:cakes_store_frontend/features/user_shared_feature/data/repositor
 import 'package:cakes_store_frontend/features/user_shared_feature/domain/repository/base_user_repo.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:http/http.dart' as http;
 
 import '../../features/auth/data/repository/auth_repository.dart';
 import '../../features/auth/data/webservice/auth_webservice.dart';
@@ -62,6 +71,13 @@ void setupLocator() {
   sl.registerLazySingleton<BaseUserRepo>(
     () => UserRepo(sl<UserSharedDatasource>()),
   );
+
+  sl.registerLazySingleton<http.Client>(() => http.Client());
+  sl.registerLazySingleton<OrderRemoteDataSource>(
+    () => OrderRemoteDataSourceImpl(sl<http.Client>()),
+  );
+  sl.registerLazySingleton<BaseOrderRepository>(
+    () => OrderRepositoryImpl(sl<OrderRemoteDataSource>()),
   sl.registerLazySingleton<BaseCardRepository>(
     () => CartRepository(sl<CartDataSource>()),
   );
@@ -89,3 +105,4 @@ void setupLocator() {
     () => ReviewsRepository(sl<ReviewsDataSource>()),
   );
 }
+
