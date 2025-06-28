@@ -4,6 +4,8 @@ import 'package:cakes_store_frontend/features/profile/data/model/profile_mongo_m
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+
 
 class ProfileService {
   
@@ -91,7 +93,26 @@ return ProfileModel.fromJson(userData);
 //       }
 //      }
 
-  
+
+Future<void> uploadImage(XFile file) async {
+   String? uid;
+  User? _user = await getCurrentUser();
+  uid = _user?.uid;
+  if (uid == null) throw Exception('User not authenticated');
+
+  final request = http.MultipartRequest(
+    'PUT',
+    Uri.parse("http://192.168.126.44:1000/users/uid/$uid/image"),
+  );
+
+  request.files.add(await http.MultipartFile.fromPath('image', file.path));
+
+  final response = await request.send();
+  if (response.statusCode != 200) {
+    throw Exception('Failed to upload image: ${response.statusCode}');
+  }
+}
+
 
 
 
