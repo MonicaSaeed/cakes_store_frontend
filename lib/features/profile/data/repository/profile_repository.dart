@@ -1,5 +1,6 @@
 import 'package:cakes_store_frontend/features/profile/data/model/profile_mongo_model.dart';
 import 'package:cakes_store_frontend/features/profile/data/webservice/profile_mongoservice.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileRepository {
   final ProfileService _service = ProfileService();
@@ -23,6 +24,15 @@ class ProfileRepository {
 
     } catch (e) {
       throw Exception('Failed to fetch profile: $e');
+    }
+  }
+
+  Future<void> uploadImage(XFile file) async {
+    try {
+      await _service.uploadImage(file);
+      print("Image uploaded successfully from repo.");
+    } catch (e) {
+      throw Exception('Failed to upload image: $e');
     }
   }
 }
