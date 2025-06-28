@@ -2,6 +2,7 @@ import 'package:cakes_store_frontend/core/components/custom_elevated_button.dart
 import 'package:cakes_store_frontend/core/theme/theme_controller.dart';
 import 'package:cakes_store_frontend/features/profile/business/cubit/user_profile_cubit.dart';
 import 'package:cakes_store_frontend/features/profile/data/repository/profile_repository.dart';
+import 'package:cakes_store_frontend/features/profile/data/webservice/profile_mongoservice.dart';
 import 'package:cakes_store_frontend/features/profile/presentation/components/profilemenuItem.dart';
 import 'package:cakes_store_frontend/features/profile/presentation/screen/editprofile_screen.dart';
 import 'package:cakes_store_frontend/features/profile/presentation/widget/dialog.dart';
@@ -26,11 +27,14 @@ class ProfileScreen extends StatelessWidget {
         ),
         body: BlocBuilder<UserProfileCubit, UserProfileState>(
           builder: (context, state) {
-            if (state is UserProfileLoading) {
+            if (state is UserProfileLoading) 
+            {
               return const Center(child: CircularProgressIndicator());
-            } else if (state is UserProfileError) {
+            } 
+            else if (state is UserProfileError) {
               return Center(child: Text(state.message));
-            } else if (state is UserProfileLoaded) {
+            } 
+            else if (state is UserProfileLoaded) {
               final profile = state.profile;
               return Column(
                 children: [
@@ -43,16 +47,23 @@ class ProfileScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         GestureDetector(
-                          onTap: () {
-                              showImageSourceDialog(context, (XFile file) {
-                                // TODO: Upload image and update profile
-                                // You can call your Cubit method here like:
-                                // context.read<UserProfileCubit>().uploadProfileImage(file);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text("Image selected (implement upload logic)")),
-                                );
-                              });
-                            },
+                                    
+                      onTap: () {
+                    showImageSourceDialog(context, (XFile file) async {
+                      try {
+                        await ProfileService().uploadImage(file);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Image uploaded successfully")),
+                        );
+                        context.read<UserProfileCubit>().fetchProfile(); // reload updated image
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Failed to upload image: $e")),
+                        );
+                      }
+                    });
+                  },
+
                           child: Stack(
                             children: [
                               CircleAvatar(
@@ -91,20 +102,23 @@ class ProfileScreen extends StatelessWidget {
                           style: theme.textTheme.bodySmall,
                         ),
                         const SizedBox(height: 12),
-                        CustomElevatedButton(
-                          textdata: 'Edit Profile',
-                          onPressed: () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => BlocProvider.value(
-                                  value: context.read<UserProfileCubit>(),
-                                  child: const EditProfileScreen(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 100),
+                          child: CustomElevatedButton(
+                            textdata: 'Edit Profile',
+                            onPressed: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => BlocProvider.value(
+                                    value: context.read<UserProfileCubit>(),
+                                    child: const EditProfileScreen(),
+                                  ),
                                 ),
-                              ),
-                            );
-                            context.read<UserProfileCubit>().fetchProfile();
-                          },
+                              );
+                              context.read<UserProfileCubit>().fetchProfile();
+                            },
+                          ),
                         ),
                         const SizedBox(height: 16),
                       ],
@@ -145,35 +159,35 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: CustomElevatedButton(
-                            textdata: "Logout",
-                            onPressed: () async {
-                              try {
-                                await FirebaseAuth.instance.signOut();
-                                if (!context.mounted) return;
-                                Navigator.pushReplacementNamed(
-                                    context, '/login');
-                              } catch (e) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content:
-                                          Text('Logout failed: $e')),
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            } else {
-              return const Center(child: Text("No profile data found."));
-            }
-          },
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 100,vertical: 30),
+              child: CustomElevatedButton(
+                textdata: "Logout",
+                onPressed: () async {
+                  try {
+                    await FirebaseAuth.instance.signOut();
+                    if (!context.mounted) return;
+                    Navigator.pushReplacementNamed(
+                        context, '/login');
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content:
+                      Text('Logout failed: $e')),
+                    );
+                  }
+                },
+              ),
+            ),
+            ],
+          ),
+        ),
+      ],
+    );
+    } else {
+      return const Center(child: Text("No profile data found."));
+    }
+  },
         ),
       ),
     );
