@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/components/rating_component.dart';
+import '../../../../core/theme/light_theme.dart';
+import '../../../reviews/presentation/components/add_review_popup.dart';
 import '../../../reviews/presentation/cubit/reviews_cubit.dart';
 import '../../../reviews/presentation/screens/reviews_screen.dart';
 import '../../../user_shared_feature/presentation/cubit/user_cubit.dart';
@@ -153,10 +155,41 @@ class ProductDetailsScreen extends StatelessWidget {
                                 const SizedBox(height: 8),
                                 QuantitySelector(quantity: 1),
                                 const SizedBox(height: 16),
-                                Text(
-                                  'Customer Reviews',
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium,
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Customer Reviews',
+                                      style:
+                                          Theme.of(
+                                            context,
+                                          ).textTheme.titleMedium,
+                                    ),
+                                    const Spacer(),
+                                    if (product.userOrdered == true)
+                                      Center(
+                                        child: ElevatedButton.icon(
+                                          icon: const Icon(Icons.rate_review),
+                                          label: const Text('Add Review'),
+                                          onPressed: () {
+                                            print(
+                                              'Adding review for product ${product.id}',
+                                            );
+                                            showModalBottomSheet(
+                                              context: context,
+                                              isScrollControlled: true,
+                                              backgroundColor:
+                                                  lightTheme
+                                                      .colorScheme
+                                                      .surface,
+                                              builder:
+                                                  (context) => AddReviewPopup(
+                                                    productId: product.id!,
+                                                  ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                  ],
                                 ),
                                 const SizedBox(height: 8),
                                 const ReviewsSection(),
