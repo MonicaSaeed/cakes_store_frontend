@@ -18,7 +18,6 @@ class ProfileMenuItem extends StatelessWidget {
       leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
       title: Text(title, style: Theme.of(context).textTheme.bodyLarge),
       subtitle: Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
-      trailing: const Icon(Icons.chevron_right),
       onTap: () {}, // You can handle navigation here
     );
   }
