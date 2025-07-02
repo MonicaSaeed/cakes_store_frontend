@@ -15,7 +15,7 @@ class ProfileRepository {
     }
   }
 
-  Future<void> updateProfile(ProfileModel profile) async {
+  Future<ProfileModel?> updateProfile(ProfileModel profile) async {
 
      try {
       final updateprofile = await _service.UpdateProfile(profile);
