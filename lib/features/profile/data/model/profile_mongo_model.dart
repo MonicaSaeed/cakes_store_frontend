@@ -17,8 +17,6 @@ class ProfileModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'uid': uid,
-      'email': email,
       'username': username,
       'phoneNumber': phoneNumber,
       'addresses': addresses,
@@ -39,13 +37,14 @@ class ProfileModel {
 
   ProfileModel copyWith({
     String? username,
+    String? email,
     String? phoneNumber,
     List<String>? addresses,
     String? image,
   }) {
     return ProfileModel(
       uid: uid,
-      email: email,
+     email: email ?? this.email,
       username: username ?? this.username,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       addresses: addresses ?? this.addresses,
