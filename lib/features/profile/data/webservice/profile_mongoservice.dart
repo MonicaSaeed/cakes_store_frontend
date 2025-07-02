@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cakes_store_frontend/core/constants/api_constants.dart';
 import 'package:cakes_store_frontend/features/profile/data/model/profile_mongo_model.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,17 +28,13 @@ class ProfileService {
 
       print("Current User ID: $uid");
 
-      final response = await http.get(Uri.parse('http://192.168.126.44:1000/users/uid/$uid'));
+      final response = await http.get(Uri.parse('${ApiConstance.usersUrl}/uid/$uid'));
 
       print("Response: ${response.body}");
 
       if (response.statusCode == 200)
        {
         
-        // final Map<String, dynamic> data = json.decode(response.body);
-        // print("Decoded Data: $data");
-        // return ProfileModel.fromJson(data);
-
 final Map<String, dynamic> responseData = json.decode(response.body);
 final Map<String, dynamic> userData = responseData['data'];
 print("Decoded Data: $userData");
@@ -54,7 +51,7 @@ return ProfileModel.fromJson(userData);
     }
   }
 
- Future<void> UpdateProfile(ProfileModel profile) async {
+ Future<ProfileModel?> UpdateProfile(ProfileModel profile) async {
 
   String? uid;
   User? _user = await getCurrentUser();
@@ -62,10 +59,15 @@ return ProfileModel.fromJson(userData);
 
   try
   {
-   final response = await http.put(Uri.parse("http://192.168.126.44:1000/users/uid/$uid"),
-      headers: {"Content-Type": "application/json"},
-      body: json.encode(profile.toJson()),
-    );
+    print("📤 Sent body: ${json.encode(profile.toJson())}");
+    print("Updating profile for user ID: $uid");
+
+    final response = await http.put(
+  Uri.parse('${ApiConstance.usersUrl}/uid/$uid'),
+  headers: {"Content-Type": "application/json"},
+  body: json.encode(profile.toJson()),
+);
+
 
     if (response.statusCode != 200) {
       throw Exception("Failed to update profile"+ " ${response.statusCode}");
@@ -76,45 +78,30 @@ return ProfileModel.fromJson(userData);
     }
   }
 
-//  Future<void> getOrdersByUserId(String userId) async {
-
-//   String? userid;
-//     User? _user = await getCurrentUser();
-//     userid = _user?.id;
-
-
-//     try{
-//       final response = await http.get(Uri.parse('http://http://192.168.126.44:1000/user/$userId'));
-//       }
-//       catch (e) {
-//         print('Error fetching orders: $e');
-//         throw e;
-
-//       }
-//      }
-
-
 Future<void> uploadImage(XFile file) async {
-   String? uid;
-  User? _user = await getCurrentUser();
-  uid = _user?.uid;
+  final user = await getCurrentUser();
+  final uid = user?.uid;
   if (uid == null) throw Exception('User not authenticated');
 
-  final request = http.MultipartRequest(
-    'PUT',
-    Uri.parse("http://192.168.126.44:1000/users/uid/$uid/image"),
-  );
+  final uri = Uri.parse("${ApiConstance.usersUrl}/uid/$uid/image");
+  final request = http.MultipartRequest('PUT', uri);
 
-  request.files.add(await http.MultipartFile.fromPath('image', file.path));
+  final fileName = file.name;
 
-  final response = await request.send();
+  // Must match multer field name: 'image'
+  request.files.add(await http.MultipartFile.fromPath(
+    'image',
+    file.path,
+    filename: fileName, // original name
+  ));
+
+  final streamedResponse = await request.send();
+  final response = await http.Response.fromStream(streamedResponse);
+
   if (response.statusCode != 200) {
-    throw Exception('Failed to upload image: ${response.statusCode}');
-  }
+    throw Exception('Failed to upload image: ${response.statusCode} \n${response.body}');
+  } 
+}
 }
 
 
-
-
-
-}
