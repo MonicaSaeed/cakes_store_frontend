@@ -32,7 +32,8 @@ class UserProfileCubit extends Cubit<UserProfileState> {
       await _repository.updateProfile(profile);
       emit(UserProfileUpdated());
       await fetchProfile(); // Refresh data
-    } catch (e) {
+    } 
+    catch (e) {
       emit(UserProfileError(e.toString()));
     }
   }
