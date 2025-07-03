@@ -1,3 +1,4 @@
+import 'package:cakes_store_frontend/features/auth/presentation/screen/login_screen.dart';
 import 'package:cakes_store_frontend/features/onboarding/data/model/onboarding_model.dart';
 import 'package:cakes_store_frontend/features/onboarding/widget/onboarding_widget.dart';
 import 'package:flutter/material.dart';
@@ -13,43 +14,42 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _controller = PageController();
   int currentPage = 0;
-  Timer? _timer;
 
   final List<OnboardingData> onboardingPages = [
     OnboardingData(
-      image: 'assets/images/cake5.jpg',
+      image: 'assets/images/cake31.jpg',
       title: 'Discover delightful cakes',
       subtitle: 'Browse our freshly baked cakes made with love and quality ingredients — ready for every occasion.',
     ),
     OnboardingData(
-      image: 'assets/images/cake7.jpg',
+      image: 'assets/images/cake32.jpg',
       title: 'Get it delivered fresh',
       subtitle: 'Order with ease and enjoy fast, fresh delivery right to your doorstep.',
     ),
   ];
 
-  void startAutoSlide() {
-    _timer?.cancel();
-    _timer = Timer(const Duration(seconds: 4), () {
-      if (currentPage < onboardingPages.length - 1) {
-        _controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-      } else {
-      }
-    });
+  void onNext() {
+    if (currentPage < onboardingPages.length - 1) 
+    {
+      _controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    } 
+    else if(currentPage == (onboardingPages.length -1))
+    {
+      Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) =>  LoginScreen(),
+              ),
+          );
+    }
+    else
+    {
+      
+    }
   }
 
-
-  @override
-  void initState() {
-    super.initState();
-    startAutoSlide();
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    _controller.dispose();
-    super.dispose();
+  void onSkip() {
+    _controller.jumpToPage(onboardingPages.length - 1);
   }
 
   @override
@@ -58,15 +58,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: PageView.builder(
         controller: _controller,
         itemCount: onboardingPages.length,
-        onPageChanged: (index) {
+        onPageChanged: (index)
+         {
           setState(() => currentPage = index);
-          startAutoSlide();
         },
         itemBuilder: (context, index) {
           return OnboardingPage(
             data: onboardingPages[index],
             currentPage: index,
-            totalPages: onboardingPages.length,
+            totalPages: onboardingPages.length, 
+            onNext: onNext,
+            onSkip: onSkip,
           );
         },
       ),
