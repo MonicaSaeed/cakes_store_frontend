@@ -1,3 +1,4 @@
+import 'package:cakes_store_frontend/features/check_out/presentation/check_out_screen.dart';
 import 'package:cakes_store_frontend/features/user_shared_feature/presentation/cubit/user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -180,6 +181,20 @@ class CartScreen extends StatelessWidget {
                                 );
                               }
                             },
+                          ),
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CheckOutScreen(),
+                                ),
+                              );
+                            },
+                            child: Text('check out'),
                           ),
                         ),
                       ],
