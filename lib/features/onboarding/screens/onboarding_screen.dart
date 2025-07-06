@@ -17,15 +17,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<OnboardingData> onboardingPages = [
     OnboardingData(
-      image: 'assets/images/cake31.jpg',
+      image: 'assets/images/cake40.jpg',
       title: 'Discover delightful cakes',
       subtitle: 'Browse our freshly baked cakes made with love and quality ingredients — ready for every occasion.',
     ),
     OnboardingData(
-      image: 'assets/images/cake32.jpg',
+      image: 'assets/images/cake37.jpg',
       title: 'Get it delivered fresh',
       subtitle: 'Order with ease and enjoy fast, fresh delivery right to your doorstep.',
     ),
+     OnboardingData(
+    image: 'assets/images/cake31.jpg',
+    title: 'Celebrate Every Moment',
+    subtitle: 'From birthdays to sweet cravings, find the perfect cake to make every moment special.',
+    ),
+
   ];
 
   void onNext() {
