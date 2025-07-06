@@ -198,6 +198,16 @@ class ProductDetailsScreen extends StatelessWidget {
                                                       child: AddReviewPopup(
                                                         productId: product.id!,
                                                         userId: userId,
+                                                        onReviewAdded: () {
+                                                          context
+                                                              .read<
+                                                                ProductListCubit
+                                                              >()
+                                                              .getProduct(
+                                                                product.id!,
+                                                                userId,
+                                                              ); // 👈 refresh rating
+                                                        },
                                                       ),
                                                     ),
                                               );

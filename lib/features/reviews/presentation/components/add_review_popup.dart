@@ -9,11 +9,13 @@ import '../cubit/reviews_cubit.dart';
 class AddReviewPopup extends StatefulWidget {
   final String productId;
   final String userId;
+  final VoidCallback? onReviewAdded;
 
   const AddReviewPopup({
     super.key,
     required this.productId,
     required this.userId,
+    this.onReviewAdded,
   });
 
   @override
@@ -36,6 +38,7 @@ class _AddReviewPopupState extends State<AddReviewPopup> {
         listener: (context, state) {
           if (state is ReviewAdded) {
             Navigator.of(context).pop();
+            widget.onReviewAdded?.call();
             ToastHelper.showToast(
               message: state.message,
               context: context,
