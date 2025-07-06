@@ -27,7 +27,7 @@ class ProductModel extends Product {
       discountPercentage: json['discountPercentage'],
       updatedAt: json['updatedAt'],
       stock: json['stock'],
-      userOrdered: json['userOrdered'] ?? false,
+      userOrdered: json['userOrderedProduct'] ?? false,
     );
   }
   @override
