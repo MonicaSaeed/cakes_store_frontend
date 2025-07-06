@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../user_shared_feature/presentation/cubit/user_cubit.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -156,7 +158,14 @@ class HomeScreen extends StatelessWidget {
                                     ),
                                 itemBuilder: (_, index) {
                                   final product = state.products[index];
-                                  return CustomCard(product: product);
+                                  return CustomCard(
+                                    product: product,
+                                    userId:
+                                        context
+                                            .read<UserCubit>()
+                                            .currentUser!
+                                            .id!,
+                                  );
                                 },
                               ),
                             ),

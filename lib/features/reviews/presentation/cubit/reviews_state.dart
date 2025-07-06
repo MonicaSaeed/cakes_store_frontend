@@ -34,3 +34,23 @@ final class ReviewsError extends ReviewsState {
 final class ReviewsEmpty extends ReviewsState {
   const ReviewsEmpty();
 }
+
+final class ReviewAddLoading extends ReviewsState {
+  const ReviewAddLoading();
+}
+
+final class ReviewAdded extends ReviewsState {
+  final String message;
+  const ReviewAdded(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+final class ReviewAddError extends ReviewsState {
+  final String errorMessage;
+  const ReviewAddError(this.errorMessage);
+
+  @override
+  List<Object?> get props => [errorMessage];
+}

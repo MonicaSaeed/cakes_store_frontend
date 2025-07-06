@@ -1,6 +1,4 @@
 import 'package:cakes_store_frontend/core/components/custom_card.dart';
-import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
-import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_state.dart';
 import 'package:cakes_store_frontend/features/shop/presentation/cubit/product_list_cubit.dart';
 import 'package:cakes_store_frontend/features/shop/presentation/cubit/product_list_state.dart'
     show
@@ -10,6 +8,8 @@ import 'package:cakes_store_frontend/features/shop/presentation/cubit/product_li
         ProductListError;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../user_shared_feature/presentation/cubit/user_cubit.dart';
 
 class PaginatedProductList extends StatefulWidget {
   const PaginatedProductList({super.key});
@@ -75,7 +75,10 @@ class _PaginatedProductListState extends State<PaginatedProductList> {
                       }
 
                       final product = state.products[index];
-                      return CustomCard(product: product);
+                      return CustomCard(
+                        product: product,
+                        userId: context.read<UserCubit>().currentUser!.id!,
+                      );
                     },
                     childCount:
                         state.products.length +

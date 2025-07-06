@@ -10,8 +10,9 @@ import '../../app_router.dart';
 
 class CustomCard extends StatelessWidget {
   final Product product;
+  final String? userId;
 
-  const CustomCard({super.key, required this.product});
+  const CustomCard({super.key, required this.product, this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class CustomCard extends StatelessWidget {
         Navigator.pushNamed(
           context,
           AppRouter.productDetails,
-          arguments: product.id,
+          arguments: {'productId': product.id, 'userId': userId},
         );
       },
       child: BlocBuilder<FavCubit, FavState>(

@@ -24,7 +24,12 @@ import '../components/quantity_selector.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   final String productId;
-  const ProductDetailsScreen({super.key, required this.productId});
+  final String userId;
+  const ProductDetailsScreen({
+    super.key,
+    required this.productId,
+    required this.userId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -165,28 +170,43 @@ class ProductDetailsScreen extends StatelessWidget {
                                           ).textTheme.titleMedium,
                                     ),
                                     const Spacer(),
-                                    if (product.userOrdered == true)
+                                    if (product.userOrdered == false)
                                       Center(
-                                        child: ElevatedButton.icon(
-                                          icon: const Icon(Icons.rate_review),
-                                          label: const Text('Add Review'),
-                                          onPressed: () {
-                                            print(
-                                              'Adding review for product ${product.id}',
-                                            );
-                                            showModalBottomSheet(
-                                              context: context,
-                                              isScrollControlled: true,
-                                              backgroundColor:
-                                                  lightTheme
-                                                      .colorScheme
-                                                      .surface,
-                                              builder:
-                                                  (context) => AddReviewPopup(
-                                                    productId: product.id!,
-                                                  ),
-                                            );
-                                          },
+                                        child: Builder(
+                                          builder:
+                                              (
+                                                localContext,
+                                              ) => ElevatedButton.icon(
+                                                icon: const Icon(
+                                                  Icons.rate_review,
+                                                ),
+                                                label: const Text('Add Review'),
+                                                onPressed: () {
+                                                  showModalBottomSheet(
+                                                    context: localContext,
+                                                    isScrollControlled: true,
+                                                    backgroundColor:
+                                                        lightTheme
+                                                            .colorScheme
+                                                            .surface,
+                                                    builder:
+                                                        (
+                                                          context,
+                                                        ) => BlocProvider.value(
+                                                          value:
+                                                              localContext
+                                                                  .read<
+                                                                    ReviewsCubit
+                                                                  >(),
+                                                          child: AddReviewPopup(
+                                                            productId:
+                                                                product.id!,
+                                                            userId: userId,
+                                                          ),
+                                                        ),
+                                                  );
+                                                },
+                                              ),
                                         ),
                                       ),
                                   ],
