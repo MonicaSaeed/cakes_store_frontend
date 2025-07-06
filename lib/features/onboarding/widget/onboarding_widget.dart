@@ -27,22 +27,29 @@ class OnboardingPage extends StatelessWidget {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Expanded(
-              flex: 3,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: AssetImage(data.image),
-                    fit: BoxFit.contain,
+            Container(
+             height: 350,
+              width: 250,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.40), 
+                    blurRadius: 15,
+                    offset: const Offset(0, 10), 
                   ),
+                ],
+                image: DecorationImage(
+                  image: AssetImage(data.image),
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
-
+        
             const SizedBox(height: 24),
             Text(
               data.title,
@@ -65,9 +72,7 @@ class OnboardingPage extends StatelessWidget {
                   width: isActive ? 16 : 8,
                   height: 8,
                   decoration: BoxDecoration(
-                    color: isActive
-                        ? colorScheme.primary
-                        : colorScheme.tertiary.withOpacity(0.3),
+                    color: isActive? colorScheme.primary: colorScheme.tertiary.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 );
