@@ -10,11 +10,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/components/not_found_screen.dart';
+import 'core/services/preference_manager.dart';
 import 'features/auth/presentation/screen/login_screen.dart';
 import 'features/auth/presentation/screen/register_screen.dart';
 import 'features/cart/presentation/screen/cart_screen.dart';
 import 'features/favorites/presentation/screen/favorites_screen.dart';
 import 'features/home/presentation/screen/home_screen.dart';
+import 'features/onboarding/screens/onboarding_screen.dart';
 import 'features/orders/presentation/screen/orders_screen.dart';
 import 'features/profile/presentation/screen/profile_screen.dart';
 
@@ -34,9 +36,14 @@ class AppRouter {
   static const String category = '/category-products';
 
   Route<dynamic> generateRoute(RouteSettings settings) {
+    final bool isFirstTime =
+        PreferencesManager().getBool('isFirstTime') ?? true;
     switch (settings.name) {
       case '/':
-        return CupertinoPageRoute(builder: (_) => const AuthGate());
+        return CupertinoPageRoute(
+          builder:
+              (_) => isFirstTime ? const OnboardingScreen() : const AuthGate(),
+        );
       case home:
         return CupertinoPageRoute(builder: (_) => const HomeScreen());
       case profile:

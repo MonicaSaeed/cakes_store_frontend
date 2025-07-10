@@ -1,8 +1,8 @@
-import 'package:cakes_store_frontend/features/auth/presentation/screen/login_screen.dart';
+import 'package:cakes_store_frontend/core/services/preference_manager.dart';
 import 'package:cakes_store_frontend/features/onboarding/data/model/onboarding_model.dart';
 import 'package:cakes_store_frontend/features/onboarding/widget/onboarding_widget.dart';
+import 'package:cakes_store_frontend/main.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -19,39 +19,33 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     OnboardingData(
       image: 'assets/images/cake40.jpg',
       title: 'Discover delightful cakes',
-      subtitle: 'Browse our freshly baked cakes made with love and quality ingredients — ready for every occasion.',
+      subtitle:
+          'Browse our freshly baked cakes made with love and quality ingredients — ready for every occasion.',
     ),
     OnboardingData(
       image: 'assets/images/cake37.jpg',
       title: 'Get it delivered fresh',
-      subtitle: 'Order with ease and enjoy fast, fresh delivery right to your doorstep.',
+      subtitle:
+          'Order with ease and enjoy fast, fresh delivery right to your doorstep.',
     ),
-     OnboardingData(
-    image: 'assets/images/cake31.jpg',
-    title: 'Celebrate Every Moment',
-    subtitle: 'From birthdays to sweet cravings, find the perfect cake to make every moment special.',
+    OnboardingData(
+      image: 'assets/images/cake31.jpg',
+      title: 'Celebrate Every Moment',
+      subtitle:
+          'From birthdays to sweet cravings, find the perfect cake to make every moment special.',
     ),
-
   ];
 
   void onNext() {
-    if (currentPage < onboardingPages.length - 1) 
-    {
-      _controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-    } 
-    else if(currentPage == (onboardingPages.length -1))
-    {
-      Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) =>  LoginScreen(),
-              ),
-          );
-    }
-    else
-    {
-      
-    }
+    if (currentPage < onboardingPages.length - 1) {
+      _controller.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else if (currentPage == (onboardingPages.length - 1)) {
+      PreferencesManager().setBool('isFirstTime', false);
+      Navigator.push(context, MaterialPageRoute(builder: (_) => AuthGate()));
+    } else {}
   }
 
   void onSkip() {
@@ -64,15 +58,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: PageView.builder(
         controller: _controller,
         itemCount: onboardingPages.length,
-        onPageChanged: (index)
-         {
+        onPageChanged: (index) {
           setState(() => currentPage = index);
         },
         itemBuilder: (context, index) {
           return OnboardingPage(
             data: onboardingPages[index],
             currentPage: index,
-            totalPages: onboardingPages.length, 
+            totalPages: onboardingPages.length,
             onNext: onNext,
             onSkip: onSkip,
           );
@@ -81,4 +74,3 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 }
-
