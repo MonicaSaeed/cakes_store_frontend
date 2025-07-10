@@ -20,4 +20,20 @@ class CartRepository extends BaseCardRepository {
       }
     }
   }
+
+  @override
+  Future<bool> addCartItem(String userId, String productId) async {
+    try {
+      final res = await _cartDataSource.addCartItem(userId, productId);
+      if (res['success'] == true) {
+        print('Item added successfully');
+        return true;
+      } else {
+        print('Failed to add item: ${res['message']}');
+        throw Exception(res['message']);
+      }
+    } catch (_) {
+      rethrow;
+    }
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cakes_store_frontend/core/components/rating_bar_widget.dart';
+import 'package:cakes_store_frontend/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_state.dart';
 import 'package:cakes_store_frontend/features/shared_product/domain/entities/product.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../app_router.dart';
+import '../services/toast_helper.dart';
 
 class CustomCard extends StatelessWidget {
   final Product product;
@@ -222,7 +224,24 @@ class CustomCard extends StatelessWidget {
                                         Icons.shopping_cart_outlined,
                                       ),
                                       iconSize: 20,
-                                      onPressed: isOutOfStock ? null : () {},
+                                      onPressed:
+                                          isOutOfStock
+                                              ? () {
+                                                ToastHelper.showToast(
+                                                  context: context,
+                                                  message:
+                                                      "Product is out of stock",
+                                                  toastType: ToastType.error,
+                                                );
+                                              }
+                                              : () {
+                                                context
+                                                    .read<CartCubit>()
+                                                    .addToCart(
+                                                      product.id!,
+                                                      context,
+                                                    );
+                                              },
                                       padding: EdgeInsets.zero,
                                       constraints: const BoxConstraints(),
                                       tooltip: "Add to Cart",

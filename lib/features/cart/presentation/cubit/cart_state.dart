@@ -34,6 +34,15 @@ class CartError extends CartState {
   List<Object?> get props => [errorMessage];
 }
 
+class AddCartError extends CartState {
+  final String errorMessage;
+
+  const AddCartError(this.errorMessage);
+
+  @override
+  List<Object?> get props => [errorMessage];
+}
+
 class CartEmpty extends CartState {
   const CartEmpty();
 

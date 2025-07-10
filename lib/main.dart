@@ -14,6 +14,7 @@ import 'core/theme/dark_theme.dart';
 import 'core/theme/light_theme.dart';
 import 'core/theme/theme_controller.dart';
 import 'features/auth/domain/auth_cubit.dart';
+import 'features/cart/presentation/cubit/cart_cubit.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -21,7 +22,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await PreferencesManager().init();
   await ThemeController().init();
-  
+
   setupLocator();
   runApp(const MyApp());
 }
@@ -37,9 +38,22 @@ class MyApp extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider<AuthCubit>(
-              create: (_) => AuthCubit(sl())..getCurrentUser(),
+              create: (context) => AuthCubit(sl())..getCurrentUser(),
             ),
-            BlocProvider<UserCubit>(create: (_) => UserCubit()),
+            BlocProvider<UserCubit>(
+              create: (context) {
+                final authState = context.read<AuthCubit>();
+                return UserCubit()
+                  ..getUserByUid(authState.currentUser?.uid ?? '');
+              },
+            ),
+            BlocProvider<CartCubit>(
+              create: (context) {
+                final authCubit = context.read<UserCubit>();
+                return CartCubit(userId: authCubit.currentUser?.id)
+                  ..getCartItems();
+              },
+            ),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -70,58 +84,55 @@ class AuthGate extends StatelessWidget {
         }
 
         if (authState is AuthSuccess) {
-          return BlocProvider<UserCubit>(
-            create: (_) => UserCubit()..getUserByUid(authState.user.uid),
-            child: BlocBuilder<UserCubit, UserState>(
-              builder: (context, userState) {
-                if (userState is UserLoading || userState is UserInitial) {
-                  return const Scaffold(
-                    body: Center(child: CircularProgressIndicator()),
-                  );
-                }
-
-                if (userState is UserLoaded) {
-                  return BlocProvider<FavCubit>(
-                    create:
-                        (_) =>
-                            FavCubit(userId: userState.user.id)
-                              ..loadAllFavourites(),
-                    child: NavigationBarScreen(),
-                  );
-
-                  // return BlocProvider<FavCubit>(
-                  //   create:
-                  //       (_) =>
-                  //           FavCubit(userId: userState.user.id)
-                  //             ..loadAllFavourites(),
-                  //   child: const NavigationBarScreen(),
-                  // );
-                }
-
-                return Scaffold(
-                  body: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Failed to load user."),
-                        SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginScreen(),
-                              ),
-                            );
-                          },
-                          child: const Text('Retry'),
-                        ),
-                      ],
-                    ),
-                  ),
+          return BlocBuilder<UserCubit, UserState>(
+            builder: (context, userState) {
+              if (userState is UserLoading || userState is UserInitial) {
+                return const Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
                 );
-              },
-            ),
+              }
+
+              if (userState is UserLoaded) {
+                return BlocProvider<FavCubit>(
+                  create:
+                      (_) =>
+                          FavCubit(userId: userState.user.id)
+                            ..loadAllFavourites(),
+                  child: NavigationBarScreen(),
+                );
+
+                // return BlocProvider<FavCubit>(
+                //   create:
+                //       (_) =>
+                //           FavCubit(userId: userState.user.id)
+                //             ..loadAllFavourites(),
+                //   child: const NavigationBarScreen(),
+                // );
+              }
+
+              return Scaffold(
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Failed to load user."),
+                      SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LoginScreen(),
+                            ),
+                          );
+                        },
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           );
         }
 
