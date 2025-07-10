@@ -1,17 +1,20 @@
-import 'package:cakes_store_frontend/core/services/service_locator.dart';
-import 'package:cakes_store_frontend/features/auth/presentation/screen/login_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:cakes_store_frontend/features/onboarding/screens/onboarding_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'core/components/navigation_bar.dart';
-import 'core/services/preference_manager.dart';
-import 'core/theme/dark_theme.dart';
-import 'core/theme/light_theme.dart';
-import 'core/theme/theme_controller.dart';
-import 'features/auth/business/auth_cubit.dart';
-import 'features/auth/data/repository/auth_repository.dart';
-import 'features/auth/data/webservice/auth_webservice.dart';
+import 'package:cakes_store_frontend/features/auth/data/webservice/auth_webservice.dart';
+import 'package:cakes_store_frontend/features/auth/data/repository/auth_repository.dart';
+import 'package:cakes_store_frontend/features/auth/business/auth_cubit.dart';
+import 'package:cakes_store_frontend/features/auth/presentation/screen/login_screen.dart';
+
+import 'package:cakes_store_frontend/core/services/service_locator.dart';
+import 'package:cakes_store_frontend/core/services/preference_manager.dart';
+import 'package:cakes_store_frontend/core/theme/dark_theme.dart';
+import 'package:cakes_store_frontend/core/theme/light_theme.dart';
+import 'package:cakes_store_frontend/core/theme/theme_controller.dart';
+import 'package:cakes_store_frontend/core/components/navigation_bar.dart';
+
 import 'firebase_options.dart';
 
 void main() async {
@@ -31,18 +34,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: ThemeController.themeNotifier,
-      builder: (_, value, _) {
+      builder: (_, themeMode, __) {
         return BlocProvider(
-          create:
-              (_) =>
-                  AuthCubit(AuthRepository(AuthWebservice()))..getCurrentUser(),
+          create: (_) => AuthCubit(AuthRepository(AuthWebservice()))..getCurrentUser(),
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'YumSlice',
-            themeMode: value,
+            themeMode: themeMode,
             theme: lightTheme,
             darkTheme: darkTheme,
-            home: const AuthGate(),
+            home: AuthGate(),
           ),
         );
       },
@@ -58,13 +59,13 @@ class AuthGate extends StatelessWidget {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
         if (state is AuthLoadingCurrentUser || state is AuthInitial) {
-          return Scaffold(
-            body: const Center(child: CircularProgressIndicator()),
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
           );
         } else if (state is AuthSuccess) {
-          return const NavigationBarScreen();
+          return const NavigationBarScreen(); // Where ProfileScreen is accessible
         } else {
-          return const LoginScreen();
+          return const OnboardingScreen();
         }
       },
     );
