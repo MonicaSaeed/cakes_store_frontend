@@ -15,12 +15,13 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String? userId = context.read<UserCubit>().currentUser?.id;
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create:
               (_) =>
-                  CartCubit(userId: context.read<UserCubit>().currentUser?.id)
+                  CartCubit(userId: userId)
                     ..getCartItems(),
         ),
         BlocProvider(create: (_) => PromoCodeCubit(promoCode: '')),
@@ -196,6 +197,7 @@ class CartScreen extends StatelessWidget {
                                     return CheckOutScreen(
                                       items: items, // from CartLoaded
                                       total: total,
+                                      userId: userId??'',
                                     );
                                   },
                                 ),

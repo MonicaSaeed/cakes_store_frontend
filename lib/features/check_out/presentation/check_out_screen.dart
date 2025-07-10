@@ -1,5 +1,9 @@
 import 'dart:developer';
 
+import 'package:cakes_store_frontend/core/services/service_locator.dart';
+import 'package:cakes_store_frontend/features/check_out/data/models/order_item.dart';
+import 'package:cakes_store_frontend/features/check_out/data/models/order_model.dart';
+import 'package:cakes_store_frontend/features/check_out/domain/place_order_use_case.dart';
 import 'package:flutter/material.dart';
 import 'package:cakes_store_frontend/features/cart/data/model/cart_model.dart';
 import 'package:cakes_store_frontend/features/user_shared_feature/presentation/cubit/user_cubit.dart';
@@ -9,12 +13,14 @@ class CheckOutScreen extends StatefulWidget {
   final List<CartItem> items;
   final double total;
   final String? promo;
+  final String userId;
 
   const CheckOutScreen({
     super.key,
     required this.items,
     required this.total,
-    this.promo
+    this.promo,
+    required this.userId
   });
 
   @override
@@ -26,14 +32,38 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   String? _errorText;
 
   void _confirmOrder({
-    required String address,
-    required List<CartItem> items,
-    required String? userId,
-  }) {
-    // Simulate sending order
+  required String address,
+  required List<CartItem> items,
+  required String? userId,
+}) async {
+  if (userId == null){
+    log('UserId = null at CheckOutScreen');
+return;
+  } 
+
+  // Simulate sending order
     log('Order placed for user: $userId');
     log('Address: $address');
     log('Items: ${items.length}');
+
+  final order = Order(
+    userId: userId,
+    orderItems: items.map((item) {
+      return OrderItem(
+        productId: item.product.id!,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+      );
+    }).toList(),
+    totalPrice: widget.total,
+    promoCodeApplied: 'SWEET10', // dynamic if available
+    discountApplied: 10,
+    shippingAddress: address,
+  );
+
+  try {
+    final placeOrderUseCase = sl<PlaceOrderUseCase>();
+    await placeOrderUseCase(order);
 
     showDialog(
       context: context,
@@ -44,15 +74,22 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
           TextButton(
             onPressed: () {
               Navigator.of(context)
-                ..pop() // close dialog
-                ..pop(); // go back to cart
+                ..pop()
+                ..pop();
             },
             child: const Text('OK'),
           ),
         ],
       ),
     );
+  } catch (e) {
+    print('Order error: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to place order')),
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -129,12 +166,11 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       return;
                     }
       
-                    final userId =
-                        context.read<UserCubit>().currentUser?.id;
+                    
                     _confirmOrder(
                       address: address,
                       items: items,
-                      userId: userId,
+                      userId: widget.userId,
                     );
                   },
                   child: const Text('Confirm Order'),
