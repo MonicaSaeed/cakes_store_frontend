@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../product_details/presentation/components/quantity_selector.dart';
 import '../components/promo_code_component.dart';
 import '../cubit/cart_cubit.dart';
 import '../cubit/promo_code_cubit/promo_code_cubit.dart';
@@ -91,15 +92,46 @@ class CartScreen extends StatelessWidget {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
-                                              product.name!,
-                                              style:
-                                                  Theme.of(
-                                                    context,
-                                                  ).textTheme.headlineMedium,
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  product.name!,
+                                                  style:
+                                                      Theme.of(context)
+                                                          .textTheme
+                                                          .headlineMedium,
+                                                ),
+                                                Spacer(),
+                                                IconButton(
+                                                  icon: const Icon(
+                                                    Icons.close,
+                                                    color: Colors.grey,
+                                                  ),
+                                                  onPressed: () {
+                                                    context
+                                                        .read<CartCubit>()
+                                                        .removeCartItem(
+                                                          product.id!,
+                                                          context,
+                                                        );
+                                                  },
+                                                  splashRadius: 20,
+                                                ),
+                                              ],
                                             ),
                                             const SizedBox(height: 4),
-                                            Text('Quantity: $quantity'),
+                                            Row(
+                                              children: [
+                                                Text('Quantity:'),
+                                                const SizedBox(width: 8),
+                                                QuantitySelector(
+                                                  quantity: quantity,
+                                                  productId: product.id!,
+                                                  stock: product.stock ?? 1,
+                                                ),
+                                                const SizedBox(height: 16),
+                                              ],
+                                            ),
                                             const SizedBox(height: 4),
                                             Row(
                                               children: [

@@ -1,3 +1,4 @@
+import 'package:cakes_store_frontend/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:cakes_store_frontend/features/product_details/presentation/cubit/product_details_cubit.dart';
 import 'package:cakes_store_frontend/features/product_details/presentation/cubit/product_details_state.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import '../../../../core/theme/light_theme.dart';
 import '../../../reviews/presentation/components/add_review_popup.dart';
 import '../../../reviews/presentation/cubit/reviews_cubit.dart';
 import '../../../reviews/presentation/screens/reviews_screen.dart';
-import '../components/quantity_selector.dart';
 
 // to navigate to this screen, you can use the following code snippet:
 // onPressed: () {
@@ -148,12 +148,17 @@ class ProductDetailsScreen extends StatelessWidget {
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                                 const SizedBox(height: 16),
-                                Text(
-                                  'Quantity',
-                                  style: Theme.of(context).textTheme.bodyMedium,
+                                // Add to cart button
+                                ElevatedButton.icon(
+                                  icon: const Icon(Icons.add_shopping_cart),
+                                  label: const Text('Add to Cart'),
+                                  onPressed: () {
+                                    context.read<CartCubit>().addToCart(
+                                      product.id!,
+                                      context,
+                                    );
+                                  },
                                 ),
-                                const SizedBox(height: 8),
-                                QuantitySelector(quantity: 1),
                                 const SizedBox(height: 16),
                                 BlocBuilder<ReviewsCubit, ReviewsState>(
                                   builder: (context, reviewState) {

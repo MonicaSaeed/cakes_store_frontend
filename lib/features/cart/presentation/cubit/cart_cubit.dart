@@ -67,4 +67,85 @@ class CartCubit extends Cubit<CartState> {
       );
     }
   }
+
+  incrementCartItem(String productId, BuildContext context) async {
+    emit(CartLoading());
+    try {
+      final res = await CartRepository(
+        sl<CartDataSource>(),
+      ).addCartItem(userId!, productId);
+      if (res) {
+        getCartItems();
+      } else {
+        emit(AddCartError('Failed to add item to cart'));
+        ToastHelper.showToast(
+          context: context,
+          message: 'Failed to add item to cart',
+          toastType: ToastType.error,
+        );
+      }
+    } catch (e) {
+      emit(AddCartError(e.toString()));
+      print(e.toString());
+      // ToastHelper.showToast(
+      //   context: context,
+      //   message: e.toString(),
+      //   toastType: ToastType.error,
+      // );
+    }
+  }
+
+  removeCartItem(String productId, BuildContext context) async {
+    emit(CartLoading());
+
+    try {
+      final res = await CartRepository(
+        sl<CartDataSource>(),
+      ).removeCartItem(userId!, productId);
+      if (res) {
+        getCartItems();
+      } else {
+        emit(RemoveCartError('Failed to remove item from cart'));
+        ToastHelper.showToast(
+          context: context,
+          message: 'Failed to remove item from cart',
+          toastType: ToastType.error,
+        );
+      }
+    } catch (e) {
+      emit(RemoveCartError(e.toString()));
+      ToastHelper.showToast(
+        context: context,
+        message: e.toString(),
+        toastType: ToastType.error,
+      );
+    }
+  }
+
+  decrementCartItem(String productId, BuildContext context) async {
+    emit(CartLoading());
+
+    try {
+      final res = await CartRepository(
+        sl<CartDataSource>(),
+      ).editCartItem(userId!, productId, 'decrement');
+      if (res) {
+        getCartItems();
+      } else {
+        emit(EditCartError('Failed to decrement item from cart'));
+        ToastHelper.showToast(
+          context: context,
+          message: 'Failed to decrement item from cart',
+          toastType: ToastType.error,
+        );
+      }
+    } catch (e) {
+      emit(EditCartError(e.toString()));
+      ToastHelper.showToast(
+        context: context,
+        message: e.toString(),
+        toastType: ToastType.error,
+      );
+    }
+  }
 }
