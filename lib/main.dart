@@ -1,4 +1,3 @@
-import 'package:cakes_store_frontend/features/onboarding/screens/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,7 +64,7 @@ class AuthGate extends StatelessWidget {
         } else if (state is AuthSuccess) {
           return const NavigationBarScreen(); // Where ProfileScreen is accessible
         } else {
-          return const OnboardingScreen();
+          return const LoginScreen();
         }
       },
     );
