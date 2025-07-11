@@ -8,6 +8,7 @@ import 'package:cakes_store_frontend/features/profile/data/repository/profile_re
 import 'package:cakes_store_frontend/features/profile/data/webservice/profile_mongoservice.dart';
 import 'package:cakes_store_frontend/features/profile/presentation/components/profilemenuItem.dart';
 import 'package:cakes_store_frontend/features/profile/presentation/screen/editprofile_screen.dart';
+import 'package:cakes_store_frontend/features/profile/presentation/widget/delete_dialog.dart';
 import 'package:cakes_store_frontend/features/profile/presentation/widget/dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -205,6 +206,15 @@ class ProfileScreen extends StatelessWidget {
         ],
       ),
     ),
+    Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: CustomElevatedButton(
+        textdata: "Delete Account", 
+      onPressed: ()=> confirmDeleteAccount(context),
+      icon: const Icon(Icons.delete, color: Colors.white, size: 20),
+      ),
+    ),
+
   ],
 );
 } else {
