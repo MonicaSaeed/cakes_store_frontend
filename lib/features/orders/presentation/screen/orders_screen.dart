@@ -12,6 +12,7 @@ class OrdersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(title: Text("Orders"),),
       body: BlocBuilder<GetOrdersCubit, OrderStates>(
@@ -53,8 +54,8 @@ class OrdersScreen extends StatelessWidget {
                             Icons.arrow_forward_ios_rounded,
                             size: 18,
                           ),
-                          onTap: () {
-                            Navigator.push(
+                          onTap: ()async {
+                             await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder:
@@ -62,6 +63,7 @@ class OrdersScreen extends StatelessWidget {
                                         OrderDetailsScreen(order: order),
                               ),
                             );
+                            context.read<GetOrdersCubit>().getOrders(order.userId);
                           },
                         ),
                       );

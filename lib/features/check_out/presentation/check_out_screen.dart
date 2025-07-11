@@ -32,7 +32,6 @@ class CheckOutScreen extends StatefulWidget {
 
 class _CheckOutScreenState extends State<CheckOutScreen> {
   final TextEditingController _addressController = TextEditingController();
-  String? _errorText;
 
   void _confirmOrder({
     required String address,
@@ -101,7 +100,6 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final items = widget.items;
     final total = widget.total;
 
     return GestureDetector(
@@ -236,8 +234,6 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                               final address = _addressController.text.trim();
                               if (address.isEmpty) {
                                 setState(() {
-                                  _errorText =
-                                      'Please enter a delivery address';
                                 });
                                 return;
                               }

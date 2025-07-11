@@ -1,13 +1,15 @@
 import 'dart:developer';
 
 import 'package:cakes_store_frontend/features/orders/domain/entities/order_entity.dart';
-import 'package:cakes_store_frontend/features/orders/presentation/cubit/orders_cubit/get_orders_cubit.dart';
+import 'package:cakes_store_frontend/features/orders/presentation/screen/components/info_row.dart';
 import 'package:cakes_store_frontend/features/orders/presentation/screen/components/product_card.dart';
+import 'package:cakes_store_frontend/features/orders/presentation/screen/components/status_components.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class OrderDetailsScreen extends StatelessWidget {
   const OrderDetailsScreen({super.key, required this.order});
+
   final OrderEntity order;
 
   @override
@@ -22,49 +24,31 @@ class OrderDetailsScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-
             _sectionTitle(context, 'Order Summary'),
-            _infoRow(
-              context,
-              'Total Price:',
-              currency.format(order.totalPrice),
+            InfoRow(
+              label: 'Total Price:',
+              value: currency.format(order.totalPrice),
             ),
-
             if (order.promoCodeApplied != null &&
                 order.promoCodeApplied!.isNotEmpty)
-              _infoRow(context, 'Promo Code:', order.promoCodeApplied!),
-              if (order.promoCodeApplied != null &&
+              InfoRow(label: 'Promo Code:', value: order.promoCodeApplied!),
+            if (order.promoCodeApplied != null &&
                 order.promoCodeApplied!.isNotEmpty)
-              _infoRow(
-              context,
-              'Promo Discount:',
-              '${order.discountApplied?.toInt()}%',
-            ),
-
-            const Divider(height: 32),
-
-            _sectionTitle(context, 'Shipping Info'),
-            _infoRow(context, 'Address:', order.shippingAddress),
-            if (order.deliveryDate != null)
-              _infoRow(
-                context,
-                'Delivery Date:',
-                DateFormat.yMMMMd().format(order.deliveryDate!),
+              InfoRow(
+                label: 'Promo Discount:',
+                value: '${order.discountApplied?.toInt()}%',
               ),
             const Divider(height: 32),
-
+            _sectionTitle(context, 'Shipping Info'),
+            InfoRow(label: 'Address:', value: order.shippingAddress),
+            if (order.deliveryDate != null)
+              InfoRow(
+                label: 'Delivery Date:',
+                value: DateFormat.yMMMMd().format(order.deliveryDate!),
+              ),
+            const Divider(height: 32),
             _sectionTitle(context, 'Status'),
-            if(order.orderStatus == 'pending')
-            ElevatedButton(onPressed: (){
-              GetOrdersCubit().cancelOrder(order.id);
-            }, child: Text('Cancel')),
-            _infoRow(context, 'Order Status:', order.orderStatus),
-            _infoRow(context, 'Payment Status:', order.paymentStatus),
-            _infoRow(
-              context,
-              'Created At:',
-              order.createdAt != null? DateFormat.yMMMMd().add_jm().format(order.createdAt!):'',
-            ),
+            StatusComponent(order: order),
             const Divider(height: 32),
             _sectionTitle(context, 'Order Items'),
             ...order.orderItems.map(
@@ -102,26 +86,6 @@ class OrderDetailsScreen extends StatelessWidget {
         style: Theme.of(
           context,
         ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-
-  Widget _infoRow(BuildContext context, String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '$label ',
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
-          ),
-          Expanded(
-            child: Text(value, style: Theme.of(context).textTheme.bodyMedium),
-          ),
-        ],
       ),
     );
   }
