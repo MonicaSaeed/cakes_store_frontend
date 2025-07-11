@@ -1,35 +1,17 @@
+import 'package:cakes_store_frontend/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class QuantitySelector extends StatefulWidget {
+class QuantitySelector extends StatelessWidget {
   final int quantity;
-  const QuantitySelector({super.key, this.quantity = 1});
-
-  @override
-  State<QuantitySelector> createState() => _QuantitySelectorState();
-}
-
-class _QuantitySelectorState extends State<QuantitySelector> {
-  late int quantity;
-
-  @override
-  void initState() {
-    super.initState();
-    quantity = widget.quantity; // initialize from widget
-  }
-
-  void increment() {
-    setState(() {
-      quantity++;
-    });
-  }
-
-  void decrement() {
-    if (quantity > 1) {
-      setState(() {
-        quantity--;
-      });
-    }
-  }
+  final int stock;
+  final String productId;
+  const QuantitySelector({
+    super.key,
+    this.quantity = 1,
+    this.stock = 1,
+    required this.productId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +28,12 @@ class _QuantitySelectorState extends State<QuantitySelector> {
             children: [
               IconButton(
                 icon: const Icon(Icons.remove),
-                onPressed: decrement,
+                onPressed: () {
+                  context.read<CartCubit>().decrementCartItem(
+                    productId,
+                    context,
+                  );
+                },
                 splashRadius: 20,
               ),
               Container(
@@ -56,7 +43,15 @@ class _QuantitySelectorState extends State<QuantitySelector> {
               ),
               IconButton(
                 icon: const Icon(Icons.add),
-                onPressed: increment,
+                onPressed:
+                    (quantity < stock)
+                        ? () {
+                          context.read<CartCubit>().incrementCartItem(
+                            productId,
+                            context,
+                          );
+                        }
+                        : null,
                 splashRadius: 20,
               ),
             ],

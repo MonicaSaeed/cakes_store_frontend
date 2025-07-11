@@ -1,6 +1,7 @@
 import 'package:cakes_store_frontend/features/reviews/domain/repository/base_reviews_repository.dart';
 
 import '../datasource/reviews_data_source.dart';
+import '../models/add_review_model.dart';
 import '../models/reviews_model.dart';
 
 class ReviewsRepository extends BaseReviewsRepository {
@@ -14,6 +15,15 @@ class ReviewsRepository extends BaseReviewsRepository {
       return await reviewsDataSource.getReviews(productId);
     } catch (e) {
       throw Exception('Failed to get reviews: $e');
+    }
+  }
+
+  @override
+  Future<String> addReview(AddReviewModel review) async {
+    try {
+      return await reviewsDataSource.addReview(review);
+    } catch (e) {
+      throw Exception('Failed to add review: $e');
     }
   }
 }

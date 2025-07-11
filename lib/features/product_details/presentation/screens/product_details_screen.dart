@@ -1,13 +1,14 @@
+import 'package:cakes_store_frontend/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:cakes_store_frontend/features/product_details/presentation/cubit/product_details_cubit.dart';
 import 'package:cakes_store_frontend/features/product_details/presentation/cubit/product_details_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/components/rating_component.dart';
+import '../../../../core/theme/light_theme.dart';
+import '../../../reviews/presentation/components/add_review_popup.dart';
 import '../../../reviews/presentation/cubit/reviews_cubit.dart';
 import '../../../reviews/presentation/screens/reviews_screen.dart';
-import '../../../user_shared_feature/presentation/cubit/user_cubit.dart';
-import '../components/quantity_selector.dart';
 
 // to navigate to this screen, you can use the following code snippet:
 // onPressed: () {
@@ -22,19 +23,20 @@ import '../components/quantity_selector.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   final String productId;
-  const ProductDetailsScreen({super.key, required this.productId});
+  final String userId;
+
+  ProductDetailsScreen({
+    super.key,
+    required this.productId,
+    required this.userId,
+  });
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create:
-              (_) =>
-                  ProductListCubit()..getProduct(
-                    productId,
-                    context.read<UserCubit>().currentUser?.id,
-                  ),
+          create: (_) => ProductListCubit()..getProduct(productId, userId),
         ),
         BlocProvider(create: (_) => ReviewsCubit()..getReviews(productId)),
       ],
@@ -146,18 +148,81 @@ class ProductDetailsScreen extends StatelessWidget {
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                                 const SizedBox(height: 16),
-                                Text(
-                                  'Quantity',
-                                  style: Theme.of(context).textTheme.bodyMedium,
+                                // Add to cart button
+                                ElevatedButton.icon(
+                                  icon: const Icon(Icons.add_shopping_cart),
+                                  label: const Text('Add to Cart'),
+                                  onPressed: () {
+                                    context.read<CartCubit>().addToCart(
+                                      product.id!,
+                                      context,
+                                    );
+                                  },
                                 ),
-                                const SizedBox(height: 8),
-                                QuantitySelector(quantity: 1),
                                 const SizedBox(height: 16),
-                                Text(
-                                  'Customer Reviews',
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium,
+                                BlocBuilder<ReviewsCubit, ReviewsState>(
+                                  builder: (context, reviewState) {
+                                    bool userHasReviewed = false;
+
+                                    if (reviewState is ReviewsLoaded) {
+                                      userHasReviewed = reviewState.reviews.any(
+                                        (review) => review.user.id == userId,
+                                      );
+                                    }
+
+                                    return Row(
+                                      children: [
+                                        Text(
+                                          'Customer Reviews',
+                                          style:
+                                              Theme.of(
+                                                context,
+                                              ).textTheme.titleMedium,
+                                        ),
+                                        const Spacer(),
+                                        if (product.userOrdered == true &&
+                                            userHasReviewed == false)
+                                          ElevatedButton.icon(
+                                            icon: const Icon(Icons.rate_review),
+                                            label: const Text('Add Review'),
+                                            onPressed: () {
+                                              showModalBottomSheet(
+                                                context: context,
+                                                isScrollControlled: true,
+                                                backgroundColor:
+                                                    lightTheme
+                                                        .colorScheme
+                                                        .surface,
+                                                builder:
+                                                    (_) => BlocProvider.value(
+                                                      value:
+                                                          context
+                                                              .read<
+                                                                ReviewsCubit
+                                                              >(),
+                                                      child: AddReviewPopup(
+                                                        productId: product.id!,
+                                                        userId: userId,
+                                                        onReviewAdded: () {
+                                                          context
+                                                              .read<
+                                                                ProductListCubit
+                                                              >()
+                                                              .getProduct(
+                                                                product.id!,
+                                                                userId,
+                                                              ); // 👈 refresh rating
+                                                        },
+                                                      ),
+                                                    ),
+                                              );
+                                            },
+                                          ),
+                                      ],
+                                    );
+                                  },
                                 ),
+
                                 const SizedBox(height: 8),
                                 const ReviewsSection(),
                               ],

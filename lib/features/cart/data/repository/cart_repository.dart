@@ -20,4 +20,60 @@ class CartRepository extends BaseCardRepository {
       }
     }
   }
+
+  @override
+  Future<bool> addCartItem(String userId, String productId) async {
+    try {
+      final res = await _cartDataSource.addCartItem(userId, productId);
+      if (res['success'] == true) {
+        print('Item added successfully');
+        return true;
+      } else {
+        print('Failed to add item: ${res['message']}');
+        throw Exception(res['message']);
+      }
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool> removeCartItem(String userId, String productId) async {
+    try {
+      final res = await _cartDataSource.removeCartItem(userId, productId);
+      if (res['success'] == true) {
+        print('Item removed successfully');
+        return true;
+      } else {
+        print('Failed to remove item');
+        throw Exception('Failed to remove item');
+      }
+    } catch (e) {
+      throw Exception('Failed to remove cart item: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<bool> editCartItem(
+    String userId,
+    String productId,
+    String operation,
+  ) async {
+    try {
+      final res = await _cartDataSource.editCartItem(
+        userId,
+        productId,
+        operation,
+      );
+      if (res['success'] == true) {
+        print('Item edited successfully');
+        return true;
+      } else {
+        print('Failed to edit item: ${res['message']}');
+        throw Exception(res['message']);
+      }
+    } catch (e) {
+      throw Exception('Failed to edit cart item: ${e.toString()}');
+    }
+  }
 }

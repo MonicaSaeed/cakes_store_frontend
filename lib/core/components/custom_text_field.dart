@@ -10,6 +10,7 @@ class CustomTextField extends StatelessWidget {
     this.obscureText = false,
     this.prefixIcon,
     this.suffixIcon,
+    this.maxLines = 1,
   });
 
   final String title;
@@ -18,6 +19,7 @@ class CustomTextField extends StatelessWidget {
   final bool obscureText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final int maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,7 @@ class CustomTextField extends StatelessWidget {
             controller: controller,
             obscureText: obscureText,
             style: Theme.of(context).textTheme.labelSmall,
+            maxLines: maxLines,
             validator: (value) {
               final trimmed = value?.trim() ?? '';
               final cleanTitle = title.replaceAll('*', '').trim().toLowerCase();
