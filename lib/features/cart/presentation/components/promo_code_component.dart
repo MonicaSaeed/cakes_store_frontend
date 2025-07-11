@@ -8,7 +8,7 @@ import '../cubit/promo_code_cubit/promo_code_state.dart';
 
 class PromoCodeSection extends StatefulWidget {
   final double cartTotal;
-  final void Function(double discountedTotal) onDiscountApplied;
+  final void Function(double discountedTotal,String promoCode,int promoDiscount) onDiscountApplied;
 
   const PromoCodeSection({
     super.key,
@@ -58,7 +58,7 @@ class _PromoCodeSectionState extends State<PromoCodeSection> {
           );
           final discount = state.promoCode.discountPercentage;
           final discountedTotal = widget.cartTotal * (1 - discount / 100);
-          widget.onDiscountApplied(discountedTotal);
+          widget.onDiscountApplied(discountedTotal,state.promoCode.code,discount);
         }
       },
       builder: (context, state) {

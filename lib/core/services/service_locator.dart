@@ -1,3 +1,6 @@
+import 'package:cakes_store_frontend/features/check_out/data/repo/order_repo_base.dart';
+import 'package:cakes_store_frontend/features/check_out/domain/place_order_use_case.dart';
+import 'package:cakes_store_frontend/features/check_out/domain/repository/order_repo_impl.dart';
 import 'package:cakes_store_frontend/features/favorites/data/datasource/fav_datasource.dart';
 import 'package:cakes_store_frontend/features/favorites/data/repository/fav_repo.dart';
 import 'package:cakes_store_frontend/features/favorites/domain/repository/base_fav_repo.dart';
@@ -100,5 +103,11 @@ void setupLocator() {
   sl.registerLazySingleton<BaseReviewsRepository>(
     () => ReviewsRepository(sl<ReviewsDataSource>()),
   );
+
+  sl.registerLazySingleton<OrderRepositoryBase>(
+    () => CheckOutOrderRepositoryImpl(sl()),
+  );
+
+  sl.registerLazySingleton(() => PlaceOrderUseCase(sl()));
 }
 

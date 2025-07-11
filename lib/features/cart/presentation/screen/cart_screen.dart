@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:cakes_store_frontend/features/check_out/presentation/check_out_screen.dart';
+import 'package:cakes_store_frontend/features/user_shared_feature/presentation/cubit/user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,7 +16,9 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String? userId = context.read<UserCubit>().currentUser?.id;
     return MultiBlocProvider(
+
       providers: [BlocProvider(create: (_) => PromoCodeCubit(promoCode: ''))],
       child: BlocBuilder<CartCubit, CartState>(
         builder: (context, state) {
@@ -40,6 +46,9 @@ class CartScreen extends StatelessWidget {
                       final discountedPrice = item.unitPrice * (1 - discount);
                       return sum + discountedPrice * item.quantity;
                     });
+
+                    String? myPromocode;
+                    int? myPromoDiscount;
 
                     return Column(
                       children: [
@@ -190,19 +199,57 @@ class CartScreen extends StatelessWidget {
                               } else {
                                 return PromoCodeSection(
                                   cartTotal: total,
-                                  onDiscountApplied: (discountedTotal) {
+                                  onDiscountApplied: (
+                                    discountedTotal,
+                                    promoCode,
+                                    promoDiscount,
+                                  ) {
                                     // use the discounted total if needed
-                                    print(
-                                      'Discounted total after promo code: $discountedTotal',
+                                    log(
+                                      'inside onDiscountApplied at CartScreen : ',
                                     );
                                     itemTotal = discountedTotal;
-                                    print(
+                                    myPromocode = promoCode;
+                                    myPromoDiscount = promoDiscount;
+
+                                    log('promoCode $myPromocode');
+                                    log('promoDiscount $myPromoDiscount');
+                                    log(
                                       'Item total after promo code: $itemTotal',
                                     );
                                   },
                                 );
                               }
                             },
+                          ),
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              log('Promocode = $myPromocode');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return BlocProvider(
+                                      create:
+                                          (context) =>
+                                              CartCubit(userId: userId)
+                                                ..getCartItems(),
+                                      child: CheckOutScreen(
+                                        items: items, // from CartLoaded
+                                        total: total,
+                                        userId: userId ?? '',
+                                        promoCode: myPromocode,
+                                        promoDiscount: myPromoDiscount,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                            child: const Text('Check out'),
                           ),
                         ),
                       ],
