@@ -108,9 +108,12 @@ flutter:
 
 
 flutter_native_splash:
-  color: "#F5F5F5"
-  image: assets/images/facebook.png
   android: true
   ios: true
-  android_gravity: center
-  ios_content_mode: center
+  web: true
+  color: "#FFFFFF"
+  image: assets/images/cake_logo.jpg
+
+  android_12:
+    image: assets/images/cake_logo.jpg
+    color: "#FFFFFF"
