@@ -18,7 +18,6 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     String? userId = context.read<UserCubit>().currentUser?.id;
     return MultiBlocProvider(
-
       providers: [BlocProvider(create: (_) => PromoCodeCubit(promoCode: ''))],
       child: BlocBuilder<CartCubit, CartState>(
         builder: (context, state) {
@@ -226,28 +225,23 @@ class CartScreen extends StatelessWidget {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {
-                              log('Promocode = $myPromocode');
-                              Navigator.push(
+                            onPressed: ()async {
+                              await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return BlocProvider(
-                                      create:
-                                          (context) =>
-                                              CartCubit(userId: userId)
-                                                ..getCartItems(),
-                                      child: CheckOutScreen(
-                                        items: items, // from CartLoaded
-                                        total: total,
-                                        userId: userId ?? '',
-                                        promoCode: myPromocode,
-                                        promoDiscount: myPromoDiscount,
-                                      ),
+                                    return CheckOutScreen(
+                                      items: items, // from CartLoaded
+                                      total: total,
+                                      userId: userId ?? '',
+                                      promoCode: myPromocode,
+                                      promoDiscount: myPromoDiscount,
                                     );
                                   },
                                 ),
                               );
+
+                              context.read<CartCubit>().getCartItems();
                             },
                             child: const Text('Check out'),
                           ),
