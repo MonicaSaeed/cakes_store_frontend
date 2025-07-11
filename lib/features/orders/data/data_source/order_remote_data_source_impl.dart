@@ -16,7 +16,9 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
   @override
   Future<List<OrderModel>> fetchUserOrders(String userId) async {
     try {
-      final response = await client.get(Uri.parse("${ApiConstance.ordersUrl}/user/$userId"));
+      final response = await client.get(
+        Uri.parse("${ApiConstance.ordersUrl}/user/$userId"),
+      );
       log("${ApiConstance.ordersUrl}/user/$userId");
 
       if (response.statusCode == 200) {
@@ -26,7 +28,9 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
           final List data = jsonResponse['data'];
           return data.map((e) => OrderModel.fromJson(e)).toList();
         } else {
-          throw Exception("Failed to fetch user orders: ${jsonResponse['message'] ?? 'Unknown error'}");
+          throw Exception(
+            "Failed to fetch user orders: ${jsonResponse['message'] ?? 'Unknown error'}",
+          );
         }
       } else {
         throw Exception(
@@ -40,12 +44,28 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
 
   @override
   Future<ProductEntity> getProductById(String productId) async {
-    final response = await client.get(Uri.parse("${ApiConstance.productsUrl}/$productId"));
+    final response = await client.get(
+      Uri.parse("${ApiConstance.productsUrl}/$productId"),
+    );
 
     if (response.statusCode == 200) {
       return ProductModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load product');
+    }
+  }
+
+  Future<void> cancelOrder(String orderId) async {
+    final response = await client.patch(
+      Uri.parse("${ApiConstance.ordersUrl}/orderStatus/$orderId"),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({"orderStatus": "Canceled"}),
+    );
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('Failed to Cancel Order');
     }
   }
 }

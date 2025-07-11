@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cakes_store_frontend/features/orders/domain/entities/order_entity.dart';
+import 'package:cakes_store_frontend/features/orders/presentation/cubit/orders_cubit/get_orders_cubit.dart';
 import 'package:cakes_store_frontend/features/orders/presentation/screen/components/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -21,20 +22,25 @@ class OrderDetailsScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
+
             _sectionTitle(context, 'Order Summary'),
             _infoRow(
               context,
               'Total Price:',
               currency.format(order.totalPrice),
             ),
-            _infoRow(
-              context,
-              'Discount:',
-              '${order.discountApplied?.toStringAsFixed(2)}',
-            ),
+
             if (order.promoCodeApplied != null &&
                 order.promoCodeApplied!.isNotEmpty)
               _infoRow(context, 'Promo Code:', order.promoCodeApplied!),
+              if (order.promoCodeApplied != null &&
+                order.promoCodeApplied!.isNotEmpty)
+              _infoRow(
+              context,
+              'Promo Discount:',
+              '${order.discountApplied?.toInt()}%',
+            ),
+
             const Divider(height: 32),
 
             _sectionTitle(context, 'Shipping Info'),
@@ -48,12 +54,16 @@ class OrderDetailsScreen extends StatelessWidget {
             const Divider(height: 32),
 
             _sectionTitle(context, 'Status'),
+            if(order.orderStatus == 'pending')
+            ElevatedButton(onPressed: (){
+              GetOrdersCubit().cancelOrder(order.id);
+            }, child: Text('Cancel')),
             _infoRow(context, 'Order Status:', order.orderStatus),
             _infoRow(context, 'Payment Status:', order.paymentStatus),
             _infoRow(
               context,
               'Created At:',
-              DateFormat.yMMMMd().add_jm().format(order.createdAt),
+              order.createdAt != null? DateFormat.yMMMMd().add_jm().format(order.createdAt!):'',
             ),
             const Divider(height: 32),
             _sectionTitle(context, 'Order Items'),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cakes_store_frontend/features/orders/data/data_source/order_remote_data_source.dart';
 import 'package:cakes_store_frontend/features/orders/domain/entities/order_entity.dart';
 import 'package:cakes_store_frontend/features/orders/domain/entities/product_entity.dart';
@@ -10,11 +12,21 @@ class OrderRepositoryImpl implements BaseOrderRepository{
 
   @override
   Future<List<OrderEntity>> getUserOrders(String userId) async {
-    final orders = await remoteDataSource.fetchUserOrders(userId);
-    return orders;
+    try {
+      final orders = await remoteDataSource.fetchUserOrders(userId);
+      return orders;
+    } catch (e) {
+      log('Exception occured at OrderRepositoryImpl in orders feature : ');
+      log(e.toString());
+      throw Exception(e.toString());
+    }
   }
   @override
   Future<ProductEntity> getProductById(String productId) {
     return remoteDataSource.getProductById(productId);
+  }
+
+  Future<void> cancelOrder(String orderId){
+    return remoteDataSource.cancelOrder(orderId);
   }
 }

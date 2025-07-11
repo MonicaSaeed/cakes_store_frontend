@@ -9,5 +9,8 @@ class OrdersLoadedState extends OrderStates {
   List<OrderEntity> orders;
 }
 
-class OrdersFailureState extends OrderStates {}
+class OrdersFailureState extends OrderStates {
+  String errorMessage;
+  OrdersFailureState(this.errorMessage);
+}
 class InvalidUserIdState extends OrderStates{}

@@ -17,10 +17,14 @@ class GetOrdersCubit extends Cubit<OrderStates> {
       );
       emit(OrdersLoadedState(orders));
     } catch (e) {
-      emit(OrdersFailureState());
+      emit(OrdersFailureState(e.toString()));
     }
     }else{
       emit(state);
     }
+  }
+
+  cancelOrder(String orderId)async{
+    await orderRepository.cancelOrder(orderId);
   }
 }

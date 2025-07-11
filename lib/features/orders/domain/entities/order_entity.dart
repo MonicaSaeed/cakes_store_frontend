@@ -9,8 +9,8 @@ class OrderEntity {
   final String shippingAddress;
   final DateTime? deliveryDate;
   final String paymentStatus;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   OrderEntity({
     required this.id,

@@ -4,4 +4,5 @@ import 'package:cakes_store_frontend/features/orders/domain/entities/product_ent
 abstract class BaseOrderRepository {
   Future<List<OrderEntity>> getUserOrders(String userId);
   Future<ProductEntity> getProductById(String productId);
+  Future<void> cancelOrder(String orderId);
 }

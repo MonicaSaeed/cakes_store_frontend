@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cakes_store_frontend/features/orders/presentation/cubit/orders_cubit/get_orders_cubit.dart';
 import 'package:cakes_store_frontend/features/orders/presentation/cubit/orders_cubit/order_cubit_states.dart';
 import 'package:cakes_store_frontend/features/orders/presentation/screen/empty_order_screen.dart';
@@ -44,7 +46,7 @@ class OrdersScreen extends StatelessWidget {
                                 ?.copyWith(fontWeight: FontWeight.w600),
                           ),
                           subtitle: Text(
-                            'Placed on ${order.createdAt.toLocal()}', // format date if needed
+                            'Placed on ${order.createdAt?.toLocal()}', // format date if needed
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                           trailing: const Icon(
@@ -67,11 +69,18 @@ class OrdersScreen extends StatelessWidget {
                   
                 );
           } else if (state is OrdersFailureState) {
+            log(state.toString());
             return Center(
               child: Column(
                 children: [
-                  Image.asset('assets/images/error.png'),
+                  Spacer(),
+                  SizedBox(
+                    height: 120,
+                    width: 120,
+                    child: Image.asset('assets/images/error.png')),
                   Text('Oops !! there is an error'),
+                  Text(state.errorMessage),
+                  Spacer()
                 ],
               ),
             );

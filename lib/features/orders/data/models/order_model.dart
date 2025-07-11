@@ -26,7 +26,9 @@ class OrderModel extends OrderEntity {
       orderStatus: json['orderStatus'],
       totalPrice: (json['totalPrice'] as num).toDouble(),
       promoCodeApplied: json['promoCodeApplied'],
-      discountApplied: (json['discountApplied'] as num).toDouble(),
+      discountApplied: json['discountApplied'] != null
+    ? (json['discountApplied'] as num).toDouble()
+    : null,
       shippingAddress: json['shippingAddress'],
       deliveryDate: json['deliveryDate'] != null
           ? DateTime.tryParse(json['deliveryDate'])
