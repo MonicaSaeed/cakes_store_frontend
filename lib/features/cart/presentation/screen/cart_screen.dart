@@ -18,12 +18,7 @@ class CartScreen extends StatelessWidget {
     String? userId = context.read<UserCubit>().currentUser?.id;
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create:
-              (_) =>
-                  CartCubit(userId: userId)
-                    ..getCartItems(),
-        ),
+        BlocProvider(create: (_) => CartCubit(userId: userId)..getCartItems()),
         BlocProvider(create: (_) => PromoCodeCubit(promoCode: '')),
       ],
       child: BlocBuilder<CartCubit, CartState>(
@@ -52,6 +47,9 @@ class CartScreen extends StatelessWidget {
                       final discountedPrice = item.unitPrice * (1 - discount);
                       return sum + discountedPrice * item.quantity;
                     });
+
+                    String? myPromocode;
+                    int? myPromoDiscount;
 
                     return Column(
                       children: [
@@ -171,13 +169,22 @@ class CartScreen extends StatelessWidget {
                               } else {
                                 return PromoCodeSection(
                                   cartTotal: total,
-                                  onDiscountApplied: (discountedTotal) {
+                                  onDiscountApplied: (
+                                    discountedTotal,
+                                    promoCode,
+                                    promoDiscount,
+                                  ) {
                                     // use the discounted total if needed
-                                    print(
-                                      'Discounted total after promo code: $discountedTotal',
+                                    log(
+                                      'inside onDiscountApplied at CartScreen : ',
                                     );
                                     itemTotal = discountedTotal;
-                                    print(
+                                    myPromocode = promoCode;
+                                    myPromoDiscount = promoDiscount;
+
+                                    log('promoCode $myPromocode');
+                                    log('promoDiscount $myPromoDiscount');
+                                    log(
                                       'Item total after promo code: $itemTotal',
                                     );
                                   },
@@ -190,14 +197,23 @@ class CartScreen extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
+                              log('Promocode = $myPromocode');
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return CheckOutScreen(
-                                      items: items, // from CartLoaded
-                                      total: total,
-                                      userId: userId??'',
+                                    return BlocProvider(
+                                      create:
+                                          (context) =>
+                                              CartCubit(userId: userId)
+                                                ..getCartItems(),
+                                      child: CheckOutScreen(
+                                        items: items, // from CartLoaded
+                                        total: total,
+                                        userId: userId ?? '',
+                                        promoCode: myPromocode,
+                                        promoDiscount: myPromoDiscount,
+                                      ),
                                     );
                                   },
                                 ),
@@ -205,8 +221,6 @@ class CartScreen extends StatelessWidget {
                             },
                             child: const Text('Check out'),
                           ),
-
-
                         ),
                       ],
                     );
