@@ -8,6 +8,7 @@ import 'package:cakes_store_frontend/features/profile/data/repository/profile_re
 import 'package:cakes_store_frontend/features/profile/data/webservice/profile_mongoservice.dart';
 import 'package:cakes_store_frontend/features/profile/presentation/components/profilemenuItem.dart';
 import 'package:cakes_store_frontend/features/profile/presentation/screen/editprofile_screen.dart';
+import 'package:cakes_store_frontend/features/profile/presentation/widget/delete_dialog.dart';
 import 'package:cakes_store_frontend/features/profile/presentation/widget/dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -137,13 +138,25 @@ class ProfileScreen extends StatelessWidget {
           icon: Icons.person,
           title: "Personal Information",
           subtitle:
-              "${profile.username}, ${profile.email}, ${profile.phoneNumber}",
+              "${profile.username}, ${profile.email}",
         ),
         ProfileMenuItem(
           icon: Icons.location_on,
           title: "My Addresses",
           subtitle: profile.addresses?.join(', ') ?? "",
         ),
+         Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: ListTile(
+          leading: Icon(Icons.manage_accounts,color: Theme.of(context).colorScheme.primary),
+          title: Text(
+            "Manage Account",
+            style: theme.textTheme.bodyMedium,
+          ),
+          onTap: () => confirmDeleteAccount(context),
+          contentPadding: EdgeInsets.zero,
+        ),
+      ),
           Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ValueListenableBuilder(
@@ -202,9 +215,11 @@ class ProfileScreen extends StatelessWidget {
             },
           ),
         ),
+
         ],
       ),
     ),
+
   ],
 );
 } else {

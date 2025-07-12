@@ -1,5 +1,7 @@
 import 'package:cakes_store_frontend/core/components/custom_elevated_button.dart';
 import 'package:cakes_store_frontend/core/components/custom_text_field.dart';
+import 'package:cakes_store_frontend/core/extensions/extensions.dart';
+import 'package:cakes_store_frontend/core/services/toast_helper.dart';
 import 'package:cakes_store_frontend/features/profile/business/cubit/user_profile_cubit.dart';
 import 'package:cakes_store_frontend/features/profile/data/model/profile_mongo_model.dart';
 import 'package:cakes_store_frontend/features/profile/presentation/widget/addaddress.dart';
@@ -34,25 +36,51 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _saveProfile() {
-    if (_formKey.currentState!.validate() && _originalProfile != null) {
-      final allAddresses = _addressControllers
-          .map((c) => c.text.trim())
-          .where((address) => address.isNotEmpty)
-          .toList();
+  final isFormValid = _formKey.currentState!.validate();
 
-      final updatedProfile = _originalProfile!.copyWith(
-        username: _usernameController.text.trim().isNotEmpty
-            ? _usernameController.text.trim()
-            : _originalProfile!.username,
-        phoneNumber: _phoneController.text.trim().isNotEmpty
-            ? _phoneController.text.trim()
-            : _originalProfile!.phoneNumber,
-        addresses: allAddresses,
-      );
+  final phone = _phoneController.text.trim();
+  final username = _usernameController.text.trim();
 
-      context.read<UserProfileCubit>().updateProfile(updatedProfile);
-    }
+  final isPhoneValid = phone.isValidPhoneNumber;
+  final isUsernameValid = username.isValidName;
+
+  if (!isFormValid) {
+    return;
   }
+
+  if (!isUsernameValid) {
+    ToastHelper.showToast(
+      context: context,
+      message: 'Please enter a valid username (letters and underscores only)',
+      toastType: ToastType.error,
+    );
+    return;
+  }
+
+  if (!isPhoneValid) {
+    ToastHelper.showToast(
+      context: context,
+      message: 'Please enter a valid Egyptian phone number',
+      toastType: ToastType.error,
+    );
+    return;
+  }
+
+  if (_originalProfile != null) {
+    final allAddresses = _addressControllers
+        .map((c) => c.text.trim())
+        .where((address) => address.isNotEmpty)
+        .toList();
+
+    final updatedProfile = _originalProfile!.copyWith(
+      username: username.isNotEmpty ? username : _originalProfile!.username,
+      phoneNumber: phone.isNotEmpty ? phone : _originalProfile!.phoneNumber,
+      addresses: allAddresses,
+    );
+    context.read<UserProfileCubit>().updateProfile(updatedProfile);
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
