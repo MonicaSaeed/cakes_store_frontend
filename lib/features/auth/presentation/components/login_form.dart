@@ -1,4 +1,3 @@
-import 'package:cakes_store_frontend/core/theme/theme_controller.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/components/custom_password_textfield.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/components/social_auth_button.dart';
 import 'package:flutter/material.dart';
