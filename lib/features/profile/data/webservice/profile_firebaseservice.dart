@@ -20,10 +20,17 @@ Future<void> deleteAccount(BuildContext context) async {
 
     if (user != null) {
       await user.delete();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Account deleted successfully')),
+
+    ToastHelper.showToast(
+    context: context,
+    message: "Account deleted successfully",
+    toastType: ToastType.success,
       );
-   MaterialPageRoute(builder: (_) => const LoginScreen());
+      
+    Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+    MaterialPageRoute(builder: (_) => const LoginScreen()),
+    (route) => false,
+  );
     }
   } on FirebaseAuthException catch (e) {
     if (e.code == 'requires-recent-login') {
