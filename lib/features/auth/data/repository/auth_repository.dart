@@ -88,6 +88,7 @@ class AuthRepository {
 
       final isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
       final user = userCredential.user;
+      print("new ${isNewUser}");
       if (isNewUser && user != null) {
         final mongoUser = UserMongoModel(
           uid: user.uid,
@@ -98,7 +99,6 @@ class AuthRepository {
         );
         await UserMongoWebService().saveUserToMongo(mongoUser);
       }
-
       return user;
     } on FirebaseAuthException catch (e) {
       throw Exception(_mapFirebaseError(e));

@@ -2,6 +2,7 @@ import 'package:cakes_store_frontend/core/components/custom_card.dart';
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_state.dart';
 import 'package:cakes_store_frontend/features/home/presentation/cubit/home_cubit.dart';
+import 'package:cakes_store_frontend/features/user_shared_feature/presentation/cubit/user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -48,7 +49,11 @@ class CategoryScreen extends StatelessWidget {
                         final product = products[index];
                         return BlocBuilder<FavCubit, FavState>(
                           builder: (context, favState) {
-                            return CustomCard(product: product);
+                            return CustomCard(
+                              product: product,
+                              userId:
+                                  context.read<UserCubit>().currentUser!.id!,
+                            );
                           },
                         );
                       },

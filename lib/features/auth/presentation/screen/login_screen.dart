@@ -57,6 +57,7 @@ class _LoginScreenState extends State<LoginScreen>
       child: Scaffold(
         body: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) async {
+            print('state: $state');
             if (state is AuthSuccess ||
                 state is AuthSuccessWithGoogle ||
                 state is AuthSuccessWithFacebook) {
@@ -70,12 +71,14 @@ class _LoginScreenState extends State<LoginScreen>
                 MaterialPageRoute(
                   builder:
                       (context) => BlocProvider<UserCubit>(
-                        create:
-                            (_) =>
-                                UserCubit()..getUserByUid(
-                                  context.read<AuthCubit>().currentUser?.uid ??
-                                      '',
-                                ),
+                        create: (_) {
+                          print(
+                            's: ${context.read<AuthCubit>().currentUser?.uid}',
+                          );
+                          return UserCubit()..getUserByUid(
+                            context.read<AuthCubit>().currentUser?.uid ?? '',
+                          );
+                        },
                         child: BlocBuilder<UserCubit, UserState>(
                           builder: (context, userState) {
                             if (userState is UserLoading ||
