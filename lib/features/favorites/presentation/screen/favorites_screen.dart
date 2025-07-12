@@ -1,6 +1,7 @@
 import 'package:cakes_store_frontend/core/components/custom_card.dart';
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_state.dart';
+import 'package:cakes_store_frontend/features/user_shared_feature/presentation/cubit/user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,7 +11,7 @@ class FavoritesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title:  const Text('Sweet Favorites')),
+      appBar: AppBar(title: const Text('Sweet Favorites')),
       body: BlocBuilder<FavCubit, FavState>(
         builder: (context, state) {
           if (state is FavLoading) {
@@ -153,7 +154,10 @@ class FavoritesScreen extends StatelessWidget {
                             );
                           },
 
-                          child: CustomCard(product: favorite),
+                          child: CustomCard(
+                            product: favorite,
+                            userId: context.read<UserCubit>().currentUser!.id!,
+                          ),
                         );
                       },
                     ),

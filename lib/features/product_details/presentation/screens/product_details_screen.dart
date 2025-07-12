@@ -1,4 +1,6 @@
 import 'package:cakes_store_frontend/features/cart/presentation/cubit/cart_cubit.dart';
+import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
+import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_state.dart';
 import 'package:cakes_store_frontend/features/product_details/presentation/cubit/product_details_cubit.dart';
 import 'package:cakes_store_frontend/features/product_details/presentation/cubit/product_details_state.dart';
 import 'package:flutter/material.dart';
@@ -51,15 +53,36 @@ class ProductDetailsScreen extends StatelessWidget {
                     return const Center(child: CircularProgressIndicator());
                   case ProductDetailsLoaded():
                     final product = state.product;
+                    final isOutOfStock = product.stock == 0;
                     return SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.network(
-                            '${product.imageUrl}',
-                            height: 250,
-                            width: double.infinity,
-                            fit: BoxFit.contain,
+                          Stack(
+                            children: [
+                              Image.network(
+                                '${product.imageUrl}',
+                                height: 250,
+                                width: double.infinity,
+                                fit: BoxFit.contain,
+                              ),
+                              if (isOutOfStock)
+                                Positioned.fill(
+                                  child: Container(
+                                    color: Colors.black.withOpacity(0.4),
+                                    child: const Center(
+                                      child: Text(
+                                        'Out of Stock',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(
@@ -71,19 +94,71 @@ class ProductDetailsScreen extends StatelessWidget {
                               children: [
                                 const SizedBox(height: 8),
                                 Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      '${product.name}',
-                                      style:
-                                          Theme.of(
-                                            context,
-                                          ).textTheme.headlineLarge,
+                                    Expanded(
+                                      child: Text(
+                                        product.name ?? '',
+                                        style:
+                                            Theme.of(
+                                              context,
+                                            ).textTheme.headlineLarge,
+                                        maxLines:
+                                            2, // Adjust depending on layout
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                    const Spacer(),
-                                    IconButton(
-                                      icon: const Icon(Icons.favorite_border),
-                                      onPressed: () {
-                                        // Handle favorite action
+                                    const SizedBox(width: 8),
+                                    BlocBuilder<FavCubit, FavState>(
+                                      builder: (context, favState) {
+                                        return Container(
+                                          width: 40,
+                                          height: 40,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: AnimatedSwitcher(
+                                            duration: const Duration(
+                                              milliseconds: 300,
+                                            ),
+                                            transitionBuilder: (
+                                              child,
+                                              animation,
+                                            ) {
+                                              return ScaleTransition(
+                                                scale: animation,
+                                                child: child,
+                                              );
+                                            },
+                                            child: IconButton(
+                                              icon:
+                                                  context
+                                                          .read<FavCubit>()
+                                                          .favouritesProducts
+                                                          .any(
+                                                            (favProduct) =>
+                                                                favProduct.id ==
+                                                                product.id,
+                                                          )
+                                                      ? const Icon(
+                                                        Icons.favorite,
+                                                        color: Colors.red,
+                                                      )
+                                                      : const Icon(
+                                                        Icons.favorite_border,
+                                                      ),
+                                              onPressed: () {
+                                                context
+                                                    .read<FavCubit>()
+                                                    .toggleFavourite(
+                                                      productId: product.id!,
+                                                    );
+                                              },
+                                              padding: EdgeInsets.zero,
+                                            ),
+                                          ),
+                                        );
                                       },
                                     ),
                                   ],
@@ -151,13 +226,24 @@ class ProductDetailsScreen extends StatelessWidget {
                                 // Add to cart button
                                 ElevatedButton.icon(
                                   icon: const Icon(Icons.add_shopping_cart),
-                                  label: const Text('Add to Cart'),
-                                  onPressed: () {
-                                    context.read<CartCubit>().addToCart(
-                                      product.id!,
-                                      context,
-                                    );
-                                  },
+                                  label: Text(
+                                    isOutOfStock
+                                        ? 'Out of Stock'
+                                        : 'Add to Cart',
+                                  ),
+                                  onPressed:
+                                      isOutOfStock
+                                          ? null // disable button if out of stock
+                                          : () {
+                                            context.read<CartCubit>().addToCart(
+                                              product.id!,
+                                              context,
+                                            );
+                                          },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        isOutOfStock ? Colors.grey : null,
+                                  ),
                                 ),
                                 const SizedBox(height: 16),
                                 BlocBuilder<ReviewsCubit, ReviewsState>(
