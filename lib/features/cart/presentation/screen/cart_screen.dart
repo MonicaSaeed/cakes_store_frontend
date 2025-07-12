@@ -48,7 +48,9 @@ class CartScreen extends StatelessWidget {
 
                     String? myPromocode;
                     int? myPromoDiscount;
-
+                    final theme = Theme.of(context);
+                    final colorScheme = theme.colorScheme;
+                    final isDarkMode = theme.brightness == Brightness.dark;
                     return Column(
                       children: [
                         Expanded(
@@ -73,7 +75,10 @@ class CartScreen extends StatelessWidget {
                                 return Container(
                                   padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color:
+                                        isDarkMode
+                                            ? colorScheme.primary
+                                            : Colors.white,
                                     borderRadius: BorderRadius.circular(8),
                                     boxShadow: [
                                       BoxShadow(
@@ -225,7 +230,7 @@ class CartScreen extends StatelessWidget {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: ()async {
+                            onPressed: () async {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -243,7 +248,15 @@ class CartScreen extends StatelessWidget {
 
                               context.read<CartCubit>().getCartItems();
                             },
-                            child: const Text('Check out'),
+                            child: Text(
+                              'Check out',
+                              style: TextStyle(
+                                color:
+                                    isDarkMode
+                                        ? colorScheme.surfaceTint
+                                        : Colors.white,
+                              ),
+                            ),
                           ),
                         ),
                       ],

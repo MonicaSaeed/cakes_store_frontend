@@ -20,6 +20,8 @@ class CustomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = theme.brightness == Brightness.dark;
     final hasDiscount =
         product.discountPercentage != null && product.discountPercentage! > 0;
     final isOutOfStock = product.stock == 0;
@@ -46,7 +48,7 @@ class CustomCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDarkMode ? colorScheme.primary : Colors.white,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.2),
@@ -75,7 +77,7 @@ class CustomCard extends StatelessWidget {
                             Positioned.fill(
                               child: Container(
                                 color: Colors.black.withOpacity(0.4),
-                                child: const Center(
+                                child: Center(
                                   child: Text(
                                     "Out of Stock",
                                     style: TextStyle(
@@ -119,8 +121,11 @@ class CustomCard extends StatelessWidget {
                             child: Container(
                               width: 40,
                               height: 40,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
+                              decoration: BoxDecoration(
+                                color:
+                                    isDarkMode
+                                        ? colorScheme.surfaceTint
+                                        : Colors.white,
                                 shape: BoxShape.circle,
                               ),
                               child: AnimatedSwitcher(
@@ -140,9 +145,12 @@ class CustomCard extends StatelessWidget {
                                                 (favProduct) =>
                                                     favProduct.id == product.id,
                                               )
-                                          ? const Icon(
+                                          ? Icon(
                                             Icons.favorite,
-                                            color: Colors.red,
+                                            color:
+                                                isDarkMode
+                                                    ? colorScheme.primary
+                                                    : Colors.red,
                                           )
                                           : const Icon(Icons.favorite_border),
                                   onPressed: () {
@@ -193,9 +201,12 @@ class CustomCard extends StatelessWidget {
                                       if (hasDiscount)
                                         Text(
                                           "${product.price} EGP",
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 12,
-                                            color: Colors.grey,
+                                            color:
+                                                isDarkMode
+                                                    ? Colors.white
+                                                    : Colors.grey,
                                             decoration:
                                                 TextDecoration.lineThrough,
                                           ),
@@ -207,7 +218,10 @@ class CustomCard extends StatelessWidget {
                                             ?.copyWith(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w600,
-                                              color: Colors.black,
+                                              color:
+                                                  isDarkMode
+                                                      ? colorScheme.surfaceTint
+                                                      : Colors.black,
                                             ),
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -220,8 +234,12 @@ class CustomCard extends StatelessWidget {
                                     width: 32,
                                     height: 32,
                                     child: IconButton(
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.shopping_cart_outlined,
+                                        color:
+                                            isDarkMode
+                                                ? colorScheme.surfaceTint
+                                                : colorScheme.primary,
                                       ),
                                       iconSize: 20,
                                       onPressed:

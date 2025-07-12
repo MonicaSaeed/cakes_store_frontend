@@ -14,11 +14,14 @@ class SortBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = theme.brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       height: 400,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDarkMode ? colorScheme.primary : Colors.white,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(32),
           topRight: Radius.circular(32),
@@ -47,13 +50,16 @@ class SortBottomSheet extends StatelessWidget {
                     letterSpacing: 2,
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
-                    color: Colors.black,
+                    color: isDarkMode ? colorScheme.surfaceTint : Colors.black,
                     fontFamily: 'popins',
                   ),
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close, color: Colors.black),
+                  icon: Icon(
+                    Icons.close,
+                    color: isDarkMode ? colorScheme.surfaceTint : Colors.black,
+                  ),
                 ),
               ],
             ),
@@ -76,7 +82,11 @@ class SortBottomSheet extends StatelessWidget {
                         decoration: BoxDecoration(
                           color:
                               isSelected
-                                  ? const Color.fromARGB(255, 249, 233, 227)
+                                  ? isDarkMode
+                                      ? Colors.white
+                                      : const Color.fromARGB(255, 249, 233, 227)
+                                  : isDarkMode
+                                  ? Color.fromARGB(255, 249, 233, 227)
                                   : Colors.white,
                           borderRadius: BorderRadius.circular(16),
                         ),

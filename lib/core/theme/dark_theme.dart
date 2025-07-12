@@ -7,10 +7,12 @@ ThemeData darkTheme = ThemeData(
   colorScheme: ColorScheme.fromSeed(
     seedColor: DarkThemeColors.primary,
     primary: DarkThemeColors.primary,
-    secondary: DarkThemeColors.secondary,
+    // secondary: DarkThemeColors.secondary,
     background: DarkThemeColors.background,
     surface: DarkThemeColors.surface,
     brightness: Brightness.dark,
+    surfaceTint: DarkThemeColors.textLight,
+
     //Add
     tertiary: DarkThemeColors.textLight,
   ),
@@ -30,6 +32,11 @@ ThemeData darkTheme = ThemeData(
       fontFamily: 'Pacifico',
       fontSize: 32,
       color: DarkThemeColors.primary,
+    ),
+    headlineMedium: TextStyle(
+      fontFamily: 'Poppins',
+      fontSize: 16,
+      color: DarkThemeColors.textLight,
     ),
     bodyLarge: TextStyle(
       fontFamily: 'Poppins',
@@ -58,7 +65,7 @@ ThemeData darkTheme = ThemeData(
       color: DarkThemeColors.primary,
       decoration: TextDecoration.underline,
       fontWeight: FontWeight.bold,
-      decorationColor: DarkThemeColors.secondary,
+      decorationColor: DarkThemeColors.textLight,
     ),
     labelSmall: TextStyle(
       color: Colors.white,
@@ -129,7 +136,8 @@ ThemeData darkTheme = ThemeData(
     ),
   ),
   chipTheme: ChipThemeData(
-    backgroundColor: DarkThemeColors.secondary,
+    ////////////////////////////////
+    backgroundColor: DarkThemeColors.textLight,
     selectedColor: DarkThemeColors.primary,
     labelStyle: const TextStyle(
       fontFamily: 'Poppins',

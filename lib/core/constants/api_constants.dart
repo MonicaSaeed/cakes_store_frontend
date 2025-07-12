@@ -1,7 +1,6 @@
 class ApiConstance {
-
-  static const String baseUrl = "http://192.168.1.8:3000";
-  // static const String baseUrl = "http://10.0.2.2:1000";
+  // static const String baseUrl = "http://192.168.1.8:3000";
+  static const String baseUrl = "http://10.0.2.2:1000";
 
   static const String productsUrl = "$baseUrl/products";
   static const String usersUrl = "$baseUrl/users";

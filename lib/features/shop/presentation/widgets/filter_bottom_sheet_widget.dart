@@ -28,11 +28,14 @@ class _FilterBottomSheetWidgetState extends State<FilterBottomSheetWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = theme.brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       height: 650,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDarkMode ? colorScheme.primary : Colors.white,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(32),
           topRight: Radius.circular(32),
@@ -61,13 +64,18 @@ class _FilterBottomSheetWidgetState extends State<FilterBottomSheetWidget> {
                       letterSpacing: 2,
                       fontSize: 24,
                       fontWeight: FontWeight.w800,
-                      color: Colors.black,
+                      color:
+                          isDarkMode ? colorScheme.surfaceTint : Colors.black,
                       fontFamily: 'popins',
                     ),
                   ),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close, color: Colors.black),
+                    icon: Icon(
+                      Icons.close,
+                      color:
+                          isDarkMode ? colorScheme.surfaceTint : Colors.black,
+                    ),
                   ),
                 ],
               ),

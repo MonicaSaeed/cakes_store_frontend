@@ -8,7 +8,12 @@ import '../cubit/promo_code_cubit/promo_code_state.dart';
 
 class PromoCodeSection extends StatefulWidget {
   final double cartTotal;
-  final void Function(double discountedTotal,String promoCode,int promoDiscount) onDiscountApplied;
+  final void Function(
+    double discountedTotal,
+    String promoCode,
+    int promoDiscount,
+  )
+  onDiscountApplied;
 
   const PromoCodeSection({
     super.key,
@@ -32,6 +37,9 @@ class _PromoCodeSectionState extends State<PromoCodeSection> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = theme.brightness == Brightness.dark;
     return BlocConsumer<PromoCodeCubit, PromoCodeState>(
       listener: (context, state) {
         if (state is PromoCodeNotFound) {
@@ -58,7 +66,11 @@ class _PromoCodeSectionState extends State<PromoCodeSection> {
           );
           final discount = state.promoCode.discountPercentage;
           final discountedTotal = widget.cartTotal * (1 - discount / 100);
-          widget.onDiscountApplied(discountedTotal,state.promoCode.code,discount);
+          widget.onDiscountApplied(
+            discountedTotal,
+            state.promoCode.code,
+            discount,
+          );
         }
       },
       builder: (context, state) {
@@ -106,7 +118,7 @@ class _PromoCodeSectionState extends State<PromoCodeSection> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDarkMode ? colorScheme.primary : Colors.white,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.grey[300]!),
               ),

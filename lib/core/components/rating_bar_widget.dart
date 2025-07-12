@@ -16,6 +16,9 @@ class RatingBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = theme.brightness == Brightness.dark;
     return Row(
       children: [
         Row(
@@ -33,7 +36,10 @@ class RatingBarWidget extends StatelessWidget {
         const SizedBox(width: 4),
         Text(
           '($reviewCount)',
-          style: TextStyle(fontSize: size * 0.7, color: Colors.black54),
+          style: TextStyle(
+            fontSize: size * 0.7,
+            color: isDarkMode ? colorScheme.surfaceTint : Colors.black54,
+          ),
         ),
       ],
     );

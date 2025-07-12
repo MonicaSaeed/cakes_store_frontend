@@ -20,6 +20,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     return ScreenUtilInit(
       designSize: const Size(
@@ -98,7 +99,10 @@ class HomeScreen extends StatelessWidget {
                                 "Categories",
                                 style: theme.textTheme.headlineMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
-                                  color: colorScheme.primary,
+                                  color:
+                                      isDarkMode
+                                          ? colorScheme.surfaceTint
+                                          : colorScheme.primary,
                                   fontSize: 14.sp,
                                 ),
                               ),
@@ -118,7 +122,10 @@ class HomeScreen extends StatelessWidget {
                                     style: theme.textTheme.headlineMedium
                                         ?.copyWith(
                                           fontWeight: FontWeight.bold,
-                                          color: colorScheme.primary,
+                                          color:
+                                              isDarkMode
+                                                  ? colorScheme.surfaceTint
+                                                  : colorScheme.primary,
                                           fontSize: 14.sp,
                                         ),
                                   ),
@@ -131,7 +138,10 @@ class HomeScreen extends StatelessWidget {
                                       style: theme.textTheme.headlineMedium
                                           ?.copyWith(
                                             fontWeight: FontWeight.bold,
-                                            color: colorScheme.primary,
+                                            color:
+                                                isDarkMode
+                                                    ? colorScheme.surfaceTint
+                                                    : colorScheme.primary,
                                             decoration:
                                                 TextDecoration.underline,
                                             decorationColor:

@@ -29,6 +29,7 @@ class _CategoryListState extends State<CategoryList> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     return ListView.separated(
       scrollDirection: Axis.horizontal,
@@ -86,7 +87,11 @@ class _CategoryListState extends State<CategoryList> {
                       width: 32.w,
                       height: 32.h,
                       colorFilter: ColorFilter.mode(
-                        isSelected ? Colors.white : LightThemeColors.iconColor,
+                        isSelected
+                            ? Colors.white
+                            : isDarkMode
+                            ? colorScheme.surfaceTint
+                            : LightThemeColors.iconColor,
                         BlendMode.srcIn,
                       ),
                     ),
@@ -107,7 +112,10 @@ class _CategoryListState extends State<CategoryList> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.primary,
+                        color:
+                            isDarkMode
+                                ? colorScheme.surfaceTint
+                                : colorScheme.primary,
                         fontWeight:
                             isSelected ? FontWeight.w700 : FontWeight.w600,
                         fontSize: 12.sp,

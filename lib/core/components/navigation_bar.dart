@@ -21,6 +21,9 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
   int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = theme.brightness == Brightness.dark;
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, dynamic result) async {
@@ -40,8 +43,12 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
             [
               const HomeScreen(),
               const FavoritesScreen(),
-               BlocProvider(
-                create: (_) => GetOrdersCubit()..getOrders(context.read<UserCubit>().currentUser?.id),
+              BlocProvider(
+                create:
+                    (_) =>
+                        GetOrdersCubit()..getOrders(
+                          context.read<UserCubit>().currentUser?.id,
+                        ),
                 child: OrdersScreen(),
               ),
               CartScreen(),
@@ -76,7 +83,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
             BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
           ],
           type: BottomNavigationBarType.fixed,
-          selectedItemColor: Theme.of(context).colorScheme.primary,
+          selectedItemColor: colorScheme.primary,
         ),
       ),
     );
