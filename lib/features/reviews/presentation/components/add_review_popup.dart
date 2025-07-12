@@ -29,6 +29,10 @@ class _AddReviewPopupState extends State<AddReviewPopup> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = colorScheme.brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 18,
@@ -78,6 +82,11 @@ class _AddReviewPopupState extends State<AddReviewPopup> {
                   const Text('Rating'),
                   Expanded(
                     child: Slider(
+                      activeColor: isDarkMode ? colorScheme.surfaceTint : null,
+                      inactiveColor:
+                          isDarkMode
+                              ? colorScheme.surfaceTint.withOpacity(0.3)
+                              : null,
                       value: _rating,
                       onChanged: (value) {
                         setState(() => _rating = value);

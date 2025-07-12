@@ -73,7 +73,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     try {
       final placeOrderUseCase = sl<PlaceOrderUseCase>();
       final addedOrder = await placeOrderUseCase(order);
-
+      final theme = Theme.of(context);
+      final colorScheme = theme.colorScheme;
+      final isDarkMode = colorScheme.brightness == Brightness.dark;
       showDialog(
         context: context,
         builder:
@@ -87,7 +89,12 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       ..pop()
                       ..pop();
                   },
-                  child: const Text('OK'),
+                  child: Text(
+                    'OK',
+                    style: TextStyle(
+                      color: isDarkMode ? colorScheme.surfaceTint : null,
+                    ),
+                  ),
                 ),
 
                 TextButton(
@@ -123,7 +130,12 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       ..pop()
                       ..pop();
                   },
-                  child: const Text('Pay'),
+                  child: Text(
+                    'Pay',
+                    style: TextStyle(
+                      color: isDarkMode ? colorScheme.surfaceTint : null,
+                    ),
+                  ),
                 ),
               ],
             ),
