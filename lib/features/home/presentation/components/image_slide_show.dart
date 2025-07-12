@@ -152,47 +152,63 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
                       // Bottom Content
                       Align(
                         alignment: Alignment.bottomLeft,
-                        child: Padding(
-                          padding: EdgeInsets.all(20.w),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                slide['title'],
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.bold,
-                                  shadows: [
-                                    Shadow(
-                                      color: Colors.black45,
-                                      blurRadius: 6,
-                                      offset: const Offset(1, 1),
+                        child: SafeArea(
+                          child: Padding(
+                            padding: EdgeInsets.all(20.w),
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxWidth:
+                                    MediaQuery.of(context).size.width * 0.85,
+                              ),
+                              child: SingleChildScrollView(
+                                physics: const NeverScrollableScrollPhysics(),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      slide['title'],
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.bold,
+                                        shadows: [
+                                          Shadow(
+                                            color: Colors.black45,
+                                            blurRadius: 6,
+                                            offset: const Offset(1, 1),
+                                          ),
+                                        ],
+                                      ),
                                     ),
+                                    SizedBox(height: 4.h),
+                                    ElevatedButton(
+                                      onPressed:
+                                          () =>
+                                              slide['onButtonPressed'](context),
+                                      style: ElevatedButton.styleFrom(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 16.w,
+                                          vertical: 8.h,
+                                        ),
+                                      ),
+                                      child: FittedBox(
+                                        child: Text(
+                                          slide['buttonTitle'],
+                                          style: TextStyle(
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 12.h),
                                   ],
                                 ),
                               ),
-                              SizedBox(height: 4.h),
-                              ElevatedButton(
-                                onPressed:
-                                    () => slide['onButtonPressed'](context),
-                                style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 16.w,
-                                    vertical: 8.h,
-                                  ),
-                                ),
-                                child: Text(
-                                  slide['buttonTitle'],
-                                  style: TextStyle(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 12.h),
-                            ],
+                            ),
                           ),
                         ),
                       ),

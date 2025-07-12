@@ -1,4 +1,3 @@
-import 'package:cakes_store_frontend/core/theme/theme_controller.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/components/custom_password_textfield.dart';
 import 'package:cakes_store_frontend/features/auth/presentation/components/social_auth_button.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +31,8 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AuthCubit>().state;
-
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -41,7 +41,7 @@ class _LoginFormState extends State<LoginForm> {
         boxShadow: [
           BoxShadow(
             color:
-                ThemeController.isDark()
+                isDarkMode
                     ? Theme.of(
                       context,
                     ).colorScheme.background.withValues(alpha: 0.2)

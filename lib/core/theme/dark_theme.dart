@@ -64,7 +64,7 @@ ThemeData darkTheme = ThemeData(
     //Added
     displaySmall: TextStyle(
       fontSize: 12,
-      color: DarkThemeColors.primary,
+      color: DarkThemeColors.secondary,
       decoration: TextDecoration.underline,
       fontWeight: FontWeight.bold,
       decorationColor: DarkThemeColors.textLight,
