@@ -37,6 +37,12 @@ class HomeScreen extends StatelessWidget {
             appBar: AppBar(
               title: Text(
                 "YumSlice Store",
+                style: TextStyle(
+                  color:
+                      isDarkMode
+                          ? colorScheme.surfaceTint
+                          : colorScheme.primary,
+                ),
                 // style: theme.textTheme.titleLarge?.copyWith(
                 //   fontWeight: FontWeight.bold,
                 // ),
@@ -54,7 +60,10 @@ class HomeScreen extends StatelessWidget {
                 IconButton(
                   icon: Icon(
                     Icons.logout,
-                    color: colorScheme.primary,
+                    color:
+                        isDarkMode
+                            ? colorScheme.surfaceTint
+                            : colorScheme.primary,
                     size: 18.w,
                   ),
                   onPressed: () async {
@@ -91,10 +100,8 @@ class HomeScreen extends StatelessWidget {
                               child: ImageSlideShow(
                                 latestProduct:
                                     context.read<HomeCubit>().latestProduct,
-                                    userId:  context
-                                            .read<UserCubit>()
-                                            .currentUser!
-                                            .id!,
+                                userId:
+                                    context.read<UserCubit>().currentUser!.id!,
                               ),
                             ),
                             Padding(

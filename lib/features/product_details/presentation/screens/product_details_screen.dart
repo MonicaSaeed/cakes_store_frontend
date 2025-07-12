@@ -35,6 +35,9 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = colorScheme.brightness == Brightness.dark;
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -114,8 +117,11 @@ class ProductDetailsScreen extends StatelessWidget {
                                         return Container(
                                           width: 40,
                                           height: 40,
-                                          decoration: const BoxDecoration(
-                                            color: Colors.white,
+                                          decoration: BoxDecoration(
+                                            color:
+                                                isDarkMode
+                                                    ? colorScheme.surfaceTint
+                                                    : Colors.white,
                                             shape: BoxShape.circle,
                                           ),
                                           child: AnimatedSwitcher(
@@ -141,9 +147,13 @@ class ProductDetailsScreen extends StatelessWidget {
                                                                 favProduct.id ==
                                                                 product.id,
                                                           )
-                                                      ? const Icon(
+                                                      ? Icon(
                                                         Icons.favorite,
-                                                        color: Colors.red,
+                                                        color:
+                                                            isDarkMode
+                                                                ? colorScheme
+                                                                    .primary
+                                                                : Colors.red,
                                                       )
                                                       : const Icon(
                                                         Icons.favorite_border,
@@ -203,7 +213,10 @@ class ProductDetailsScreen extends StatelessWidget {
                                         vertical: 4,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFFFBE6E6),
+                                        color:
+                                            isDarkMode
+                                                ? colorScheme.surfaceTint
+                                                : const Color(0xFFFBE6E6),
                                         borderRadius: BorderRadius.circular(16),
                                       ),
                                       child: Text(
@@ -211,7 +224,10 @@ class ProductDetailsScreen extends StatelessWidget {
                                         style: Theme.of(
                                           context,
                                         ).textTheme.bodyMedium?.copyWith(
-                                          color: const Color(0xFFFF8C8C),
+                                          color:
+                                              isDarkMode
+                                                  ? colorScheme.primary
+                                                  : const Color(0xFFFF8C8C),
                                         ),
                                       ),
                                     ),

@@ -14,7 +14,9 @@ class RatingComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     int fullStars = rating.floor();
     bool hasHalfStar = (rating - fullStars) >= 0.5;
-
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = colorScheme.brightness == Brightness.dark;
     return Row(
       children: [
         ...List.generate(
@@ -33,7 +35,10 @@ class RatingComponent extends StatelessWidget {
         reviewCount > 0
             ? Text(
               '$rating ($reviewCount reviews)',
-              style: const TextStyle(fontSize: 14, color: Colors.black87),
+              style: TextStyle(
+                fontSize: 14,
+                color: isDarkMode ? colorScheme.surfaceTint : Colors.black87,
+              ),
             )
             : Text(''),
       ],

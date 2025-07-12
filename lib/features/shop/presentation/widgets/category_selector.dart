@@ -41,6 +41,9 @@ class _CategorySelectorState extends State<CategorySelector> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = colorScheme.brightness == Brightness.dark;
     const Color brown = Color(0xFF432c23);
     return SizedBox(
       height: 150,
@@ -53,9 +56,25 @@ class _CategorySelectorState extends State<CategorySelector> {
           final isSelected =
               widget.categories[index] == widget.selectedCategory;
           final bgColor =
-              isSelected ? brown.withOpacity(0.1) : Colors.transparent;
-          final iconColor = isSelected ? brown : brown.withOpacity(0.6);
-          final textColor = isSelected ? brown : Colors.black;
+              isSelected
+                  ? isDarkMode
+                      ? colorScheme.surfaceTint
+                      : brown.withOpacity(0.1)
+                  : Colors.transparent;
+          final iconColor =
+              isSelected
+                  ? brown
+                  : isDarkMode
+                  ? colorScheme.surfaceTint.withOpacity(0.5)
+                  : brown.withOpacity(0.6);
+          final textColor =
+              isSelected
+                  ? isDarkMode
+                      ? colorScheme.surfaceTint
+                      : brown
+                  : isDarkMode
+                  ? colorScheme.surfaceTint.withOpacity(0.6)
+                  : Colors.black;
 
           return GestureDetector(
             onTap:

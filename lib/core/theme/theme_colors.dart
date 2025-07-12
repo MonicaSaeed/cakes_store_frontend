@@ -20,7 +20,9 @@ class LightThemeColors {
 }
 
 class DarkThemeColors {
-  static const Color primary = Color(0xFF523f38);
+  // static const Color primary = Color(0xFF523f38);
+  static const Color primary = Color(0xFF3c2e29);
+
   // Color.fromARGB(
   //   255,
   //   238,

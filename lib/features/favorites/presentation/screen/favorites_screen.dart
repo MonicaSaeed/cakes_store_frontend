@@ -1,4 +1,5 @@
 import 'package:cakes_store_frontend/core/components/custom_card.dart';
+import 'package:cakes_store_frontend/core/theme/dark_theme.dart';
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
 import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_state.dart';
 import 'package:cakes_store_frontend/features/user_shared_feature/presentation/cubit/user_cubit.dart';
@@ -10,8 +11,19 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = colorScheme.brightness == Brightness.dark;
+    ;
     return Scaffold(
-      appBar: AppBar(title: const Text('Sweet Favorites')),
+      appBar: AppBar(
+        title: Text(
+          'Sweet Favorites',
+          style: TextStyle(
+            color: isDarkMode ? colorScheme.surfaceTint : colorScheme.primary,
+          ),
+        ),
+      ),
       body: BlocBuilder<FavCubit, FavState>(
         builder: (context, state) {
           if (state is FavLoading) {

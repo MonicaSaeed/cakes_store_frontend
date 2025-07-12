@@ -28,7 +28,7 @@ ThemeData lightTheme = ThemeData(
   ),
   textTheme: const TextTheme(
     headlineLarge: TextStyle(
-      fontFamily: 'Pacifico',
+      fontFamily: 'times new roman',
       fontSize: 32,
       color: LightThemeColors.primary,
     ),

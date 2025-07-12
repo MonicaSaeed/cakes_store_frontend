@@ -1,4 +1,5 @@
 import 'package:cakes_store_frontend/core/extensions/extensions.dart';
+import 'package:cakes_store_frontend/core/theme/dark_theme.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/components/rating_component.dart';
@@ -11,11 +12,14 @@ class ReviewDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = colorScheme.brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(8.0),
       margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       decoration: BoxDecoration(
-        color: LightThemeColors.white,
+        color: isDarkMode ? colorScheme.surfaceTint : LightThemeColors.white,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Padding(
@@ -31,13 +35,16 @@ class ReviewDetailsScreen extends StatelessWidget {
                         radius: 30.0,
                         backgroundColor: LightThemeColors.primary,
                       )
-                      : const CircleAvatar(
+                      : CircleAvatar(
                         radius: 30.0,
                         backgroundColor: LightThemeColors.primary,
                         child: Icon(
                           Icons.person,
                           size: 30,
-                          color: LightThemeColors.white,
+                          color:
+                              isDarkMode
+                                  ? colorScheme.surfaceTint
+                                  : LightThemeColors.white,
                         ),
                       ),
             ),
@@ -48,14 +55,29 @@ class ReviewDetailsScreen extends StatelessWidget {
                 children: [
                   Text(
                     review.user.username,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style:
+                        isDarkMode
+                            ? TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 18,
+                              color: DarkThemeColors.primary,
+                              fontWeight: FontWeight.bold,
+                            )
+                            : Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                   ),
                   const SizedBox(height: 4.0),
                   Text(
                     review.createdAt.toString().formattedDate,
-                    style: Theme.of(context).textTheme.bodySmall,
+                    style:
+                        isDarkMode
+                            ? TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 14,
+                              color: DarkThemeColors.primary,
+                            )
+                            : Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(height: 4.0),
                   RatingComponent(rating: review.rating, reviewCount: 0),
@@ -64,7 +86,14 @@ class ReviewDetailsScreen extends StatelessWidget {
                     scrollDirection: Axis.vertical,
                     child: Text(
                       review.comment,
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style:
+                          isDarkMode
+                              ? TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 18,
+                                color: DarkThemeColors.primary,
+                              )
+                              : Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
                 ],

@@ -21,17 +21,19 @@ ThemeData darkTheme = ThemeData(
     foregroundColor: DarkThemeColors.primary,
     elevation: 2,
     titleTextStyle: TextStyle(
-      color: DarkThemeColors.primary,
-      fontFamily: 'Pacifico',
+      color: DarkThemeColors.textLight,
+      // fontFamily: 'Pacifico',
       fontSize: 24,
+      letterSpacing: 2,
+      fontFamily: 'times new roman',
       fontWeight: FontWeight.w500,
     ),
   ),
   textTheme: const TextTheme(
     headlineLarge: TextStyle(
-      fontFamily: 'Pacifico',
+      fontFamily: 'times new roman',
       fontSize: 32,
-      color: DarkThemeColors.primary,
+      color: DarkThemeColors.textLight,
     ),
     headlineMedium: TextStyle(
       fontFamily: 'Poppins',
