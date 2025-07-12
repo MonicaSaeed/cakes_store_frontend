@@ -22,9 +22,18 @@ class CategoryScreen extends StatelessWidget {
       appBar: AppBar(title: Text('$categoryName Category')),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final isSmallScreen = constraints.maxWidth < 350;
-          final gridCrossAxisCount = isSmallScreen ? 2 : 2;
-          final gridChildAspectRatio = isSmallScreen ? 0.6 : 0.55;
+          final int gridCrossAxisCount;
+          final double gridChildAspectRatio;
+          if (constraints.maxWidth >= 800) {
+            gridCrossAxisCount = 4;
+            gridChildAspectRatio = 0.55;
+          } else if (constraints.maxWidth >= 600) {
+            gridCrossAxisCount = 3;
+            gridChildAspectRatio = 0.55;
+          } else {
+            gridCrossAxisCount = 2;
+            gridChildAspectRatio = 0.55;
+          }
 
           return Padding(
             padding: EdgeInsets.all(16.w),

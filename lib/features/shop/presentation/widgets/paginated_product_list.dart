@@ -8,6 +8,7 @@ import 'package:cakes_store_frontend/features/shop/presentation/cubit/product_li
         ProductListError;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../user_shared_feature/presentation/cubit/user_cubit.dart';
 
@@ -53,40 +54,55 @@ class _PaginatedProductListState extends State<PaginatedProductList> {
         if (state is ProductListLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is ProductListLoaded) {
-          return CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              SliverPadding(
-                padding: const EdgeInsets.all(8.0),
-                sliver: SliverGrid(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    childAspectRatio:
-                        MediaQuery.of(context).size.width /
-                        2 /
-                        (MediaQuery.of(context).size.width / 2 / 0.6),
-                  ),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      if (index >= state.products.length) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final int gridCrossAxisCount;
+              final double gridChildAspectRatio;
+              if (constraints.maxWidth >= 800) {
+                gridCrossAxisCount = 4;
+                gridChildAspectRatio = 0.55;
+              } else if (constraints.maxWidth >= 600) {
+                gridCrossAxisCount = 3;
+                gridChildAspectRatio = 0.55;
+              } else {
+                gridCrossAxisCount = 2;
+                gridChildAspectRatio = 0.55;
+              }
+              return CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  SliverPadding(
+                    padding: const EdgeInsets.all(8.0),
+                    sliver: SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: gridCrossAxisCount,
+                        crossAxisSpacing: 10.w,
+                        mainAxisSpacing: 10.h,
+                        childAspectRatio: gridChildAspectRatio,
+                      ),
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          if (index >= state.products.length) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
 
-                      final product = state.products[index];
-                      return CustomCard(
-                        product: product,
-                        userId: context.read<UserCubit>().currentUser!.id!,
-                      );
-                    },
-                    childCount:
-                        state.products.length +
-                        (state.isLoadingMore ? 1 : 0), // +1 if loading more
+                          final product = state.products[index];
+                          return CustomCard(
+                            product: product,
+                            userId: context.read<UserCubit>().currentUser!.id!,
+                          );
+                        },
+                        childCount:
+                            state.products.length +
+                            (state.isLoadingMore ? 1 : 0), // +1 if loading more
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ],
+                ],
+              );
+            },
           );
         } else if (state is ProductListError) {
           return Center(

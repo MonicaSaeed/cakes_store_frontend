@@ -87,10 +87,18 @@ class HomeScreen extends StatelessWidget {
                   return LayoutBuilder(
                     builder: (context, constraints) {
                       // Calculate responsive values based on screen size
-                      final isSmallScreen = constraints.maxWidth < 350;
-                      final gridCrossAxisCount = isSmallScreen ? 2 : 2;
-                      final gridChildAspectRatio = isSmallScreen ? 0.6 : 0.55;
-
+                      final int gridCrossAxisCount;
+                      final double gridChildAspectRatio;
+                      if (constraints.maxWidth >= 800) {
+                        gridCrossAxisCount = 4;
+                        gridChildAspectRatio = 0.55;
+                      } else if (constraints.maxWidth >= 600) {
+                        gridCrossAxisCount = 3;
+                        gridChildAspectRatio = 0.55;
+                      } else {
+                        gridCrossAxisCount = 2;
+                        gridChildAspectRatio = 0.55;
+                      }
                       return SingleChildScrollView(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
