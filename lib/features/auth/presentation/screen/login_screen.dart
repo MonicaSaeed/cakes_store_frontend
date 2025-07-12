@@ -146,6 +146,7 @@ class _LoginScreenState extends State<LoginScreen>
               } else if (state is AuthFailureWithFacebook) {
                 msg = state.message;
               }
+              msg = context.read<AuthCubit>().parseErrorMessage(msg);
               ToastHelper.showToast(
                 context: context,
                 message: msg,
@@ -167,10 +168,13 @@ class _LoginScreenState extends State<LoginScreen>
                   end: Alignment.bottomRight,
                   colors: [
                     Theme.of(context).colorScheme.background,
-                    Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                    Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.2),
+                    Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.1),
                   ],
-                  stops: const [0.0, 0.5, 1.0],
                 ),
               ),
               child: SafeArea(

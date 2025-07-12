@@ -152,4 +152,9 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthFailureWithFacebook(e.toString()));
     }
   }
+
+  String parseErrorMessage(String error) {
+    // Remove repeated "Exception:" if present
+    return error.replaceAll(RegExp(r'Exception:\s*'), '').trim();
+  }
 }

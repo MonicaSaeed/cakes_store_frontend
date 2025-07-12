@@ -32,7 +32,8 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AuthCubit>().state;
-
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -41,7 +42,7 @@ class _LoginFormState extends State<LoginForm> {
         boxShadow: [
           BoxShadow(
             color:
-                ThemeController.isDark()
+                isDarkMode
                     ? Theme.of(
                       context,
                     ).colorScheme.background.withValues(alpha: 0.2)
