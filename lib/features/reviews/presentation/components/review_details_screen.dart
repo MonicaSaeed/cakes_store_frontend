@@ -1,8 +1,8 @@
 import 'package:cakes_store_frontend/core/extensions/extensions.dart';
-import 'package:cakes_store_frontend/core/theme/dark_theme.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/components/rating_component.dart';
+import '../../../../core/constants/api_constants.dart';
 import '../../../../core/theme/theme_colors.dart';
 import '../../data/models/reviews_model.dart';
 
@@ -31,7 +31,9 @@ class ReviewDetailsScreen extends StatelessWidget {
               child:
                   review.user.image != null
                       ? CircleAvatar(
-                        backgroundImage: NetworkImage(review.user.image!),
+                        backgroundImage: NetworkImage(
+                          '${ApiConstance.baseUrl}${review.user.image!}',
+                        ),
                         radius: 30.0,
                         backgroundColor: LightThemeColors.primary,
                       )
