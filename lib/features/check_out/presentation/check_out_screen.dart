@@ -1,11 +1,14 @@
 import 'dart:developer';
 
 import 'package:cakes_store_frontend/core/components/custom_text_field.dart';
+import 'package:cakes_store_frontend/core/constants/api_constants.dart';
 import 'package:cakes_store_frontend/core/services/service_locator.dart';
 import 'package:cakes_store_frontend/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:cakes_store_frontend/features/check_out/data/models/order_item.dart';
 import 'package:cakes_store_frontend/features/check_out/data/models/order_model.dart';
 import 'package:cakes_store_frontend/features/check_out/domain/place_order_use_case.dart';
+import 'package:cakes_store_frontend/features/payment/payment_screen.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:cakes_store_frontend/features/cart/data/model/cart_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,7 +42,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     required String? userId,
     required double totalPrice,
     String? promoCode,
-    int? promoDiscount
+    int? promoDiscount,
   }) async {
     if (userId == null) {
       log('UserId = null at CheckOutScreen');
@@ -69,7 +72,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
 
     try {
       final placeOrderUseCase = sl<PlaceOrderUseCase>();
-      await placeOrderUseCase(order);
+      final addedOrder = await placeOrderUseCase(order);
 
       showDialog(
         context: context,
@@ -80,12 +83,47 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    
                     Navigator.of(context)
                       ..pop()
                       ..pop();
                   },
                   child: const Text('OK'),
+                ),
+
+                TextButton(
+                  onPressed: () async {
+                    try {
+                      // Step 1: Get iframe URL from your backend
+                      final response = await Dio().post(
+                        ApiConstance.payUrl,
+                        data: {
+                          "mongo_order_id": addedOrder.id,
+                          "amount": addedOrder.totalPrice,
+                        },
+                      );
+
+                      if (response.statusCode == 200 &&
+                          response.data['iframe_url'] != null) {
+                        final iframeUrl = response.data['iframe_url'];
+
+                        // Step 2: Open PaymentScreen and wait for result
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) =>
+                                    PaymentScreen(iframeUrl: iframeUrl),
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      log("Error while fetching frameUrl $e");
+                    }
+                    Navigator.of(context)
+                      ..pop()
+                      ..pop();
+                  },
+                  child: const Text('Pay'),
                 ),
               ],
             ),
@@ -105,161 +143,171 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: BlocBuilder<CartCubit, CartState>(
-          builder: (context, state) {
-            switch (state.runtimeType) {
-              case CartLoading:
-                return Scaffold(appBar: AppBar(),body: const Center(child: CircularProgressIndicator()));
-              case CartEmpty:
-                return Scaffold( appBar: AppBar(),body: const Center(child: Text('Your cart is empty')));
-              case CartLoaded:
-                final cartLoadedState = state as CartLoaded;
-                final items = cartLoadedState.items;
+        builder: (context, state) {
+          switch (state.runtimeType) {
+            case CartLoading:
+              return Scaffold(
+                appBar: AppBar(),
+                body: const Center(child: CircularProgressIndicator()),
+              );
+            case CartEmpty:
+              return Scaffold(
+                appBar: AppBar(),
+                body: const Center(child: Text('Your cart is empty')),
+              );
+            case CartLoaded:
+              final cartLoadedState = state as CartLoaded;
+              final items = cartLoadedState.items;
 
-                if (items.isEmpty) {
-                  return const Center(child: Text('Your cart is empty'));
-                }
+              if (items.isEmpty) {
+                return const Center(child: Text('Your cart is empty'));
+              }
 
-                log('$cartLoadedState');
+              log('$cartLoadedState');
 
-                return Scaffold(
-                  appBar: AppBar(title: const Text('Checkout')),
-                  body: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 16,
-                      horizontal: 0,
-                    ),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: items.length,
-                            itemBuilder: (context, index) {
-                              final item = items[index];
-                              final product = item.product;
-                              final discount =
-                                  (product.discountPercentage ?? 0) / 100;
-                              final discountedPrice =
-                                  item.unitPrice * (1 - discount);
-                              final quantity = item.quantity;
-
-                              return Card(
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      product.name!,
-                                      style:
-                                          Theme.of(
-                                            context,
-                                          ).textTheme.headlineSmall,
-                                    ),
-                                    ListTile(
-                                      leading: Image.network(product.imageUrl!),
-                                      subtitle: Column(
-                                        children: [
-                                          Text(
-                                            ' EGP ${item.unitPrice.toStringAsFixed(2)}',
-                                            style: TextStyle(
-                                              color: Colors.red,
-                                              decoration:
-                                                  TextDecoration.lineThrough,
-                                            ),
-                                          ),
-                                          Text(
-                                            ' EGP ${discountedPrice.toStringAsFixed(2)}',
-                                          ),
-                                        ],
-                                      ),
-                                      trailing: Column(
-                                        children: [
-                                          Text('Qty: $quantity'),
-                                          Text(
-                                            'EGP ${(discountedPrice * quantity).toStringAsFixed(2)}',
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        CustomTextField(
-                          controller: _addressController,
-                          hintText: 'Enter Delivery Address',
-                          title: 'Delivery Address',
-                          suffixIcon: const Icon(Icons.home),
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Total:',
-                              style: Theme.of(context).textTheme.headlineSmall,
-                            ),
-                            widget.promoCode == null
-                                ? Text(
-                                  'EGP ${total.toStringAsFixed(2)}',
-                                  style:
-                                      Theme.of(context).textTheme.headlineSmall,
-                                )
-                                : Column(
-                                  children: [
-                                    Text(
-                                      'EGP ${total.toStringAsFixed(2)}',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.headlineSmall?.copyWith(
-                                        decoration: TextDecoration.lineThrough,
-                                      ),
-                                    ),
-                                    Text(
-                                      'EGP ${(total * (1 - (widget.promoDiscount ?? 0) / 100)).toStringAsFixed(2)}',
-                                      style:
-                                          Theme.of(
-                                            context,
-                                          ).textTheme.headlineSmall,
-                                    ),
-                                  ],
-                                ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              final address = _addressController.text.trim();
-                              if (address.isEmpty) {
-                                setState(() {
-                                });
-                                return;
-                              }
-
-                              _confirmOrder(
-                                address: address,
-                                items: items,
-                                userId: widget.userId,
-                                totalPrice:widget.promoCode == null? total : total * (1 - (widget.promoDiscount ?? 0) / 100),
-                                promoCode: widget.promoCode,
-                                promoDiscount: widget.promoDiscount
-                              );
-                            },
-                            child: const Text('Confirm Order'),
-                          ),
-                        ),
-                      ],
-                    ),
+              return Scaffold(
+                appBar: AppBar(title: const Text('Checkout')),
+                body: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16,
+                    horizontal: 0,
                   ),
-                );
-              default:
-                return const Center(child: Text('Unknown state'));
-            }
-          },
-        ),
-     
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: items.length,
+                          itemBuilder: (context, index) {
+                            final item = items[index];
+                            final product = item.product;
+                            final discount =
+                                (product.discountPercentage ?? 0) / 100;
+                            final discountedPrice =
+                                item.unitPrice * (1 - discount);
+                            final quantity = item.quantity;
+
+                            return Card(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    product.name!,
+                                    style:
+                                        Theme.of(
+                                          context,
+                                        ).textTheme.headlineSmall,
+                                  ),
+                                  ListTile(
+                                    leading: Image.network(product.imageUrl!),
+                                    subtitle: Column(
+                                      children: [
+                                        Text(
+                                          ' EGP ${item.unitPrice.toStringAsFixed(2)}',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                          ),
+                                        ),
+                                        Text(
+                                          ' EGP ${discountedPrice.toStringAsFixed(2)}',
+                                        ),
+                                      ],
+                                    ),
+                                    trailing: Column(
+                                      children: [
+                                        Text('Qty: $quantity'),
+                                        Text(
+                                          'EGP ${(discountedPrice * quantity).toStringAsFixed(2)}',
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      CustomTextField(
+                        controller: _addressController,
+                        hintText: 'Enter Delivery Address',
+                        title: 'Delivery Address',
+                        suffixIcon: const Icon(Icons.home),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Total:',
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          widget.promoCode == null
+                              ? Text(
+                                'EGP ${total.toStringAsFixed(2)}',
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall,
+                              )
+                              : Column(
+                                children: [
+                                  Text(
+                                    'EGP ${total.toStringAsFixed(2)}',
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.headlineSmall?.copyWith(
+                                      decoration: TextDecoration.lineThrough,
+                                    ),
+                                  ),
+                                  Text(
+                                    'EGP ${(total * (1 - (widget.promoDiscount ?? 0) / 100)).toStringAsFixed(2)}',
+                                    style:
+                                        Theme.of(
+                                          context,
+                                        ).textTheme.headlineSmall,
+                                  ),
+                                ],
+                              ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            final address = _addressController.text.trim();
+                            if (address.isEmpty) {
+                              setState(() {});
+                              return;
+                            }
+
+                            _confirmOrder(
+                              address: address,
+                              items: items,
+                              userId: widget.userId,
+                              totalPrice:
+                                  widget.promoCode == null
+                                      ? total
+                                      : total *
+                                          (1 -
+                                              (widget.promoDiscount ?? 0) /
+                                                  100),
+                              promoCode: widget.promoCode,
+                              promoDiscount: widget.promoDiscount,
+                            );
+                          },
+                          child: const Text('Confirm Order'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            default:
+              return const Center(child: Text('Unknown state'));
+          }
+        },
+      ),
     );
   }
 }
