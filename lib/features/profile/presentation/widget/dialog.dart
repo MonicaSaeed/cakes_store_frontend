@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 void showImageSourceDialog(BuildContext context, Function(XFile) selectedFile) {
+  final theme = Theme.of(context);
+  final colorScheme = theme.colorScheme;
+  final isDarkMode = colorScheme.brightness == Brightness.dark;
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -14,16 +17,20 @@ void showImageSourceDialog(BuildContext context, Function(XFile) selectedFile) {
           SimpleDialogOption(
             onPressed: () async {
               Navigator.pop(context);
-              XFile? image =
-                  await ImagePicker().pickImage(source: ImageSource.camera);
+              XFile? image = await ImagePicker().pickImage(
+                source: ImageSource.camera,
+              );
               if (image != null) {
                 selectedFile(image);
               }
             },
             padding: const EdgeInsets.all(16),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.camera_alt),
+                Icon(
+                  Icons.camera_alt,
+                  color: isDarkMode ? colorScheme.secondary : null,
+                ),
                 SizedBox(width: 8),
                 Text('Camera'),
               ],
@@ -32,21 +39,25 @@ void showImageSourceDialog(BuildContext context, Function(XFile) selectedFile) {
           SimpleDialogOption(
             onPressed: () async {
               Navigator.pop(context);
-              XFile? image =
-                  await ImagePicker().pickImage(source: ImageSource.gallery);
+              XFile? image = await ImagePicker().pickImage(
+                source: ImageSource.gallery,
+              );
               if (image != null) {
                 selectedFile(image);
               }
             },
             padding: const EdgeInsets.all(16),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.photo_library),
+                Icon(
+                  Icons.photo_library,
+                  color: isDarkMode ? colorScheme.secondary : null,
+                ),
                 SizedBox(width: 8),
                 Text('Gallery'),
               ],
             ),
-          )
+          ),
         ],
       );
     },

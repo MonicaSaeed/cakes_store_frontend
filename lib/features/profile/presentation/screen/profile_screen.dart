@@ -99,7 +99,10 @@ class ProfileScreen extends StatelessWidget {
                                   child: Icon(
                                     Icons.edit,
                                     size: 14,
-                                    color: theme.colorScheme.surfaceTint,
+                                    color:
+                                        isDarkMode
+                                            ? colorScheme.secondary
+                                            : theme.colorScheme.surfaceTint,
                                   ),
                                 ),
                               ),
