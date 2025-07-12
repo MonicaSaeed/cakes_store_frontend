@@ -292,9 +292,11 @@ class ProductDetailsScreen extends StatelessWidget {
                                                 context: context,
                                                 isScrollControlled: true,
                                                 backgroundColor:
-                                                    lightTheme
-                                                        .colorScheme
-                                                        .surface,
+                                                    isDarkMode
+                                                        ? colorScheme.primary
+                                                        : lightTheme
+                                                            .colorScheme
+                                                            .surface,
                                                 builder:
                                                     (_) => BlocProvider.value(
                                                       value:
