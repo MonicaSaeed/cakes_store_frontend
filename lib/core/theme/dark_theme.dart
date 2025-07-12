@@ -158,7 +158,7 @@ ThemeData darkTheme = ThemeData(
     space: 32,
   ),
   cardTheme: CardThemeData(
-    color: DarkThemeColors.surface,
+    color: DarkThemeColors.primary,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
     elevation: 4,
     margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

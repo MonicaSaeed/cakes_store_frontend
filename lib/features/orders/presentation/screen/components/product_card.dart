@@ -12,7 +12,9 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProductCubit(sl<BaseOrderRepository>())..fetchProduct(productId),
+      create:
+          (context) =>
+              ProductCubit(sl<BaseOrderRepository>())..fetchProduct(productId),
       child: BlocBuilder<ProductCubit, ProductStates>(
         builder: (context, state) {
           if (state is ProductLoading) {
@@ -20,39 +22,57 @@ class ProductCard extends StatelessWidget {
           } else if (state is ProductLoaded) {
             final product = state.product;
             return Card(
-              
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
                   children: [
                     ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: product.imageUrl!=null ?Image.network(
-                          product.imageUrl!,
-                          width: 300,
-                          height: 350,
-                          fit: BoxFit.cover,
-                        ):Image.asset('assets/images/no_image_available.png'),
-                      ),
-                      Row(
-                        children: [
-                          Text(product.name,style: Theme.of(context).textTheme.titleLarge,),
-                          Spacer(),
-                          (product.totalRating??0) > 0?Text('${product.totalRating}/5'):Text('')
-                        ],
-                      ),
-                
+                      borderRadius: BorderRadius.circular(8),
+                      child:
+                          product.imageUrl != null
+                              ? Image.network(
+                                product.imageUrl!,
+                                width: 300,
+                                height: 350,
+                                fit: BoxFit.cover,
+                              )
+                              : Image.asset(
+                                'assets/images/no_image_available.png',
+                              ),
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Text(
+                          product.name,
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        Spacer(),
+                        (product.totalRating ?? 0) > 0
+                            ? Text('${product.totalRating}/5')
+                            : Text(''),
+                      ],
+                    ),
+
                     ListTile(
-                      title: Text(product.category,style: Theme.of(context).textTheme.labelMedium,),
-                      subtitle: Text(product.description, maxLines: 4, overflow: TextOverflow.ellipsis,style: Theme.of(context).textTheme.labelSmall),
+                      title: Text(
+                        product.category,
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                      subtitle: Text(
+                        product.description,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.labelSmall,
+                      ),
                       trailing: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
                             '\$${product.price}',
-                            style:Theme.of(context).textTheme.bodyMedium,
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
-                          if ((product.discountPercentage??0) > 0)
+                          if ((product.discountPercentage ?? 0) > 0)
                             Text(
                               '-${product.discountPercentage}%',
                               style: const TextStyle(color: Colors.redAccent),

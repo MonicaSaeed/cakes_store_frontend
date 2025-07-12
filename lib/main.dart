@@ -7,6 +7,7 @@ import 'package:cakes_store_frontend/features/user_shared_feature/presentation/c
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'core/components/navigation_bar.dart';
 import 'core/services/preference_manager.dart';
@@ -55,22 +56,30 @@ class MyApp extends StatelessWidget {
               },
             ),
 
-             BlocProvider<FavCubit>(
+            BlocProvider<FavCubit>(
               create: (context) {
                 final userCubit = context.read<UserCubit>();
                 final userId = userCubit.currentUser?.id;
                 return FavCubit(userId: userId)..loadAllFavourites();
               },
-    ),
+            ),
           ],
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'YumSlice',
-            themeMode: value,
-            theme: lightTheme,
-            darkTheme: darkTheme,
-            onGenerateRoute:
-                (RouteSettings settings) => AppRouter().generateRoute(settings),
+          child: ScreenUtilInit(
+            designSize: const Size(375, 812), // Example iPhone 11 size
+            minTextAdapt: true,
+            splitScreenMode: true,
+            builder: (context, child) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'YumSlice',
+                themeMode: value,
+                theme: lightTheme,
+                darkTheme: darkTheme,
+                onGenerateRoute:
+                    (RouteSettings settings) =>
+                        AppRouter().generateRoute(settings),
+              );
+            },
           ),
         );
       },
@@ -102,7 +111,6 @@ class AuthGate extends StatelessWidget {
 
               if (userState is UserLoaded) {
                 return NavigationBarScreen();
-            
 
                 // return BlocProvider<FavCubit>(
                 //   create:
