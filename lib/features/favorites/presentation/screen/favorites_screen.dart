@@ -10,7 +10,7 @@ class FavoritesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Center(child: const Text('Sweet Favorites'))),
+      appBar: AppBar(title:  const Text('Sweet Favorites')),
       body: BlocBuilder<FavCubit, FavState>(
         builder: (context, state) {
           if (state is FavLoading) {
