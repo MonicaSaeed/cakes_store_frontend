@@ -1,6 +1,7 @@
+import 'package:cakes_store_frontend/app_router.dart';
 import 'package:cakes_store_frontend/core/components/navigation_index_notifier.dart';
+import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_cubit.dart';
 import 'package:cakes_store_frontend/features/home/presentation/cubit/home_cubit.dart';
-import 'package:cakes_store_frontend/features/home/presentation/screen/category_screen.dart';
 import 'package:cakes_store_frontend/features/shared_product/domain/entities/product.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -9,8 +10,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ImageSlideShow extends StatefulWidget {
   final Product? latestProduct;
+    final String? userId;
 
-  const ImageSlideShow({super.key, this.latestProduct});
+  const ImageSlideShow({super.key, this.latestProduct, this.userId});
 
   @override
   State<ImageSlideShow> createState() => _ImageSlideShowState();
@@ -29,11 +31,11 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
         'buttonTitle': 'View Details',
         'discount': widget.latestProduct!.discountPercentage,
         'onButtonPressed': (context) {
-          // Navigator.pushNamed(
-          //   context,
-          //   AppRouter.productDetails,
-          //   arguments: widget.latestProduct!.id,
-          // );
+           Navigator.pushNamed(
+          context,
+          AppRouter.productDetails,
+          arguments: {'productId': widget.latestProduct!.id, 'userId':  widget.userId},
+        );
         },
       });
     }
@@ -52,16 +54,15 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
         'title': 'Cupcakes Collection',
         'buttonTitle': 'Show Collection',
         'onButtonPressed': (BuildContext outerContext) {
-          Navigator.push(
-            outerContext,
-            MaterialPageRoute(
-              builder:
-                  (context) => BlocProvider.value(
-                    value: outerContext.read<HomeCubit>(),
-                    child: CategoryScreen(categoryName: 'Cupcakes'),
-                  ),
-            ),
-          );
+          Navigator.pushNamed(
+              context,
+              AppRouter.category,
+              arguments: {
+                'categoryName': 'Cupcakes',
+                'homeCubit': context.read<HomeCubit>(),
+                'favCubit': context.read<FavCubit>(),
+              },
+            );
         },
       },
     ]);

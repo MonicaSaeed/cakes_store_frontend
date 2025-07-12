@@ -391,7 +391,7 @@ class ShopProductScreen extends StatelessWidget {
         // ),
       ],
       child: Scaffold(
-        appBar: AppBar(title: const Center(child: Text('Shop Now'))),
+        appBar: AppBar(title:Text('Shop Now')),
         body: Column(
           children: [
             // Fixed controls section - only rebuilds when categories/filters change
