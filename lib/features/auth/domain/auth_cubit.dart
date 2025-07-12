@@ -12,7 +12,11 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit(this._repository) : super(AuthInitial());
 
   User? get currentUser =>
-      (state is AuthSuccess) ? (state as AuthSuccess).user : null;
+      (state is AuthSuccess)
+          ? (state as AuthSuccess).user
+          : (state is AuthSuccessWithGoogle)
+          ? (state as AuthSuccessWithGoogle).user
+          : null;
   Future<void> getCurrentUser() async {
     emit(AuthLoadingCurrentUser());
     try {
