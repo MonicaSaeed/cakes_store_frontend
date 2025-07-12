@@ -10,7 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ImageSlideShow extends StatefulWidget {
   final Product? latestProduct;
-    final String? userId;
+  final String? userId;
 
   const ImageSlideShow({super.key, this.latestProduct, this.userId});
 
@@ -31,11 +31,14 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
         'buttonTitle': 'View Details',
         'discount': widget.latestProduct!.discountPercentage,
         'onButtonPressed': (context) {
-           Navigator.pushNamed(
-          context,
-          AppRouter.productDetails,
-          arguments: {'productId': widget.latestProduct!.id, 'userId':  widget.userId},
-        );
+          Navigator.pushNamed(
+            context,
+            AppRouter.productDetails,
+            arguments: {
+              'productId': widget.latestProduct!.id,
+              'userId': widget.userId,
+            },
+          );
         },
       });
     }
@@ -55,14 +58,14 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
         'buttonTitle': 'Show Collection',
         'onButtonPressed': (BuildContext outerContext) {
           Navigator.pushNamed(
-              context,
-              AppRouter.category,
-              arguments: {
-                'categoryName': 'Cupcakes',
-                'homeCubit': context.read<HomeCubit>(),
-                'favCubit': context.read<FavCubit>(),
-              },
-            );
+            context,
+            AppRouter.category,
+            arguments: {
+              'categoryName': 'Cupcakes',
+              'homeCubit': context.read<HomeCubit>(),
+              'favCubit': context.read<FavCubit>(),
+            },
+          );
         },
       },
     ]);
@@ -122,7 +125,7 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
                       ),
 
                       // Discount
-                      if (slide['discount'] != null)
+                      if (slide['discount'] != null && slide['discount'] != 0)
                         Positioned(
                           top: 16.h,
                           right: 16.w,
