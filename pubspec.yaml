@@ -65,8 +65,7 @@ dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/icon/icon.jpg"
-
+  image_path: "assets/icon/icon.png"
 
 
 dev_dependencies:
@@ -96,6 +95,7 @@ flutter:
     - assets/images/
     - assets/svg/
     - assets/animations/
+    - assets/icon/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
