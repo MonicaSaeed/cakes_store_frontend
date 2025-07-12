@@ -138,13 +138,25 @@ class ProfileScreen extends StatelessWidget {
           icon: Icons.person,
           title: "Personal Information",
           subtitle:
-              "${profile.username}, ${profile.email}, ${profile.phoneNumber}",
+              "${profile.username}, ${profile.email}",
         ),
         ProfileMenuItem(
           icon: Icons.location_on,
           title: "My Addresses",
           subtitle: profile.addresses?.join(', ') ?? "",
         ),
+         Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: ListTile(
+          leading: Icon(Icons.manage_accounts,color: Theme.of(context).colorScheme.primary),
+          title: Text(
+            "Manage Account",
+            style: theme.textTheme.bodyMedium,
+          ),
+          onTap: () => confirmDeleteAccount(context),
+          contentPadding: EdgeInsets.zero,
+        ),
+      ),
           Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ValueListenableBuilder(
@@ -203,15 +215,8 @@ class ProfileScreen extends StatelessWidget {
             },
           ),
         ),
+
         ],
-      ),
-    ),
-    Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: CustomElevatedButton(
-        textdata: "Delete Account", 
-      onPressed: ()=> confirmDeleteAccount(context),
-      icon: const Icon(Icons.delete, color: Colors.white, size: 20),
       ),
     ),
 
