@@ -37,20 +37,20 @@ class HomeScreen extends StatelessWidget {
             appBar: AppBar(
               title: Text(
                 "YumSlice Store",
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                // style: theme.textTheme.titleLarge?.copyWith(
+                //   fontWeight: FontWeight.bold,
+                // ),
               ),
               elevation: 0,
               actions: [
-                IconButton(
-                  icon: Icon(
-                    Icons.shopping_cart,
-                    color: colorScheme.primary,
-                    size: 18.w,
-                  ),
-                  onPressed: () {},
-                ),
+                // IconButton(
+                //   icon: Icon(
+                //     Icons.shopping_cart,
+                //     color: colorScheme.primary,
+                //     size: 18.w,
+                //   ),
+                //   onPressed: () {},
+                // ),
                 IconButton(
                   icon: Icon(
                     Icons.logout,
@@ -91,6 +91,10 @@ class HomeScreen extends StatelessWidget {
                               child: ImageSlideShow(
                                 latestProduct:
                                     context.read<HomeCubit>().latestProduct,
+                                    userId:  context
+                                            .read<UserCubit>()
+                                            .currentUser!
+                                            .id!,
                               ),
                             ),
                             Padding(
@@ -146,7 +150,7 @@ class HomeScreen extends StatelessWidget {
                                                 TextDecoration.underline,
                                             decorationColor:
                                                 theme.colorScheme.primary,
-                                            // fontSize: 14.sp,
+                                            fontSize: 16.sp,
                                           ),
                                     ),
                                   ),

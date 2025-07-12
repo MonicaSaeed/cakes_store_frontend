@@ -9,7 +9,7 @@
 
     <application
         android:name="${applicationName}"
-        android:label="cakes_store_frontend"
+        android:label="Yum Cakes"
         android:icon="@mipmap/ic_launcher">
 
         <!-- Facebook SDK meta-data -->

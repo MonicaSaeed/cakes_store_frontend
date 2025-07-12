@@ -54,6 +54,14 @@ class MyApp extends StatelessWidget {
                   ..getCartItems();
               },
             ),
+
+             BlocProvider<FavCubit>(
+              create: (context) {
+                final userCubit = context.read<UserCubit>();
+                final userId = userCubit.currentUser?.id;
+                return FavCubit(userId: userId)..loadAllFavourites();
+              },
+    ),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -93,13 +101,8 @@ class AuthGate extends StatelessWidget {
               }
 
               if (userState is UserLoaded) {
-                return BlocProvider<FavCubit>(
-                  create:
-                      (_) =>
-                          FavCubit(userId: userState.user.id)
-                            ..loadAllFavourites(),
-                  child: NavigationBarScreen(),
-                );
+                return NavigationBarScreen();
+            
 
                 // return BlocProvider<FavCubit>(
                 //   create:

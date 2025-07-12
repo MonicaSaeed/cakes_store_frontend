@@ -59,10 +59,12 @@ class CartCubit extends Cubit<CartState> {
         );
       }
     } catch (e) {
-      emit(AddCartError(e.toString()));
+      final errorMessage = _parseErrorMessage(e.toString());
+
+      emit(AddCartError(errorMessage));
       ToastHelper.showToast(
         context: context,
-        message: e.toString(),
+        message: errorMessage,
         toastType: ToastType.error,
       );
     }
@@ -147,5 +149,10 @@ class CartCubit extends Cubit<CartState> {
         toastType: ToastType.error,
       );
     }
+  }
+
+  String _parseErrorMessage(String error) {
+    // Remove repeated "Exception:" if present
+    return error.replaceAll(RegExp(r'Exception:\s*'), '').trim();
   }
 }
