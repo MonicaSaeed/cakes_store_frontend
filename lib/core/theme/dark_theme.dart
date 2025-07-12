@@ -7,7 +7,7 @@ ThemeData darkTheme = ThemeData(
   colorScheme: ColorScheme.fromSeed(
     seedColor: DarkThemeColors.primary,
     primary: DarkThemeColors.primary,
-    // secondary: DarkThemeColors.secondary,
+    secondary: DarkThemeColors.secondary,
     background: DarkThemeColors.background,
     surface: DarkThemeColors.surface,
     brightness: Brightness.dark,
@@ -18,7 +18,7 @@ ThemeData darkTheme = ThemeData(
   ),
   appBarTheme: const AppBarTheme(
     backgroundColor: DarkThemeColors.surface,
-    foregroundColor: DarkThemeColors.primary,
+    foregroundColor: DarkThemeColors.textLight,
     elevation: 2,
     titleTextStyle: TextStyle(
       color: DarkThemeColors.textLight,
@@ -77,8 +77,8 @@ ThemeData darkTheme = ThemeData(
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
-      backgroundColor: DarkThemeColors.primary,
-      foregroundColor: Colors.white,
+      backgroundColor: DarkThemeColors.secondary, // buttery gold
+      foregroundColor: Color(0xFF2D1F1B), // deep brown
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       textStyle: const TextStyle(

@@ -123,6 +123,19 @@ class _FilterBottomSheetWidgetState extends State<FilterBottomSheetWidget> {
                         // context.read<ProductListCubit>().inStock = onChanged;
                       });
                     },
+                    // activeColor: colorScheme.surfaceTint, // Thumb
+                    // activeTrackColor: colorScheme.surfaceTint.withOpacity(
+                    //   0.3,
+                    // ), // Track
+                    // inactiveThumbColor: Color(0xFFA19086),
+                    // inactiveTrackColor: Color(0xFF6A524D),
+                    activeColor: isDarkMode ? colorScheme.surfaceTint : null,
+                    activeTrackColor:
+                        isDarkMode
+                            ? colorScheme.surfaceTint.withOpacity(0.3)
+                            : null,
+                    inactiveThumbColor: isDarkMode ? Color(0xFFA19086) : null,
+                    inactiveTrackColor: isDarkMode ? Color(0xFF6A524D) : null,
                   ),
                 ],
               ),

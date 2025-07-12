@@ -253,7 +253,7 @@ class CartScreen extends StatelessWidget {
                               style: TextStyle(
                                 color:
                                     isDarkMode
-                                        ? colorScheme.surfaceTint
+                                        ? colorScheme.primary
                                         : Colors.white,
                               ),
                             ),

@@ -10,6 +10,9 @@ class _PriceRangeSliderState extends State<PriceRangeSlider> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = colorScheme.brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -27,8 +30,14 @@ class _PriceRangeSliderState extends State<PriceRangeSlider> {
           min: 0,
           max: 500,
           divisions: 50,
-          activeColor: Color(0xFF432c23),
-          inactiveColor: Color(0xFF432c23).withOpacity(0.2),
+          activeColor:
+              isDarkMode
+                  ? colorScheme.surfaceTint.withOpacity(0.7)
+                  : Color(0xFF432c23),
+          inactiveColor:
+              isDarkMode
+                  ? colorScheme.surfaceTint.withOpacity(0.2)
+                  : Color(0xFF432c23).withOpacity(0.2),
           labels: RangeLabels(
             'EGP ${_currentRange.start.toInt()}',
             'EGP ${_currentRange.end.toInt()}',

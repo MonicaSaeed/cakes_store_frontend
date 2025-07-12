@@ -29,7 +29,7 @@ class DarkThemeColors {
   //   102,
   //   138,
   // ); // Same as logo pink
-  // static const Color secondary = Color(0xFF2f2724); // Slightly deeper pink
+  static const Color secondary = Color(0xFFE4B96F); // Slightly deeper pink
   static const Color background = Color(0xFF1f1b18); // Typical dark background
   static const Color surface = Color(0xFF1E1E1E); // Card/app bar surface
   static const Color textDark = Colors.white; // Inverted

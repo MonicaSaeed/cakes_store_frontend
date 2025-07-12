@@ -14,8 +14,17 @@ class ProfileMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = colorScheme.brightness == Brightness.dark;
     return ListTile(
-      leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
+      leading: Icon(
+        icon,
+        color:
+            isDarkMode
+                ? colorScheme.secondary
+                : Theme.of(context).colorScheme.primary,
+      ),
       title: Text(title, style: Theme.of(context).textTheme.bodyLarge),
       subtitle: Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
       onTap: () {}, // You can handle navigation here

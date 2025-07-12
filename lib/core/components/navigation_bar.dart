@@ -79,7 +79,10 @@ class NavigationBarScreen extends StatelessWidget {
                 ),
               ],
               type: BottomNavigationBarType.fixed,
-              selectedItemColor: Theme.of(context).colorScheme.primary,
+              selectedItemColor:
+                  isDarkMode
+                      ? colorScheme.secondary
+                      : Theme.of(context).colorScheme.primary,
             ),
           );
         },
