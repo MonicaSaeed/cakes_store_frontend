@@ -1,3 +1,5 @@
+import 'package:cakes_store_frontend/core/services/toast_helper.dart';
+import 'package:cakes_store_frontend/features/auth/presentation/screen/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -21,19 +23,22 @@ Future<void> deleteAccount(BuildContext context) async {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Account deleted successfully')),
       );
-      // Navigate to login or welcome screen
-      Navigator.pushReplacementNamed(context, '/login');
+   MaterialPageRoute(builder: (_) => const LoginScreen());
     }
   } on FirebaseAuthException catch (e) {
     if (e.code == 'requires-recent-login') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please log in again to delete your account')),
-      );
-      // ممكن هنا توديه لصفحة إعادة تسجيل الدخول
+     ToastHelper.showToast(
+    context: context,
+    message: "Please log in again to delete your account: $e",
+    toastType: ToastType.error,
+  );
+    
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.message}')),
-      );
+     ToastHelper.showToast(
+      context: context,
+      message: "Failed to Delete Account: $e",
+      toastType: ToastType.error,
+    );
     }
   }
 }
