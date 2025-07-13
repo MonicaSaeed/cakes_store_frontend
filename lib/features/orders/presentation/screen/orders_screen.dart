@@ -12,9 +12,8 @@ class OrdersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(title: Text("Orders"),),
+      appBar: AppBar(title: Text("Orders")),
       body: BlocBuilder<GetOrdersCubit, OrderStates>(
         builder: (context, state) {
           if (state is OrdersInitialState) {
@@ -23,52 +22,52 @@ class OrdersScreen extends StatelessWidget {
             return state.orders.isEmpty
                 ? EmptyOrderScreen()
                 : ListView.builder(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    itemCount: state.orders.length,
-                    itemBuilder: (context, index) {
-                      final order = state.orders[index];
-                      return Card(
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  itemCount: state.orders.length,
+                  itemBuilder: (context, index) {
+                    final order = state.orders[index];
+                    return Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      margin: const EdgeInsets.only(bottom: 12),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
                         ),
-                        margin: const EdgeInsets.only(bottom: 12),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 12,
-                          ),
-                          title: Text(
-                            'Order #$index',
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.w600),
-                          ),
-                          subtitle: Text(
-                            'Placed on ${order.createdAt?.toLocal()}', // format date if needed
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                          trailing: const Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            size: 18,
-                          ),
-                          onTap: ()async {
-                             await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) =>
-                                        OrderDetailsScreen(order: order),
-                              ),
-                            );
-                            context.read<GetOrdersCubit>().getOrders(order.userId);
-                          },
+                        title: Text(
+                          'Order #$index',
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
-                      );
-                    },
-                  
+                        subtitle: Text(
+                          'Placed on ${order.createdAt?.toLocal()}', // format date if needed
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 18,
+                        ),
+                        onTap: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => OrderDetailsScreen(order: order),
+                            ),
+                          );
+                          context.read<GetOrdersCubit>().getOrders(
+                            order.userId,
+                          );
+                        },
+                      ),
+                    );
+                  },
                 );
           } else if (state is OrdersFailureState) {
             log(state.toString());
@@ -79,17 +78,20 @@ class OrdersScreen extends StatelessWidget {
                   SizedBox(
                     height: 120,
                     width: 120,
-                    child: Image.asset('assets/images/error.png')),
+                    child: Image.asset('assets/images/error.png'),
+                  ),
                   Text('Oops !! there is an error'),
                   Text(state.errorMessage),
-                  Spacer()
+                  Spacer(),
                 ],
               ),
             );
-          }else if(state is InvalidUserIdState){
-            return Center(child: Text('You ust login first !!'),);
+          } else if (state is InvalidUserIdState) {
+            return Center(child: Text('You ust login first !!'));
           }
-          return Center(child: Text("Some thing wrong with data provider state"));
+          return Center(
+            child: Text("Some thing wrong with data provider state"),
+          );
         },
       ),
     );

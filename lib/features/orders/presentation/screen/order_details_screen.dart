@@ -54,7 +54,7 @@ class OrderDetailsScreen extends StatelessWidget {
             ...order.orderItems.map(
               (item) => Column(
                 children: [
-                  ProductCard(productId: item.productId),
+                  ProductCard(productId: item.productId, userId: order.userId),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text(

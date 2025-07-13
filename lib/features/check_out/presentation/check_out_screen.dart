@@ -182,7 +182,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                 body: Padding(
                   padding: const EdgeInsets.symmetric(
                     vertical: 16,
-                    horizontal: 0,
+                    horizontal: 12,
                   ),
                   child: Column(
                     children: [
@@ -199,37 +199,56 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                             final quantity = item.quantity;
 
                             return Card(
-                              child: Column(
+                              child: Row(
                                 children: [
-                                  Text(
-                                    product.name!,
-                                    style:
-                                        Theme.of(
-                                          context,
-                                        ).textTheme.headlineSmall,
-                                  ),
-                                  ListTile(
-                                    leading: Image.network(product.imageUrl!),
-                                    subtitle: Column(
-                                      children: [
-                                        Text(
-                                          ' EGP ${item.unitPrice.toStringAsFixed(2)}',
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                            decoration:
-                                                TextDecoration.lineThrough,
-                                          ),
-                                        ),
-                                        Text(
-                                          ' EGP ${discountedPrice.toStringAsFixed(2)}',
-                                        ),
-                                      ],
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Image.network(
+                                      product.imageUrl!,
+                                      width: 90,
+                                      height: 90,
+                                      fit: BoxFit.cover,
                                     ),
-                                    trailing: Column(
+                                  ),
+
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text('Qty: $quantity'),
+                                        SizedBox(height: 10),
                                         Text(
-                                          'EGP ${(discountedPrice * quantity).toStringAsFixed(2)}',
+                                          product.name!,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headlineMedium
+                                              ?.copyWith(fontSize: 18),
+                                        ),
+                                        ListTile(
+                                          leading: Column(
+                                            children: [
+                                              Text(
+                                                ' EGP ${item.unitPrice.toStringAsFixed(2)}',
+                                                style: TextStyle(
+                                                  color: Colors.red,
+                                                  decoration:
+                                                      TextDecoration
+                                                          .lineThrough,
+                                                ),
+                                              ),
+                                              Text(
+                                                ' EGP ${discountedPrice.toStringAsFixed(2)}',
+                                              ),
+                                            ],
+                                          ),
+                                          subtitle: Column(
+                                            children: [
+                                              Text('Qty: $quantity'),
+                                              Text(
+                                                'EGP ${(discountedPrice * quantity).toStringAsFixed(2)}',
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -253,13 +272,15 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                         children: [
                           Text(
                             'Total:',
-                            style: Theme.of(context).textTheme.headlineSmall,
+                            style: Theme.of(
+                              context,
+                            ).textTheme.headlineSmall?.copyWith(fontSize: 20),
                           ),
                           widget.promoCode == null
                               ? Text(
                                 'EGP ${total.toStringAsFixed(2)}',
-                                style:
-                                    Theme.of(context).textTheme.headlineSmall,
+                                style: Theme.of(context).textTheme.headlineSmall
+                                    ?.copyWith(fontSize: 20),
                               )
                               : Column(
                                 children: [
@@ -285,30 +306,33 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       const SizedBox(height: 16),
                       SizedBox(
                         width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            final address = _addressController.text.trim();
-                            if (address.isEmpty) {
-                              setState(() {});
-                              return;
-                            }
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              final address = _addressController.text.trim();
+                              if (address.isEmpty) {
+                                setState(() {});
+                                return;
+                              }
 
-                            _confirmOrder(
-                              address: address,
-                              items: items,
-                              userId: widget.userId,
-                              totalPrice:
-                                  widget.promoCode == null
-                                      ? total
-                                      : total *
-                                          (1 -
-                                              (widget.promoDiscount ?? 0) /
-                                                  100),
-                              promoCode: widget.promoCode,
-                              promoDiscount: widget.promoDiscount,
-                            );
-                          },
-                          child: const Text('Confirm Order'),
+                              _confirmOrder(
+                                address: address,
+                                items: items,
+                                userId: widget.userId,
+                                totalPrice:
+                                    widget.promoCode == null
+                                        ? total
+                                        : total *
+                                            (1 -
+                                                (widget.promoDiscount ?? 0) /
+                                                    100),
+                                promoCode: widget.promoCode,
+                                promoDiscount: widget.promoDiscount,
+                              );
+                            },
+                            child: const Text('Confirm Order'),
+                          ),
                         ),
                       ),
                     ],

@@ -51,215 +51,221 @@ class CartScreen extends StatelessWidget {
                     final theme = Theme.of(context);
                     final colorScheme = theme.colorScheme;
                     final isDarkMode = theme.brightness == Brightness.dark;
-                    return Column(
-                      children: [
-                        Expanded(
-                          child: ListView.separated(
-                            padding: const EdgeInsets.all(16),
-                            separatorBuilder:
-                                (_, __) => const SizedBox(height: 12),
-                            itemCount: items.length + 1, // +1 for total section
-                            itemBuilder: (context, index) {
-                              if (index < items.length) {
-                                // Regular cart items
-                                final item = items[index];
-                                final product = item.product;
-                                final quantity = item.quantity;
-                                final discount =
-                                    (product.discountPercentage ?? 0) / 100;
-                                final originalPrice = item.unitPrice;
-                                final discountedPrice =
-                                    originalPrice * (1 - discount);
-                                itemTotal = discountedPrice * quantity;
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: ListView.separated(
+                              padding: const EdgeInsets.all(16),
+                              separatorBuilder:
+                                  (_, __) => const SizedBox(height: 12),
+                              itemCount:
+                                  items.length + 1, // +1 for total section
+                              itemBuilder: (context, index) {
+                                if (index < items.length) {
+                                  // Regular cart items
+                                  final item = items[index];
+                                  final product = item.product;
+                                  final quantity = item.quantity;
+                                  final discount =
+                                      (product.discountPercentage ?? 0) / 100;
+                                  final originalPrice = item.unitPrice;
+                                  final discountedPrice =
+                                      originalPrice * (1 - discount);
+                                  itemTotal = discountedPrice * quantity;
 
-                                return Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        isDarkMode
-                                            ? colorScheme.primary
-                                            : Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.05),
-                                        blurRadius: 5,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(6),
-                                        child: Image.network(
-                                          product.imageUrl!,
-                                          width: 60,
-                                          height: 60,
-                                          fit: BoxFit.cover,
+                                  return Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          isDarkMode
+                                              ? colorScheme.primary
+                                              : Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.05),
+                                          blurRadius: 5,
+                                          offset: const Offset(0, 2),
                                         ),
-                                      ),
-                                      const SizedBox(width: 24),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  product.name!,
-                                                  style:
-                                                      Theme.of(context)
-                                                          .textTheme
-                                                          .headlineMedium,
-                                                ),
-                                                Spacer(),
-                                                IconButton(
-                                                  icon: const Icon(
-                                                    Icons.close,
-                                                    color: Colors.grey,
-                                                  ),
-                                                  onPressed: () {
-                                                    context
-                                                        .read<CartCubit>()
-                                                        .removeCartItem(
-                                                          product.id!,
-                                                          context,
-                                                        );
-                                                  },
-                                                  splashRadius: 20,
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Row(
-                                              children: [
-                                                Text('Quantity:'),
-                                                const SizedBox(width: 8),
-                                                QuantitySelector(
-                                                  quantity: quantity,
-                                                  productId: product.id!,
-                                                  stock: product.stock ?? 1,
-                                                ),
-                                                const SizedBox(height: 16),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  'EGP ${discountedPrice.toStringAsFixed(2)}',
-                                                  style:
-                                                      Theme.of(
-                                                        context,
-                                                      ).textTheme.bodyMedium,
-                                                ),
-                                                const SizedBox(width: 8),
-                                                if (discount > 0)
+                                      ],
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            6,
+                                          ),
+                                          child: Image.network(
+                                            product.imageUrl!,
+                                            width: 60,
+                                            height: 60,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 24),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
                                                   Text(
-                                                    'EGP ${originalPrice.toStringAsFixed(2)}',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodySmall
-                                                        ?.copyWith(
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .lineThrough,
-                                                        ),
+                                                    product.name!,
+                                                    style:
+                                                        Theme.of(context)
+                                                            .textTheme
+                                                            .headlineMedium,
                                                   ),
-                                                if (discount > 0)
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                          left: 8.0,
+                                                  Spacer(),
+                                                  IconButton(
+                                                    icon: const Icon(
+                                                      Icons.close,
+                                                      color: Colors.grey,
+                                                    ),
+                                                    onPressed: () {
+                                                      context
+                                                          .read<CartCubit>()
+                                                          .removeCartItem(
+                                                            product.id!,
+                                                            context,
+                                                          );
+                                                    },
+                                                    splashRadius: 20,
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Row(
+                                                children: [
+                                                  Text('Quantity:'),
+                                                  const SizedBox(width: 8),
+                                                  QuantitySelector(
+                                                    quantity: quantity,
+                                                    productId: product.id!,
+                                                    stock: product.stock ?? 1,
+                                                  ),
+                                                  const SizedBox(height: 16),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    'EGP ${discountedPrice.toStringAsFixed(2)}',
+                                                    style:
+                                                        Theme.of(
+                                                          context,
+                                                        ).textTheme.bodyMedium,
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  if (discount > 0)
+                                                    Text(
+                                                      'EGP ${originalPrice.toStringAsFixed(2)}',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall
+                                                          ?.copyWith(
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .lineThrough,
+                                                          ),
+                                                    ),
+                                                  if (discount > 0)
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                            left: 8.0,
+                                                          ),
+                                                      child: Text(
+                                                        '-${(discount * 100).toStringAsFixed(0)}%',
+                                                        style: const TextStyle(
+                                                          color: Colors.red,
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                         ),
-                                                    child: Text(
-                                                      '-${(discount * 100).toStringAsFixed(0)}%',
-                                                      style: const TextStyle(
-                                                        color: Colors.red,
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.bold,
                                                       ),
                                                     ),
-                                                  ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 8),
-                                            Text(
-                                              'Item Total: EGP ${itemTotal.toStringAsFixed(2)}',
-                                              style:
-                                                  Theme.of(
-                                                    context,
-                                                  ).textTheme.bodyMedium,
-                                            ),
-                                          ],
+                                                ],
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Text(
+                                                'Item Total: EGP ${itemTotal.toStringAsFixed(2)}',
+                                                style:
+                                                    Theme.of(
+                                                      context,
+                                                    ).textTheme.bodyMedium,
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  return PromoCodeSection(
+                                    cartTotal: total,
+                                    onDiscountApplied: (
+                                      discountedTotal,
+                                      promoCode,
+                                      promoDiscount,
+                                    ) {
+                                      // use the discounted total if needed
+                                      log(
+                                        'inside onDiscountApplied at CartScreen : ',
+                                      );
+                                      itemTotal = discountedTotal;
+                                      myPromocode = promoCode;
+                                      myPromoDiscount = promoDiscount;
+
+                                      log('promoCode $myPromocode');
+                                      log('promoDiscount $myPromoDiscount');
+                                      log(
+                                        'Item total after promo code: $itemTotal',
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return CheckOutScreen(
+                                        items: items, // from CartLoaded
+                                        total: total,
+                                        userId: userId ?? '',
+                                        promoCode: myPromocode,
+                                        promoDiscount: myPromoDiscount,
+                                      );
+                                    },
                                   ),
                                 );
-                              } else {
-                                return PromoCodeSection(
-                                  cartTotal: total,
-                                  onDiscountApplied: (
-                                    discountedTotal,
-                                    promoCode,
-                                    promoDiscount,
-                                  ) {
-                                    // use the discounted total if needed
-                                    log(
-                                      'inside onDiscountApplied at CartScreen : ',
-                                    );
-                                    itemTotal = discountedTotal;
-                                    myPromocode = promoCode;
-                                    myPromoDiscount = promoDiscount;
 
-                                    log('promoCode $myPromocode');
-                                    log('promoDiscount $myPromoDiscount');
-                                    log(
-                                      'Item total after promo code: $itemTotal',
-                                    );
-                                  },
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return CheckOutScreen(
-                                      items: items, // from CartLoaded
-                                      total: total,
-                                      userId: userId ?? '',
-                                      promoCode: myPromocode,
-                                      promoDiscount: myPromoDiscount,
-                                    );
-                                  },
+                                context.read<CartCubit>().getCartItems();
+                              },
+                              child: Text(
+                                'Check out',
+                                style: TextStyle(
+                                  color:
+                                      isDarkMode
+                                          ? colorScheme.primary
+                                          : Colors.white,
                                 ),
-                              );
-
-                              context.read<CartCubit>().getCartItems();
-                            },
-                            child: Text(
-                              'Check out',
-                              style: TextStyle(
-                                color:
-                                    isDarkMode
-                                        ? colorScheme.primary
-                                        : Colors.white,
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     );
                   case CartError:
                     return Center(
