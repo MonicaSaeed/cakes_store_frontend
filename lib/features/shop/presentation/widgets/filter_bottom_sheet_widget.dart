@@ -7,12 +7,14 @@ import 'package:flutter/material.dart';
 class FilterBottomSheetWidget extends StatefulWidget {
   final String selectedOne;
   final List<String> categories;
+  final Map filterbody;
   final void Function(Map<String, dynamic> filterbody)? onItemSelected;
   FilterBottomSheetWidget({
     super.key,
     required this.selectedOne,
     required this.categories,
     required this.onItemSelected,
+    required this.filterbody,
   });
 
   @override
@@ -23,17 +25,38 @@ class FilterBottomSheetWidget extends StatefulWidget {
 class _FilterBottomSheetWidgetState extends State<FilterBottomSheetWidget> {
   bool value = false;
   // for the in stock switch
-  var filterbody = {};
+  // var filterbody = {};
   bool isLoading = false;
+  late RangeValues _currentRange;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _currentRange = RangeValues(
+      (widget.filterbody['minPrice'] ?? 50).toDouble(),
+      (widget.filterbody['maxPrice'] ?? 250).toDouble(),
+    );
+
+    // Also initialize switch state from filterbody
+    value = widget.filterbody['inStock'] ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {
+    // RangeValues _currentRange = RangeValues(
+    //   widget.filterbody['minPrice']?.toInt() ?? 50,
+    //   widget.filterbody['maxPrice']?.toInt() ?? 250,
+    // );
+
     bool isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
 
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDarkMode = theme.brightness == Brightness.dark;
+    print('rating');
+    print(widget.filterbody['rating']);
     return Container(
       width: double.infinity,
       height: 650,
@@ -94,16 +117,59 @@ class _FilterBottomSheetWidgetState extends State<FilterBottomSheetWidget> {
               SizedBox(height: 20),
               CategorySelector(
                 categories: widget.categories,
-                selectedCategory: filterbody['category'] ?? widget.selectedOne,
+                selectedCategory:
+                    widget.filterbody['category'] ?? widget.selectedOne,
                 // need to think of how to provide it the context of the cubit
                 onCategorySelected: (onCategorySelectedindex) {
-                  filterbody['category'] =
+                  widget.filterbody['category'] =
                       widget.categories[onCategorySelectedindex];
                   // context.read<ProductListCubit>().selectedCategory =
                   //     onCategorySelectedindex;
                 },
               ),
-              PriceRangeSlider(),
+              // PriceRangeSlider(),
+              Text(
+                'Price Range',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontSize: 19,
+                  letterSpacing: 2,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 12),
+              RangeSlider(
+                values: _currentRange,
+                min: 0,
+                max: 500,
+                divisions: 50,
+                activeColor:
+                    isDarkMode
+                        ? colorScheme.surfaceTint.withOpacity(0.7)
+                        : Color(0xFF432c23),
+                inactiveColor:
+                    isDarkMode
+                        ? colorScheme.surfaceTint.withOpacity(0.2)
+                        : Color(0xFF432c23).withOpacity(0.2),
+                labels: RangeLabels(
+                  'EGP ${_currentRange.start.toInt()}',
+                  'EGP ${_currentRange.end.toInt()}',
+                ),
+                onChanged: (RangeValues values) {
+                  setState(() {
+                    _currentRange = values;
+                    widget.filterbody['maxPrice'] = _currentRange.end.toInt();
+                    widget.filterbody['minPrice'] = _currentRange.start.toInt();
+                  });
+                },
+              ),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('EGP ${_currentRange.start.toInt()}'),
+                  Text('EGP ${_currentRange.end.toInt()}'),
+                ],
+              ),
               SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -122,7 +188,7 @@ class _FilterBottomSheetWidgetState extends State<FilterBottomSheetWidget> {
                     onChanged: (onChanged) {
                       setState(() {
                         value = onChanged;
-                        filterbody['inStock'] = onChanged;
+                        widget.filterbody['inStock'] = onChanged;
                         // context.read<ProductListCubit>().inStock = onChanged;
                       });
                     },
@@ -153,8 +219,9 @@ class _FilterBottomSheetWidgetState extends State<FilterBottomSheetWidget> {
               ),
               SizedBox(height: 4),
               InteractiveRating(
-                onRatingUpdate: (double) {
-                  filterbody['rating'] = double;
+                initialRating: widget.filterbody['rating'] ?? 0,
+                onRatingUpdate: (double1) {
+                  widget.filterbody['rating'] = double1;
                   // context.read<ProductListCubit>().selectedRating = double;
                 },
               ),
@@ -166,7 +233,11 @@ class _FilterBottomSheetWidgetState extends State<FilterBottomSheetWidget> {
                     onPressed: () {
                       setState(() {
                         value = false; // Reset the switch
-                        filterbody.clear(); // Clear the filter body
+                        widget.filterbody.clear(); // Clear the filter body
+                        widget.onItemSelected?.call(
+                          widget.filterbody.cast<String, dynamic>(),
+                        );
+                        Navigator.pop(context);
                         // context.read<ProductListCubit>().resetFilters();
                       });
                     },
@@ -205,8 +276,10 @@ class _FilterBottomSheetWidgetState extends State<FilterBottomSheetWidget> {
                               await Future.delayed(
                                 const Duration(milliseconds: 100),
                               );
+                              print("filter body");
+                              print(widget.filterbody.cast<String, dynamic>());
                               widget.onItemSelected?.call(
-                                filterbody.cast<String, dynamic>(),
+                                widget.filterbody.cast<String, dynamic>(),
                               );
 
                               if (mounted) {

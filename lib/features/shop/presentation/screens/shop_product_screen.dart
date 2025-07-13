@@ -12,6 +12,7 @@ import 'package:cakes_store_frontend/features/user_shared_feature/presentation/c
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ShopProductScreen extends StatelessWidget {
   const ShopProductScreen({super.key});
@@ -32,14 +33,20 @@ class ShopProductScreen extends StatelessWidget {
         ),
       ],
       child: Scaffold(
-        appBar: AppBar(title:Text('Shop Now')),
-        body: Column(
-          children: [
-            // Fixed controls section - only rebuilds when categories/filters change
-            const _FixedControlsSection(),
+        appBar: AppBar(title: Text('Shop Now')),
+        body: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(child: _FixedControlsSection()),
+            SliverFillRemaining(child: PaginatedProductList()),
+            // Column(
+            //   children: [
+            //     // Fixed controls section - only rebuilds when categories/filters change
+            //     const _FixedControlsSection(),
 
-            // Products grid section - rebuilds when products change
-            const Expanded(child: PaginatedProductList()),
+            //     // Products grid section - rebuilds when products change
+            //     const Expanded(child: PaginatedProductList()),
+            //   ],
+            // ),
           ],
         ),
       ),
@@ -72,6 +79,9 @@ class _FixedControlsSection extends StatelessWidget {
         final theme = Theme.of(context);
         final colorScheme = theme.colorScheme;
         final isDarkMode = theme.brightness == Brightness.dark;
+        bool isLandscape =
+            MediaQuery.of(context).orientation == Orientation.landscape;
+
         return Column(
           children: [
             const SizedBox(height: 20),
@@ -163,7 +173,12 @@ class _FixedControlsSection extends StatelessWidget {
                                       : colorScheme.primary,
                             ),
                             SizedBox(width: 8),
-                            Text('Filter'),
+                            Text(
+                              'Filter',
+                              style: TextStyle(
+                                fontSize: isLandscape ? 8.sp : 15.sp,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -175,7 +190,12 @@ class _FixedControlsSection extends StatelessWidget {
                                     ? state.products.length
                                     : 0,
                         builder: (context, count) {
-                          return Text('$count products');
+                          return Text(
+                            '$count products',
+                            style: TextStyle(
+                              fontSize: isLandscape ? 8.sp : 15.sp,
+                            ),
+                          );
                         },
                       ),
                       const SizedBox(width: 16),
@@ -192,7 +212,12 @@ class _FixedControlsSection extends StatelessWidget {
                                       : colorScheme.primary,
                             ),
                             SizedBox(width: 4),
-                            Text('Sort'),
+                            Text(
+                              'Sort',
+                              style: TextStyle(
+                                fontSize: isLandscape ? 8.sp : 15.sp,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -215,6 +240,7 @@ class _FixedControlsSection extends StatelessWidget {
       isScrollControlled: true,
       builder: (context) {
         return FilterBottomSheetWidget(
+          filterbody: cubit.filterbody,
           selectedOne: cubit.filterbody['category'] ?? "All Items",
           categories: cubit.categories,
           onItemSelected: (filterbody1) {

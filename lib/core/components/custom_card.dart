@@ -6,6 +6,7 @@ import 'package:cakes_store_frontend/features/favorites/presentation/cubit/fav_s
 import 'package:cakes_store_frontend/features/shared_product/domain/entities/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../app_router.dart';
 import '../services/toast_helper.dart';
@@ -31,6 +32,8 @@ class CustomCard extends StatelessWidget {
             ? (originalPrice * (1 - product.discountPercentage! / 100))
                 .toStringAsFixed(2)
             : product.price?.toStringAsFixed(2) ?? 0;
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
     return GestureDetector(
       onTap: () {
@@ -181,7 +184,7 @@ class CustomCard extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: theme.textTheme.headlineMedium?.copyWith(
                                 letterSpacing: 2,
-                                fontSize: 16,
+                                fontSize: isLandscape ? 7.sp : 16.sp,
                               ),
                             ),
                             const SizedBox(height: 5),

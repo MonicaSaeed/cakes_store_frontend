@@ -25,7 +25,10 @@ class ProfileMenuItem extends StatelessWidget {
                 ? colorScheme.secondary
                 : Theme.of(context).colorScheme.primary,
       ),
-      title: Text(title, style: Theme.of(context).textTheme.bodyLarge),
+      title: Text(
+        title,
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 20),
+      ),
       subtitle: Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
       onTap: () {}, // You can handle navigation here
     );

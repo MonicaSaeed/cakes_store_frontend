@@ -7,7 +7,7 @@ class InteractiveRating extends StatefulWidget {
 
   const InteractiveRating({
     super.key,
-    this.initialRating = 0.0,
+    required this.initialRating,
     required this.onRatingUpdate,
   });
 

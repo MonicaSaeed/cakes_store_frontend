@@ -15,34 +15,44 @@ class QuantitySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = colorScheme.brightness == Brightness.dark;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
+          width: 110,
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey.shade300),
             borderRadius: BorderRadius.circular(25),
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
+            // mainAxisSize: MainAxisSize.,
             children: [
               IconButton(
-                icon: const Icon(Icons.remove),
+                icon: Icon(
+                  Icons.remove,
+                  color: isDarkMode ? colorScheme.secondary : null,
+                ),
                 onPressed: () {
                   context.read<CartCubit>().decrementCartItem(
                     productId,
                     context,
                   );
                 },
-                splashRadius: 20,
+                splashRadius: 10,
               ),
               Container(
-                width: 40,
+                width: 10,
                 alignment: Alignment.center,
                 child: Text('$quantity', style: const TextStyle(fontSize: 16)),
               ),
               IconButton(
-                icon: const Icon(Icons.add),
+                icon: Icon(
+                  Icons.add,
+                  color: isDarkMode ? colorScheme.secondary : null,
+                ),
                 onPressed:
                     (quantity < stock)
                         ? () {
