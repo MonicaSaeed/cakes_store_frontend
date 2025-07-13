@@ -21,6 +21,8 @@ class HomeScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDarkMode = theme.brightness == Brightness.dark;
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
     return ScreenUtilInit(
       designSize: const Size(
@@ -64,7 +66,7 @@ class HomeScreen extends StatelessWidget {
                         isDarkMode
                             ? colorScheme.surfaceTint
                             : colorScheme.primary,
-                    size: 18.w,
+                    size: isLandscape ? 12.w : 18.w,
                   ),
                   onPressed: () async {
                     await context.read<AuthCubit>().logoutUser();
@@ -122,10 +124,11 @@ class HomeScreen extends StatelessWidget {
                                       isDarkMode
                                           ? colorScheme.surfaceTint
                                           : colorScheme.primary,
-                                  fontSize: 14.sp,
+                                  fontSize: isLandscape ? 10.sp : 14.sp,
                                 ),
                               ),
                             ),
+                            SizedBox(height: 5),
                             SizedBox(
                               height: 110.h,
                               child: const CategoryList(),
@@ -145,7 +148,7 @@ class HomeScreen extends StatelessWidget {
                                               isDarkMode
                                                   ? colorScheme.surfaceTint
                                                   : colorScheme.primary,
-                                          fontSize: 14.sp,
+                                          fontSize: isLandscape ? 10.sp : 14.sp,
                                         ),
                                   ),
                                   TextButton(
@@ -165,7 +168,8 @@ class HomeScreen extends StatelessWidget {
                                                 TextDecoration.underline,
                                             decorationColor:
                                                 theme.colorScheme.primary,
-                                            fontSize: 16.sp,
+                                            fontSize:
+                                                isLandscape ? 10.sp : 16.sp,
                                           ),
                                     ),
                                   ),

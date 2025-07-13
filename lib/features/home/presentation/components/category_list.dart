@@ -27,6 +27,9 @@ class _CategoryListState extends State<CategoryList> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDarkMode = theme.brightness == Brightness.dark;
@@ -131,7 +134,8 @@ class _CategoryListState extends State<CategoryList> {
                                   isSelected
                                       ? FontWeight.w700
                                       : FontWeight.w600,
-                              fontSize: 11.sp.clamp(9.sp, 13.sp),
+                              fontSize:
+                                  isLandscape ? 7.sp : 11.sp.clamp(9.sp, 13.sp),
                             ),
                           ),
                         ),

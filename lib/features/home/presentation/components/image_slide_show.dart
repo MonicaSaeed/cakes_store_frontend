@@ -76,6 +76,8 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
   @override
   Widget build(BuildContext context) {
     final slides = getSlides(context);
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
     return Stack(
       children: [
@@ -98,14 +100,14 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
           items:
               slides.map((slide) {
                 return Container(
-                  width: double.infinity,
+                  width: isLandscape ? 600 : double.infinity,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image:
                           slide['imageUrl'].toString().startsWith('http')
                               ? NetworkImage(slide['imageUrl']) as ImageProvider
                               : AssetImage(slide['imageUrl']),
-                      fit: BoxFit.cover,
+                      fit: isLandscape ? BoxFit.contain : BoxFit.cover,
                     ),
                   ),
                   child: Stack(
@@ -143,7 +145,7 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 12.sp,
+                                fontSize: isLandscape ? 6.sp : 12.sp,
                               ),
                             ),
                           ),
@@ -172,7 +174,7 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
                                       maxLines: 2,
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 20.sp,
+                                        fontSize: isLandscape ? 8.sp : 20.sp,
                                         fontWeight: FontWeight.bold,
                                         shadows: [
                                           Shadow(
@@ -191,14 +193,15 @@ class _ImageSlideShowState extends State<ImageSlideShow> {
                                       style: ElevatedButton.styleFrom(
                                         padding: EdgeInsets.symmetric(
                                           horizontal: 16.w,
-                                          vertical: 8.h,
+                                          vertical: isLandscape ? 7.h : 8.h,
                                         ),
                                       ),
                                       child: FittedBox(
                                         child: Text(
                                           slide['buttonTitle'],
                                           style: TextStyle(
-                                            fontSize: 12.sp,
+                                            fontSize:
+                                                isLandscape ? 7.sp : 12.sp,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),

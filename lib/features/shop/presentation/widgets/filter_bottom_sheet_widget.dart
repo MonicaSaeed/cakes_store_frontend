@@ -28,6 +28,9 @@ class _FilterBottomSheetWidgetState extends State<FilterBottomSheetWidget> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDarkMode = theme.brightness == Brightness.dark;
@@ -157,6 +160,7 @@ class _FilterBottomSheetWidgetState extends State<FilterBottomSheetWidget> {
               ),
               SizedBox(height: 20),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
                     onPressed: () {
@@ -168,7 +172,9 @@ class _FilterBottomSheetWidgetState extends State<FilterBottomSheetWidget> {
                     },
                     style: ElevatedButton.styleFrom(
                       fixedSize: Size(
-                        MediaQuery.of(context).size.width / 2 - 30,
+                        isLandscape
+                            ? MediaQuery.of(context).size.width / 4
+                            : MediaQuery.of(context).size.width / 2 - 30,
                         50,
                       ),
                       backgroundColor: Color.fromARGB(255, 197, 195, 195),
@@ -182,7 +188,9 @@ class _FilterBottomSheetWidgetState extends State<FilterBottomSheetWidget> {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       fixedSize: Size(
-                        MediaQuery.of(context).size.width / 2 - 30,
+                        isLandscape
+                            ? MediaQuery.of(context).size.width / 4
+                            : MediaQuery.of(context).size.width / 2 - 30,
                         50,
                       ),
                     ),
