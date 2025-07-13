@@ -35,18 +35,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void _saveProfile() {
     if (_formKey.currentState!.validate() && _originalProfile != null) {
-      final allAddresses = _addressControllers
-          .map((c) => c.text.trim())
-          .where((address) => address.isNotEmpty)
-          .toList();
+      final allAddresses =
+          _addressControllers
+              .map((c) => c.text.trim())
+              .where((address) => address.isNotEmpty)
+              .toList();
 
       final updatedProfile = _originalProfile!.copyWith(
-        username: _usernameController.text.trim().isNotEmpty
-            ? _usernameController.text.trim()
-            : _originalProfile!.username,
-        phoneNumber: _phoneController.text.trim().isNotEmpty
-            ? _phoneController.text.trim()
-            : _originalProfile!.phoneNumber,
+        username:
+            _usernameController.text.trim().isNotEmpty
+                ? _usernameController.text.trim()
+                : _originalProfile!.username,
+        phoneNumber:
+            _phoneController.text.trim().isNotEmpty
+                ? _phoneController.text.trim()
+                : _originalProfile!.phoneNumber,
         addresses: allAddresses,
       );
 
@@ -57,12 +60,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = colorScheme.brightness == Brightness.dark;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Edit Profile"),
-        elevation: 2,
-      ),
+      appBar: AppBar(title: const Text("Edit Profile"), elevation: 2),
       body: BlocListener<UserProfileCubit, UserProfileState>(
         listener: (context, state) {
           if (state is UserProfileUpdated) {
@@ -78,7 +79,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Text(
                   "Error: ${state.message}",
                   style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.error),
+                    color: theme.colorScheme.error,
+                  ),
                 ),
               );
             } else if (state is UserProfileLoaded) {
@@ -93,8 +95,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   _addressControllers.add(TextEditingController());
                 } else {
                   for (final addr in existingAddresses) {
-                    _addressControllers
-                        .add(TextEditingController(text: addr));
+                    _addressControllers.add(TextEditingController(text: addr));
                   }
                 }
               }
@@ -115,14 +116,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           hintText: _originalProfile!.email ?? '',
                         ),
                         enabled: false,
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelLarge
-                            ?.copyWith(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurface
-                                    .withOpacity(0.6)),
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withOpacity(0.6),
+                        ),
                       ),
                       const SizedBox(height: 16),
                       CustomTextField(
@@ -136,9 +134,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         hintText: _originalProfile!.phoneNumber ?? '',
                         controller: _phoneController,
                       ),
-                       const SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       ..._addressControllers.asMap().entries.map((entry) {
                         int index = entry.key;
+
                         TextEditingController controller = entry.value;
                         return Row(
                           children: [
@@ -152,15 +151,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             Padding(
                               padding: const EdgeInsets.only(top: 20),
                               child: IconButton(
-                                icon: const Icon(Icons.delete),
+                                icon: Icon(
+                                  Icons.delete,
+                                  color:
+                                      isDarkMode ? colorScheme.secondary : null,
+                                ),
                                 onPressed: () => _removeAddressField(index),
                               ),
                             ),
                           ],
                         );
                       }).toList(),
-                
-                    addaddresas(context, _addAddressField),
+
+                      addaddresas(context, _addAddressField),
 
                       const SizedBox(height: 70),
                       CustomElevatedButton(

@@ -25,8 +25,11 @@ class ReviewsSection extends StatelessWidget {
               },
             );
           case ReviewsEmpty():
-            return const Center(
-              child: Text('No reviews available for this product.'),
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const Center(
+                child: Text('No reviews available for this product.'),
+              ),
             );
           case ReviewsError():
             return Text('Error loading reviews: ${state.errorMessage}');
