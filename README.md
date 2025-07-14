@@ -1,21 +1,72 @@
-## 🍰 YumSlice Frontend
-This is the frontend for the YumSlice application.
+#  Yum Slice – E-Commerce Flutter App
 
-## screens
-home: https://readdy.link/share/e56bf27c05f055b01a615213bcd68771
-orders: https://readdy.link/share/79d31538a5d0a4314c07470fe43fcf77
-details: https://readdy.link/share/d7bdea86b43fc5cae1a1cb78594cc653
-checkout: https://readdy.link/share/99da54c604d93260a6b84b853bb8ed46
+**Yum Slice** is a cross-platform e-commerce mobile application built with **Flutter**, offering a smooth and interactive online shopping experience. Users can browse products, add items to their cart, place orders, submit reviews, apply promo codes, and complete payments via Visa using Paymob integration.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+##  Features Overview
 
-A few resources to get you started if this is your first Flutter project:
+The app is structured into modular feature folders for scalability and clarity:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+###  Authentication
+- Firebase-based login and registration.
+- Cubit used for managing authentication state.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+###  Home
+- Displays banners and access to main product categories (desserts, drinks, meals, snacks).
+
+###  Shop
+- Browse all products with support for:
+  - **Category Filtering** (chips and bottom sheet)
+  - **Sorting** (e.g., price, popularity)
+  - **Pagination**
+  - Real-time product count
+- State managed using Cubit.
+
+###  Product Details
+- Detailed product information.
+- Add to cart functionality.
+
+###  Reviews
+- Add and view product reviews.
+
+###  Cart
+- Add, update, and remove items.
+- Apply promo codes.
+- View total price.
+
+###  Checkout
+- Confirm address and payment method.
+
+###  Payment
+- Integrated with **Paymob** for Visa payments.
+- Orders can be canceled if not yet prepared.
+
+###  Orders
+- Track current and past orders.
+- Status updates: pending, preparing, delivered, canceled.
+
+###  Favorites
+- Save and manage favorite products.
+
+###  Profile
+- Update user data (name, phone, etc.).
+- Change app theme (light/dark).
+- Upload/change profile picture via `image_picker`.
+
+---
+
+##  Architecture
+
+The app follows **Clean Architecture**:
+
+- **State Management:** Cubit (`flutter_bloc`)
+- **Layer Separation:**  
+  - `data/`: data sources, models, repositories  
+  - `domain/`: base repositories, use cases  
+  - `presentation/`: cubits, components, screens
+
+- **Dependency Injection:** Managed with `get_it` for service locator pattern.
+- **Network Requests:** Handled using `dio` for efficient API calls and also `http` for simpler requests.
+- **Local Storage:** Utilizes `shared_preferences` for theme and bool for onboarding state.
+
